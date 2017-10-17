@@ -1,0 +1,13 @@
+You must be on version 4.9 for updating the product to 5.0
+Please follow the instructions below to successfully update your product to version 5.0
+
+- Download the fresh copy of Ekattor School Management System from codecanyon (if you have done it already, skip this step)
+- Take a note of the database info that you were using for version 4.9
+- Replace all the files and folders of your previous version with the new one downloaded just before except the 'uploads' folder
+- Go to the file database.php in application/config/database.php and replace db_host, db_user, db_pass, db_name with your credentials
+- Go to the file routes.php in application/config/routes.php and set default controller from 'install' to 'login'
+- Go to your web browser and enter your application url and login
+- Go to settings > general settings and find the section 'update product'
+- Select the zip file 'update_5.0.zip' in 'update_pack/update_5.0.zip' and hit install update
+- If you want to see the frontend website as default, set default controller to 'home' in routes.php
+- If you want to see the backend erp as default, set the default controller to 'login' in routes.php

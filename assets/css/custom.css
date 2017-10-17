@@ -1,0 +1,18 @@
+/**
+ *
+ * Apply Here your Custom CSS
+ *
+*/
+
+@font-face {
+    font-family: 'yekan';
+    src:url('http://helli2judge.ir/portal/assets/fonts/fonts/BBadr.eot?#) format('eot'),  
+          url('http://helli2judge.ir/portal/assets/fonts/fonts/BBadr.woff') format('woff'),
+          url('http://helli2judge.ir/portal/assets/fonts/fonts/BBadr.ttf') format('truetype');
+}
+
+
+body {
+        font-family: "yekan", Tahoma !important;
+	color: blue;
+}

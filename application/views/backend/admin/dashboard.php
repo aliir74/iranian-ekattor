@@ -1,0 +1,147 @@
+<hr />
+<div class="row">
+	<div class="col-md-8">
+    	<div class="row">
+            <!-- CALENDAR-->
+            <div class="col-md-12 col-xs-12">
+                <div class="panel panel-primary " data-collapsed="0">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <i class="fa fa-calendar"></i>
+                            <?php echo get_phrase('event_schedule');?>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="padding:0px;">
+                        <div class="calendar-env">
+                            <div class="calendar-body">
+                                <div id="notice_calendar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	<div class="col-md-4">
+		<div class="row">
+            <div class="col-md-12">
+
+                <div class="tile-stats tile-red">
+                    <div class="icon"><i class="fa fa-group"></i></div>
+                    <div class="num" data-start="0"
+												data-end="
+													<?php
+														$number_of_student_in_current_session = $this->db->get_where('enroll', array('year' => $running_year))->num_rows();
+														echo $number_of_student_in_current_session;
+														//echo $this->db->count_all('student');
+													?>
+													"
+                    		data-postfix="" data-duration="1500" data-delay="0">0</div>
+
+                    <h3><?php echo get_phrase('student');?></h3>
+                   <p>Total students</p>
+                </div>
+
+            </div>
+            <div class="col-md-12">
+
+                <div class="tile-stats tile-green">
+                    <div class="icon"><i class="entypo-users"></i></div>
+                    <div class="num" data-start="0" data-end="<?php echo $this->db->count_all('teacher');?>"
+                    		data-postfix="" data-duration="800" data-delay="0">0</div>
+
+                    <h3><?php echo get_phrase('teacher');?></h3>
+                   <p>Total teachers</p>
+                </div>
+
+            </div>
+            <div class="col-md-12">
+
+                <div class="tile-stats tile-aqua">
+                    <div class="icon"><i class="entypo-user"></i></div>
+                    <div class="num" data-start="0" data-end="<?php echo $this->db->count_all('parent');?>"
+                    		data-postfix="" data-duration="500" data-delay="0">0</div>
+
+                    <h3><?php echo get_phrase('parent');?></h3>
+                   <p>Total parents</p>
+                </div>
+
+            </div>
+            <div class="col-md-12">
+
+                <div class="tile-stats tile-blue">
+                    <div class="icon"><i class="entypo-chart-bar"></i></div>
+                    <?php
+						$check	=	array(	'timestamp' => strtotime(date('Y-m-d')) , 'status' => '1' );
+						$query = $this->db->get_where('attendance' , $check);
+						$present_today		=	$query->num_rows();
+						?>
+                    <div class="num" data-start="0" data-end="<?php echo $present_today;?>"
+                    		data-postfix="" data-duration="500" data-delay="0">0</div>
+
+                    <h3><?php echo get_phrase('attendance');?></h3>
+                   <p>Total present student today</p>
+                </div>
+
+            </div>
+    	</div>
+    </div>
+
+</div>
+
+
+
+
+<link rel='stylesheet' href='../../../../portal/assets/js/fullcalendar/lib/cupertino/jquery-ui.min.css' />
+<link href='../../../../portal/assets/js/fullcalendar/fullcalendar.css' rel='stylesheet' />
+<link href='../../../../portal/assets/js/fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
+<script src='../../../portal/assets/js/fullcalendar/lib/moment.min.js'></script>
+<script src='../../../portal/assets/js/fullcalendar/lib/jquery.min.js'></script>
+<script src='../../../portal/assets/js/fullcalendar/fullcalendar.min.js'></script>
+<script src='../../../portal/assets/js/fullcalendar/lang-all.js'></script>
+<script>
+
+    $(document).ready(function() {
+        function renderCalendar() {
+            $('#notice_calendar').fullCalendar({
+                header: {
+                    right: 'next,prev today',
+                    center: 'title',
+                    left: 'agendaDay,agendaWeek,month'
+                },
+                isRTL: true,
+                defaultDate: '2016-05-12',
+                lang: 'fa',
+                buttonIcons: false, // show the prev/next text
+                weekNumbers: true,
+                editable: true,
+                eventLimit: true, // allow "more" link when too many events
+                events: [
+                    <?php
+                    $notices    =   $this->db->get('noticeboard')->result_array();
+                    foreach($notices as $row):
+                    ?>
+                    {
+                        title: "<?php echo $row['notice_title'];?>",
+                        start: new Date(<?php echo date('Y',$row['create_timestamp']);?>, <?php echo date('m',$row['create_timestamp'])-1;?>, <?php echo date('d',$row['create_timestamp']);?>),
+                        end:    new Date(<?php echo date('Y',$row['create_timestamp']);?>, <?php echo date('m',$row['create_timestamp'])-1;?>, <?php echo date('d',$row['create_timestamp']);?>)
+                    },
+                    <?php
+                    endforeach
+                    ?>
+
+                ]
+            });
+        }
+
+        renderCalendar();
+        $('.fc-prev-button').text('قبلی')
+        $('.fc-next-button').text('بعدی')
+        $('.fc-today-button').text('امروز')
+        $('.fc-month-button').text('ماه')
+        $('.fc-agendaWeek-button').text('هفته')
+        $('.fc-agendaDay-button').text('روز')
+    });
+
+</script>
