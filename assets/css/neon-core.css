@@ -1,16 +1,3 @@
-@font-face {
-    font-family: 'yekan';
-    src:url('http://helli2judge.ir/portal/assets/fonts/fonts/BYekan.eot?#) format('eot'),    
-          url('http://helli2judge.ir/portal/assets/fonts/fonts/BYekan.woff') format('woff'),
-          url('http://helli2judge.ir/portal/assets/fonts/fonts/BYekan.ttf') format('truetype'); 
-}
-
-
-body {
-	font-family: "yekan", Tahoma !important;
-}
-
-
 *,
 *:before,
 *:after {
