@@ -99,7 +99,7 @@
 <script src='/school/assets/js/fullcalendar/lib/moment.min.js'></script>
 <script src='/school/assets/js/fullcalendar/lib/jquery.min.js'></script>
 <script src='/school/assets/js/fullcalendar/fullcalendar.min.js'></script>
-<script src='/school/assets/js/fullcalendar/lang-all.js'></script>
+//<script src='/school/assets/js/fullcalendar/lang-all.js'></script>
 <script>
 
     $(document).ready(function() {
