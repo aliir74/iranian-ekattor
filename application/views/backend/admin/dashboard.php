@@ -148,12 +148,14 @@ monthsShort:"jan_feb_mar_apr_maj_jun_jul_aug_sep_okt_nov_dec".split("_"),weekday
         }
 
         renderCalendar();
+        /*
         $('.fc-prev-button').text('قبلی')
         $('.fc-next-button').text('بعدی')
         $('.fc-today-button').text('امروز')
         $('.fc-month-button').text('ماه')
         $('.fc-agendaWeek-button').text('هفته')
         $('.fc-agendaDay-button').text('روز')
+        */
     });
 
 </script>
