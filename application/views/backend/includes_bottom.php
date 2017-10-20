@@ -18,6 +18,11 @@
 	<script src="assets/js/toastr.js"></script>
     <script src="assets/js/jquery.validate.min.js"></script>
 	<script src="assets/js/fullcalendar/fullcalendar.min.js"></script>
+    <!--manually added for jalaali calendar-->
+    <script src="assets/js/fullcalendar/lang/fa.js"></script>
+    <script src="assets/js/fullcalendar/lib/moment.js"></script>
+    <script src="assets/js/fullcalendar/lib/moment-jalaali.js"></script>
+    <!---->
     <script src="assets/js/bootstrap-datepicker.js"></script>
     <script src="assets/js/fileinput.js"></script>
     
