@@ -124,7 +124,8 @@ monthsShort:"jan_feb_mar_apr_maj_jun_jul_aug_sep_okt_nov_dec".split("_"),weekday
                 isRTL: true,
                 isJalaali: true,
                 defaultDate: '2016-05-12',
-                lang: 'fa',
+                //lang: 'fa',
+                lang: 'en',
                 buttonIcons: false, // show the prev/next text
                 weekNumbers: true,
                 editable: true,
