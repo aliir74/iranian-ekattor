@@ -143,7 +143,7 @@ monthsShort:"jan_feb_mar_apr_maj_jun_jul_aug_sep_okt_nov_dec".split("_"),weekday
             });
         }
 
-        //renderCalendar();
+        renderCalendar();
         /*
         $('.fc-prev-button').text('قبلی')
         $('.fc-next-button').text('بعدی')
