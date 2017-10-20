@@ -108,7 +108,6 @@ monthsShort:"jan_feb_mar_apr_maj_jun_jul_aug_sep_okt_nov_dec".split("_"),weekday
 </script>-->
 
 <script>
-    ali
     $(document).ready(function() {
         function renderCalendar() {
             $('#notice_calendar').fullCalendar({
