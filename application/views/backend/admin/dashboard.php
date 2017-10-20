@@ -92,10 +92,10 @@
 
 
 
-<!--<link rel='stylesheet' href='/school/assets/js/fullcalendar/lib/cupertino/jquery-ui.min.css' />
-<link href='/school/assets/js/fullcalendar/fullcalendar.css' rel='stylesheet' />
-<link href='/school/assets/js/fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
-<script src='/school/assets/js/fullcalendar/lib/jquery.min.js'></script>
+<!--<link rel='stylesheet' href='assets/js/fullcalendar/lib/cupertino/jquery-ui.min.css' />-->
+<link href='assets/js/fullcalendar/dist/fullcalendar.css' rel='stylesheet' />
+<link href='assets/js/fullcalendar/dist/fullcalendar.print.css' rel='stylesheet' media='print' />
+<!--<script src='/school/assets/js/fullcalendar/lib/jquery.min.js'></script>
 <script src='/school/assets/js/fullcalendar/lib/moment.min.js'></script>
 <script src="/school/assets/js/fullcalendar/lib/moment-jalaali.js"></script>
 <script src='/school/assets/js/fullcalendar/fullcalendar.min.js'></script>
