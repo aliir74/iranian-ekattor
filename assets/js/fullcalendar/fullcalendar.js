@@ -1,7 +1,7 @@
 /*!
- * FullCalendar v2.7.2
+ * FullCalendar v2.6.0
  * Docs & License: http://fullcalendar.io/
- * (c) 2016 Adam Shaw
+ * (c) 2015 Adam Shaw
  */
 
 (function(factory) {
@@ -19,8 +19,8 @@
 ;;
 
 var FC = $.fullCalendar = {
-	version: "2.7.2",
-	internalApiVersion: 3
+	version: "2.6.0",
+	internalApiVersion: 2
 };
 var fcViews = FC.views = {};
 
@@ -262,25 +262,29 @@ function matchCellWidths(els) {
 }
 
 
-// Given one element that resides inside another,
-// Subtracts the height of the inner element from the outer element.
-function subtractInnerElHeight(outerEl, innerEl) {
-	var both = outerEl.add(innerEl);
-	var diff;
+// Turns a container element into a scroller if its contents is taller than the allotted height.
+// Returns true if the element is now a scroller, false otherwise.
+// NOTE: this method is best because it takes weird zooming dimensions into account
+function setPotentialScroller(containerEl, height) {
+	containerEl.height(height).addClass('fc-scroller');
 
-	// effin' IE8/9/10/11 sometimes returns 0 for dimensions. this weird hack was the only thing that worked
-	both.css({
-		position: 'relative', // cause a reflow, which will force fresh dimension recalculation
-		left: -1 // ensure reflow in case the el was already relative. negative is less likely to cause new scroll
-	});
-	diff = outerEl.outerHeight() - innerEl.outerHeight(); // grab the dimensions
-	both.css({ position: '', left: '' }); // undo hack
+	// are scrollbars needed?
+	if (containerEl[0].scrollHeight - 1 > containerEl[0].clientHeight) { // !!! -1 because IE is often off-by-one :(
+		return true;
+	}
 
-	return diff;
+	unsetScroller(containerEl); // undo
+	return false;
 }
 
 
-/* Element Geom Utilities
+// Takes an element that might have been a scroller, and turns it back into a normal element.
+function unsetScroller(containerEl) {
+	containerEl.height('').removeClass('fc-scroller');
+}
+
+
+/* General DOM Utilities
 ----------------------------------------------------------------------------------------------------------------------*/
 
 FC.getOuterRect = getOuterRect;
@@ -305,30 +309,26 @@ function getScrollParent(el) {
 
 // Queries the outer bounding area of a jQuery element.
 // Returns a rectangle with absolute coordinates: left, right (exclusive), top, bottom (exclusive).
-// Origin is optional.
-function getOuterRect(el, origin) {
+function getOuterRect(el) {
 	var offset = el.offset();
-	var left = offset.left - (origin ? origin.left : 0);
-	var top = offset.top - (origin ? origin.top : 0);
 
 	return {
-		left: left,
-		right: left + el.outerWidth(),
-		top: top,
-		bottom: top + el.outerHeight()
+		left: offset.left,
+		right: offset.left + el.outerWidth(),
+		top: offset.top,
+		bottom: offset.top + el.outerHeight()
 	};
 }
 
 
 // Queries the area within the margin/border/scrollbars of a jQuery element. Does not go within the padding.
 // Returns a rectangle with absolute coordinates: left, right (exclusive), top, bottom (exclusive).
-// Origin is optional.
 // NOTE: should use clientLeft/clientTop, but very unreliable cross-browser.
-function getClientRect(el, origin) {
+function getClientRect(el) {
 	var offset = el.offset();
 	var scrollbarWidths = getScrollbarWidths(el);
-	var left = offset.left + getCssFloat(el, 'border-left-width') + scrollbarWidths.left - (origin ? origin.left : 0);
-	var top = offset.top + getCssFloat(el, 'border-top-width') + scrollbarWidths.top - (origin ? origin.top : 0);
+	var left = offset.left + getCssFloat(el, 'border-left-width') + scrollbarWidths.left;
+	var top = offset.top + getCssFloat(el, 'border-top-width') + scrollbarWidths.top;
 
 	return {
 		left: left,
@@ -341,13 +341,10 @@ function getClientRect(el, origin) {
 
 // Queries the area within the margin/border/padding of a jQuery element. Assumed not to have scrollbars.
 // Returns a rectangle with absolute coordinates: left, right (exclusive), top, bottom (exclusive).
-// Origin is optional.
-function getContentRect(el, origin) {
+function getContentRect(el) {
 	var offset = el.offset(); // just outside of border, margin not included
-	var left = offset.left + getCssFloat(el, 'border-left-width') + getCssFloat(el, 'padding-left') -
-		(origin ? origin.left : 0);
-	var top = offset.top + getCssFloat(el, 'border-top-width') + getCssFloat(el, 'padding-top') -
-		(origin ? origin.top : 0);
+	var left = offset.left + getCssFloat(el, 'border-left-width') + getCssFloat(el, 'padding-left');
+	var top = offset.top + getCssFloat(el, 'border-top-width') + getCssFloat(el, 'padding-top');
 
 	return {
 		left: left,
@@ -417,82 +414,13 @@ function getCssFloat(el, prop) {
 }
 
 
-/* Mouse / Touch Utilities
-----------------------------------------------------------------------------------------------------------------------*/
-
-FC.preventDefault = preventDefault;
-
-
 // Returns a boolean whether this was a left mouse click and no ctrl key (which means right click on Mac)
 function isPrimaryMouseButton(ev) {
 	return ev.which == 1 && !ev.ctrlKey;
 }
 
 
-function getEvX(ev) {
-	if (ev.pageX !== undefined) {
-		return ev.pageX;
-	}
-	var touches = ev.originalEvent.touches;
-	if (touches) {
-		return touches[0].pageX;
-	}
-}
-
-
-function getEvY(ev) {
-	if (ev.pageY !== undefined) {
-		return ev.pageY;
-	}
-	var touches = ev.originalEvent.touches;
-	if (touches) {
-		return touches[0].pageY;
-	}
-}
-
-
-function getEvIsTouch(ev) {
-	return /^touch/.test(ev.type);
-}
-
-
-function preventSelection(el) {
-	el.addClass('fc-unselectable')
-		.on('selectstart', preventDefault);
-}
-
-
-// Stops a mouse/touch event from doing it's native browser action
-function preventDefault(ev) {
-	ev.preventDefault();
-}
-
-
-// attach a handler to get called when ANY scroll action happens on the page.
-// this was impossible to do with normal on/off because 'scroll' doesn't bubble.
-// http://stackoverflow.com/a/32954565/96342
-// returns `true` on success.
-function bindAnyScroll(handler) {
-	if (window.addEventListener) {
-		window.addEventListener('scroll', handler, true); // useCapture=true
-		return true;
-	}
-	return false;
-}
-
-
-// undoes bindAnyScroll. must pass in the original function.
-// returns `true` on success.
-function unbindAnyScroll(handler) {
-	if (window.removeEventListener) {
-		window.removeEventListener('scroll', handler, true); // useCapture=true
-		return true;
-	}
-	return false;
-}
-
-
-/* General Geometry Utils
+/* Geometry
 ----------------------------------------------------------------------------------------------------------------------*/
 
 FC.intersectRects = intersectRects;
@@ -1018,21 +946,22 @@ function proxy(obj, methodName) {
 
 // Returns a function, that, as long as it continues to be invoked, will not
 // be triggered. The function will be called after it stops being called for
-// N milliseconds. If `immediate` is passed, trigger the function on the
-// leading edge, instead of the trailing.
+// N milliseconds.
 // https://github.com/jashkenas/underscore/blob/1.6.0/underscore.js#L714
-function debounce(func, wait, immediate) {
-	var timeout, args, context, timestamp, result;
-
+function debounce(func, wait) {
+	var timeoutId;
+	var args;
+	var context;
+	var timestamp; // of most recent call
 	var later = function() {
 		var last = +new Date() - timestamp;
-		if (last < wait) {
-			timeout = setTimeout(later, wait - last);
+		if (last < wait && last > 0) {
+			timeoutId = setTimeout(later, wait - last);
 		}
 		else {
-			timeout = null;
-			if (!immediate) {
-				result = func.apply(context, args);
+			timeoutId = null;
+			func.apply(context, args);
+			if (!timeoutId) {
 				context = args = null;
 			}
 		}
@@ -1042,15 +971,9 @@ function debounce(func, wait, immediate) {
 		context = this;
 		args = arguments;
 		timestamp = +new Date();
-		var callNow = immediate && !timeout;
-		if (!timeout) {
-			timeout = setTimeout(later, wait);
+		if (!timeoutId) {
+			timeoutId = setTimeout(later, wait);
 		}
-		if (callNow) {
-			result = func.apply(context, args);
-			context = args = null;
-		}
-		return result;
 	};
 }
 
@@ -1854,25 +1777,23 @@ function extendClass(superClass, members) {
 
 
 function mixIntoClass(theClass, members) {
-	copyOwnProps(members, theClass.prototype); // TODO: copyNativeMethods?
+	copyOwnProps(members.prototype || members, theClass.prototype); // TODO: copyNativeMethods?
 }
 ;;
 
-var EmitterMixin = FC.EmitterMixin = {
+var Emitter = FC.Emitter = Class.extend({
 
 	callbackHash: null,
 
 
 	on: function(name, callback) {
-		this.loopCallbacks(name, 'add', [ callback ]);
-
+		this.getCallbacks(name).add(callback);
 		return this; // for chaining
 	},
 
 
 	off: function(name, callback) {
-		this.loopCallbacks(name, 'remove', [ callback ]);
-
+		this.getCallbacks(name).remove(callback);
 		return this; // for chaining
 	},
 
@@ -1887,133 +1808,30 @@ var EmitterMixin = FC.EmitterMixin = {
 
 
 	triggerWith: function(name, context, args) {
-		this.loopCallbacks(name, 'fireWith', [ context, args ]);
+		var callbacks = this.getCallbacks(name);
+
+		callbacks.fireWith(context, args);
 
 		return this; // for chaining
 	},
 
 
-	/*
-	Given an event name string with possible namespaces,
-	call the given methodName on all the internal Callback object with the given arguments.
-	*/
-	loopCallbacks: function(name, methodName, args) {
-		var parts = name.split('.'); // "click.namespace" -> [ "click", "namespace" ]
-		var i, part;
-		var callbackObj;
+	getCallbacks: function(name) {
+		var callbacks;
 
-		for (i = 0; i < parts.length; i++) {
-			part = parts[i];
-			if (part) { // in case no event name like "click"
-				callbackObj = this.ensureCallbackObj((i ? '.' : '') + part); // put periods in front of namespaces
-				callbackObj[methodName].apply(callbackObj, args);
-			}
-		}
-	},
-
-
-	ensureCallbackObj: function(name) {
 		if (!this.callbackHash) {
 			this.callbackHash = {};
 		}
-		if (!this.callbackHash[name]) {
-			this.callbackHash[name] = $.Callbacks();
-		}
-		return this.callbackHash[name];
-	}
 
-};
-;;
-
-/*
-Utility methods for easily listening to events on another object,
-and more importantly, easily unlistening from them.
-*/
-var ListenerMixin = FC.ListenerMixin = (function() {
-	var guid = 0;
-	var ListenerMixin = {
-
-		listenerId: null,
-
-		/*
-		Given an `other` object that has on/off methods, bind the given `callback` to an event by the given name.
-		The `callback` will be called with the `this` context of the object that .listenTo is being called on.
-		Can be called:
-			.listenTo(other, eventName, callback)
-		OR
-			.listenTo(other, {
-				eventName1: callback1,
-				eventName2: callback2
-			})
-		*/
-		listenTo: function(other, arg, callback) {
-			if (typeof arg === 'object') { // given dictionary of callbacks
-				for (var eventName in arg) {
-					if (arg.hasOwnProperty(eventName)) {
-						this.listenTo(other, eventName, arg[eventName]);
-					}
-				}
-			}
-			else if (typeof arg === 'string') {
-				other.on(
-					arg + '.' + this.getListenerNamespace(), // use event namespacing to identify this object
-					$.proxy(callback, this) // always use `this` context
-						// the usually-undesired jQuery guid behavior doesn't matter,
-						// because we always unbind via namespace
-				);
-			}
-		},
-
-		/*
-		Causes the current object to stop listening to events on the `other` object.
-		`eventName` is optional. If omitted, will stop listening to ALL events on `other`.
-		*/
-		stopListeningTo: function(other, eventName) {
-			other.off((eventName || '') + '.' + this.getListenerNamespace());
-		},
-
-		/*
-		Returns a string, unique to this object, to be used for event namespacing
-		*/
-		getListenerNamespace: function() {
-			if (this.listenerId == null) {
-				this.listenerId = guid++;
-			}
-			return '_listener' + this.listenerId;
+		callbacks = this.callbackHash[name];
+		if (!callbacks) {
+			callbacks = this.callbackHash[name] = $.Callbacks();
 		}
 
-	};
-	return ListenerMixin;
-})();
-;;
-
-// simple class for toggle a `isIgnoringMouse` flag on delay
-// initMouseIgnoring must first be called, with a millisecond delay setting.
-var MouseIgnorerMixin = {
-
-	isIgnoringMouse: false, // bool
-	delayUnignoreMouse: null, // method
-
-
-	initMouseIgnoring: function(delay) {
-		this.delayUnignoreMouse = debounce(proxy(this, 'unignoreMouse'), delay || 1000);
-	},
-
-
-	// temporarily ignore mouse actions on segments
-	tempIgnoreMouse: function() {
-		this.isIgnoringMouse = true;
-		this.delayUnignoreMouse();
-	},
-
-
-	// delayUnignoreMouse eventually calls this
-	unignoreMouse: function() {
-		this.isIgnoringMouse = false;
+		return callbacks;
 	}
 
-};
-
+});
 ;;
 
 /* A rectangular panel that is absolutely positioned over other content
@@ -2030,11 +1848,12 @@ Options:
 	- hide (callback)
 */
 
-var Popover = Class.extend(ListenerMixin, {
+var Popover = Class.extend({
 
 	isHidden: true,
 	options: null,
 	el: null, // the container element for the popover. generated by this object
+	documentMousedownProxy: null, // document mousedown handler bound to `this`
 	margin: 10, // the space required between the popover and the edges of the scroll container
 
 
@@ -2088,7 +1907,7 @@ var Popover = Class.extend(ListenerMixin, {
 		});
 
 		if (options.autoHide) {
-			this.listenTo($(document), 'mousedown', this.documentMousedown);
+			$(document).on('mousedown', this.documentMousedownProxy = proxy(this, 'documentMousedown'));
 		}
 	},
 
@@ -2111,7 +1930,7 @@ var Popover = Class.extend(ListenerMixin, {
 			this.el = null;
 		}
 
-		this.stopListeningTo($(document), 'mousedown');
+		$(document).off('mousedown', this.documentMousedownProxy);
 	},
 
 
@@ -2245,14 +2064,6 @@ var CoordCache = FC.CoordCache = Class.extend({
 	},
 
 
-	// When called, if coord caches aren't built, builds them
-	ensureBuilt: function() {
-		if (!this.origin) {
-			this.build();
-		}
-	},
-
-
 	// Compute and return what the elements' bounding rectangle is, from the user's perspective.
 	// Right now, only returns a rectangle if constrained by an overflow:scroll element.
 	queryBoundingRect: function() {
@@ -2305,8 +2116,6 @@ var CoordCache = FC.CoordCache = Class.extend({
 	// Given a left offset (from document left), returns the index of the el that it horizontally intersects.
 	// If no intersection is made, or outside of the boundingRect, returns undefined.
 	getHorizontalIndex: function(leftOffset) {
-		this.ensureBuilt();
-
 		var boundingRect = this.boundingRect;
 		var lefts = this.lefts;
 		var rights = this.rights;
@@ -2326,8 +2135,6 @@ var CoordCache = FC.CoordCache = Class.extend({
 	// Given a top offset (from document top), returns the index of the el that it vertically intersects.
 	// If no intersection is made, or outside of the boundingRect, returns undefined.
 	getVerticalIndex: function(topOffset) {
-		this.ensureBuilt();
-
 		var boundingRect = this.boundingRect;
 		var tops = this.tops;
 		var bottoms = this.bottoms;
@@ -2346,14 +2153,12 @@ var CoordCache = FC.CoordCache = Class.extend({
 
 	// Gets the left offset (from document left) of the element at the given index
 	getLeftOffset: function(leftIndex) {
-		this.ensureBuilt();
 		return this.lefts[leftIndex];
 	},
 
 
 	// Gets the left position (from offsetParent left) of the element at the given index
 	getLeftPosition: function(leftIndex) {
-		this.ensureBuilt();
 		return this.lefts[leftIndex] - this.origin.left;
 	},
 
@@ -2361,7 +2166,6 @@ var CoordCache = FC.CoordCache = Class.extend({
 	// Gets the right offset (from document left) of the element at the given index.
 	// This value is NOT relative to the document's right edge, like the CSS concept of "right" would be.
 	getRightOffset: function(leftIndex) {
-		this.ensureBuilt();
 		return this.rights[leftIndex];
 	},
 
@@ -2369,35 +2173,30 @@ var CoordCache = FC.CoordCache = Class.extend({
 	// Gets the right position (from offsetParent left) of the element at the given index.
 	// This value is NOT relative to the offsetParent's right edge, like the CSS concept of "right" would be.
 	getRightPosition: function(leftIndex) {
-		this.ensureBuilt();
 		return this.rights[leftIndex] - this.origin.left;
 	},
 
 
 	// Gets the width of the element at the given index
 	getWidth: function(leftIndex) {
-		this.ensureBuilt();
 		return this.rights[leftIndex] - this.lefts[leftIndex];
 	},
 
 
 	// Gets the top offset (from document top) of the element at the given index
 	getTopOffset: function(topIndex) {
-		this.ensureBuilt();
 		return this.tops[topIndex];
 	},
 
 
 	// Gets the top position (from offsetParent top) of the element at the given position
 	getTopPosition: function(topIndex) {
-		this.ensureBuilt();
 		return this.tops[topIndex] - this.origin.top;
 	},
 
 	// Gets the bottom offset (from the document top) of the element at the given index.
 	// This value is NOT relative to the offsetParent's bottom edge, like the CSS concept of "bottom" would be.
 	getBottomOffset: function(topIndex) {
-		this.ensureBuilt();
 		return this.bottoms[topIndex];
 	},
 
@@ -2405,14 +2204,12 @@ var CoordCache = FC.CoordCache = Class.extend({
 	// Gets the bottom position (from the offsetParent top) of the element at the given index.
 	// This value is NOT relative to the offsetParent's bottom edge, like the CSS concept of "bottom" would be.
 	getBottomPosition: function(topIndex) {
-		this.ensureBuilt();
 		return this.bottoms[topIndex] - this.origin.top;
 	},
 
 
 	// Gets the height of the element at the given index
 	getHeight: function(topIndex) {
-		this.ensureBuilt();
 		return this.bottoms[topIndex] - this.tops[topIndex];
 	}
 
@@ -2424,325 +2221,148 @@ var CoordCache = FC.CoordCache = Class.extend({
 ----------------------------------------------------------------------------------------------------------------------*/
 // TODO: use Emitter
 
-var DragListener = FC.DragListener = Class.extend(ListenerMixin, MouseIgnorerMixin, {
+var DragListener = FC.DragListener = Class.extend({
 
 	options: null,
 
-	// for IE8 bug-fighting behavior
-	subjectEl: null,
-	subjectHref: null,
+	isListening: false,
+	isDragging: false,
 
 	// coordinates of the initial mousedown
 	originX: null,
 	originY: null,
 
-	// the wrapping element that scrolls, or MIGHT scroll if there's overflow.
-	// TODO: do this for wrappers that have overflow:hidden as well.
+	// handler attached to the document, bound to the DragListener's `this`
+	mousemoveProxy: null,
+	mouseupProxy: null,
+
+	// for IE8 bug-fighting behavior, for now
+	subjectEl: null, // the element being draged. optional
+	subjectHref: null,
+
 	scrollEl: null,
+	scrollBounds: null, // { top, bottom, left, right }
+	scrollTopVel: null, // pixels per second
+	scrollLeftVel: null, // pixels per second
+	scrollIntervalId: null, // ID of setTimeout for scrolling animation loop
+	scrollHandlerProxy: null, // this-scoped function for handling when scrollEl is scrolled
 
-	isInteracting: false,
-	isDistanceSurpassed: false,
-	isDelayEnded: false,
-	isDragging: false,
-	isTouch: false,
-
-	delay: null,
-	delayTimeoutId: null,
-	minDistance: null,
-
-	handleTouchScrollProxy: null, // calls handleTouchScroll, always bound to `this`
+	scrollSensitivity: 30, // pixels from edge for scrolling to start
+	scrollSpeed: 200, // pixels per second, at maximum speed
+	scrollIntervalMs: 50, // millisecond wait between scroll increment
 
 
 	constructor: function(options) {
-		this.options = options || {};
-		this.handleTouchScrollProxy = proxy(this, 'handleTouchScroll');
-		this.initMouseIgnoring(500);
+		options = options || {};
+		this.options = options;
+		this.subjectEl = options.subjectEl;
 	},
 
 
-	// Interaction (high-level)
-	// -----------------------------------------------------------------------------------------------------------------
+	// Call this when the user does a mousedown. Will probably lead to startListening
+	mousedown: function(ev) {
+		if (isPrimaryMouseButton(ev)) {
 
+			ev.preventDefault(); // prevents native selection in most browsers
 
-	startInteraction: function(ev, extraOptions) {
-		var isTouch = getEvIsTouch(ev);
+			this.startListening(ev);
 
-		if (ev.type === 'mousedown') {
-			if (this.isIgnoringMouse) {
-				return;
+			// start the drag immediately if there is no minimum distance for a drag start
+			if (!this.options.distance) {
+				this.startDrag(ev);
 			}
-			else if (!isPrimaryMouseButton(ev)) {
-				return;
+		}
+	},
+
+
+	// Call this to start tracking mouse movements
+	startListening: function(ev) {
+		var scrollParent;
+
+		if (!this.isListening) {
+
+			// grab scroll container and attach handler
+			if (ev && this.options.scroll) {
+				scrollParent = getScrollParent($(ev.target));
+				if (!scrollParent.is(window) && !scrollParent.is(document)) {
+					this.scrollEl = scrollParent;
+
+					// scope to `this`, and use `debounce` to make sure rapid calls don't happen
+					this.scrollHandlerProxy = debounce(proxy(this, 'scrollHandler'), 100);
+					this.scrollEl.on('scroll', this.scrollHandlerProxy);
+				}
+			}
+
+			$(document)
+				.on('mousemove', this.mousemoveProxy = proxy(this, 'mousemove'))
+				.on('mouseup', this.mouseupProxy = proxy(this, 'mouseup'))
+				.on('selectstart', this.preventDefault); // prevents native selection in IE<=8
+
+			if (ev) {
+				this.originX = ev.pageX;
+				this.originY = ev.pageY;
 			}
 			else {
-				ev.preventDefault(); // prevents native selection in most browsers
+				// if no starting information was given, origin will be the topleft corner of the screen.
+				// if so, dx/dy in the future will be the absolute coordinates.
+				this.originX = 0;
+				this.originY = 0;
+			}
+
+			this.isListening = true;
+			this.listenStart(ev);
+		}
+	},
+
+
+	// Called when drag listening has started (but a real drag has not necessarily began)
+	listenStart: function(ev) {
+		this.trigger('listenStart', ev);
+	},
+
+
+	// Called when the user moves the mouse
+	mousemove: function(ev) {
+		var dx = ev.pageX - this.originX;
+		var dy = ev.pageY - this.originY;
+		var minDistance;
+		var distanceSq; // current distance from the origin, squared
+
+		if (!this.isDragging) { // if not already dragging...
+			// then start the drag if the minimum distance criteria is met
+			minDistance = this.options.distance || 1;
+			distanceSq = dx * dx + dy * dy;
+			if (distanceSq >= minDistance * minDistance) { // use pythagorean theorem
+				this.startDrag(ev);
 			}
 		}
 
-		if (!this.isInteracting) {
-
-			// process options
-			extraOptions = extraOptions || {};
-			this.delay = firstDefined(extraOptions.delay, this.options.delay, 0);
-			this.minDistance = firstDefined(extraOptions.distance, this.options.distance, 0);
-			this.subjectEl = this.options.subjectEl;
-
-			this.isInteracting = true;
-			this.isTouch = isTouch;
-			this.isDelayEnded = false;
-			this.isDistanceSurpassed = false;
-
-			this.originX = getEvX(ev);
-			this.originY = getEvY(ev);
-			this.scrollEl = getScrollParent($(ev.target));
-
-			this.bindHandlers();
-			this.initAutoScroll();
-			this.handleInteractionStart(ev);
-			this.startDelay(ev);
-
-			if (!this.minDistance) {
-				this.handleDistanceSurpassed(ev);
-			}
+		if (this.isDragging) {
+			this.drag(dx, dy, ev); // report a drag, even if this mousemove initiated the drag
 		}
 	},
 
 
-	handleInteractionStart: function(ev) {
-		this.trigger('interactionStart', ev);
-	},
+	// Call this to initiate a legitimate drag.
+	// This function is called internally from this class, but can also be called explicitly from outside
+	startDrag: function(ev) {
 
-
-	endInteraction: function(ev, isCancelled) {
-		if (this.isInteracting) {
-			this.endDrag(ev);
-
-			if (this.delayTimeoutId) {
-				clearTimeout(this.delayTimeoutId);
-				this.delayTimeoutId = null;
-			}
-
-			this.destroyAutoScroll();
-			this.unbindHandlers();
-
-			this.isInteracting = false;
-			this.handleInteractionEnd(ev, isCancelled);
-
-			// a touchstart+touchend on the same element will result in the following addition simulated events:
-			// mouseover + mouseout + click
-			// let's ignore these bogus events
-			if (this.isTouch) {
-				this.tempIgnoreMouse();
-			}
+		if (!this.isListening) { // startDrag must have manually initiated
+			this.startListening();
 		}
-	},
-
-
-	handleInteractionEnd: function(ev, isCancelled) {
-		this.trigger('interactionEnd', ev, isCancelled || false);
-	},
-
-
-	// Binding To DOM
-	// -----------------------------------------------------------------------------------------------------------------
-
-
-	bindHandlers: function() {
-		var _this = this;
-		var touchStartIgnores = 1;
-
-		if (this.isTouch) {
-			this.listenTo($(document), {
-				touchmove: this.handleTouchMove,
-				touchend: this.endInteraction,
-				touchcancel: this.endInteraction,
-
-				// Sometimes touchend doesn't fire
-				// (can't figure out why. touchcancel doesn't fire either. has to do with scrolling?)
-				// If another touchstart happens, we know it's bogus, so cancel the drag.
-				// touchend will continue to be broken until user does a shorttap/scroll, but this is best we can do.
-				touchstart: function(ev) {
-					if (touchStartIgnores) { // bindHandlers is called from within a touchstart,
-						touchStartIgnores--; // and we don't want this to fire immediately, so ignore.
-					}
-					else {
-						_this.endInteraction(ev, true); // isCancelled=true
-					}
-				}
-			});
-
-			// listen to ALL scroll actions on the page
-			if (
-				!bindAnyScroll(this.handleTouchScrollProxy) && // hopefully this works and short-circuits the rest
-				this.scrollEl // otherwise, attach a single handler to this
-			) {
-				this.listenTo(this.scrollEl, 'scroll', this.handleTouchScroll);
-			}
-		}
-		else {
-			this.listenTo($(document), {
-				mousemove: this.handleMouseMove,
-				mouseup: this.endInteraction
-			});
-		}
-
-		this.listenTo($(document), {
-			selectstart: preventDefault, // don't allow selection while dragging
-			contextmenu: preventDefault // long taps would open menu on Chrome dev tools
-		});
-	},
-
-
-	unbindHandlers: function() {
-		this.stopListeningTo($(document));
-
-		// unbind scroll listening
-		unbindAnyScroll(this.handleTouchScrollProxy);
-		if (this.scrollEl) {
-			this.stopListeningTo(this.scrollEl, 'scroll');
-		}
-	},
-
-
-	// Drag (high-level)
-	// -----------------------------------------------------------------------------------------------------------------
-
-
-	// extraOptions ignored if drag already started
-	startDrag: function(ev, extraOptions) {
-		this.startInteraction(ev, extraOptions); // ensure interaction began
 
 		if (!this.isDragging) {
 			this.isDragging = true;
-			this.handleDragStart(ev);
+			this.dragStart(ev);
 		}
 	},
 
 
-	handleDragStart: function(ev) {
-		this.trigger('dragStart', ev);
-		this.initHrefHack();
-	},
-
-
-	handleMove: function(ev) {
-		var dx = getEvX(ev) - this.originX;
-		var dy = getEvY(ev) - this.originY;
-		var minDistance = this.minDistance;
-		var distanceSq; // current distance from the origin, squared
-
-		if (!this.isDistanceSurpassed) {
-			distanceSq = dx * dx + dy * dy;
-			if (distanceSq >= minDistance * minDistance) { // use pythagorean theorem
-				this.handleDistanceSurpassed(ev);
-			}
-		}
-
-		if (this.isDragging) {
-			this.handleDrag(dx, dy, ev);
-		}
-	},
-
-
-	// Called while the mouse is being moved and when we know a legitimate drag is taking place
-	handleDrag: function(dx, dy, ev) {
-		this.trigger('drag', dx, dy, ev);
-		this.updateAutoScroll(ev); // will possibly cause scrolling
-	},
-
-
-	endDrag: function(ev) {
-		if (this.isDragging) {
-			this.isDragging = false;
-			this.handleDragEnd(ev);
-		}
-	},
-
-
-	handleDragEnd: function(ev) {
-		this.trigger('dragEnd', ev);
-		this.destroyHrefHack();
-	},
-
-
-	// Delay
-	// -----------------------------------------------------------------------------------------------------------------
-
-
-	startDelay: function(initialEv) {
-		var _this = this;
-
-		if (this.delay) {
-			this.delayTimeoutId = setTimeout(function() {
-				_this.handleDelayEnd(initialEv);
-			}, this.delay);
-		}
-		else {
-			this.handleDelayEnd(initialEv);
-		}
-	},
-
-
-	handleDelayEnd: function(initialEv) {
-		this.isDelayEnded = true;
-
-		if (this.isDistanceSurpassed) {
-			this.startDrag(initialEv);
-		}
-	},
-
-
-	// Distance
-	// -----------------------------------------------------------------------------------------------------------------
-
-
-	handleDistanceSurpassed: function(ev) {
-		this.isDistanceSurpassed = true;
-
-		if (this.isDelayEnded) {
-			this.startDrag(ev);
-		}
-	},
-
-
-	// Mouse / Touch
-	// -----------------------------------------------------------------------------------------------------------------
-
-
-	handleTouchMove: function(ev) {
-		// prevent inertia and touchmove-scrolling while dragging
-		if (this.isDragging) {
-			ev.preventDefault();
-		}
-
-		this.handleMove(ev);
-	},
-
-
-	handleMouseMove: function(ev) {
-		this.handleMove(ev);
-	},
-
-
-	// Scrolling (unrelated to auto-scroll)
-	// -----------------------------------------------------------------------------------------------------------------
-
-
-	handleTouchScroll: function(ev) {
-		// if the drag is being initiated by touch, but a scroll happens before
-		// the drag-initiating delay is over, cancel the drag
-		if (!this.isDragging) {
-			this.endInteraction(ev, true); // isCancelled=true
-		}
-	},
-
-
-	// <A> HREF Hack
-	// -----------------------------------------------------------------------------------------------------------------
-
-
-	initHrefHack: function() {
+	// Called when the actual drag has started (went beyond minDistance)
+	dragStart: function(ev) {
 		var subjectEl = this.subjectEl;
+
+		this.trigger('dragStart', ev);
 
 		// remove a mousedown'd <a>'s href so it is not visited (IE8 bug)
 		if ((this.subjectHref = subjectEl ? subjectEl.attr('href') : null)) {
@@ -2751,21 +2371,75 @@ var DragListener = FC.DragListener = Class.extend(ListenerMixin, MouseIgnorerMix
 	},
 
 
-	destroyHrefHack: function() {
-		var subjectEl = this.subjectEl;
-		var subjectHref = this.subjectHref;
+	// Called while the mouse is being moved and when we know a legitimate drag is taking place
+	drag: function(dx, dy, ev) {
+		this.trigger('drag', dx, dy, ev);
+		this.updateScroll(ev); // will possibly cause scrolling
+	},
+
+
+	// Called when the user does a mouseup
+	mouseup: function(ev) {
+		this.stopListening(ev);
+	},
+
+
+	// Called when the drag is over. Will not cause listening to stop however.
+	// A concluding 'cellOut' event will NOT be triggered.
+	stopDrag: function(ev) {
+		if (this.isDragging) {
+			this.stopScrolling();
+			this.dragStop(ev);
+			this.isDragging = false;
+		}
+	},
+
+
+	// Called when dragging has been stopped
+	dragStop: function(ev) {
+		var _this = this;
+
+		this.trigger('dragStop', ev);
 
 		// restore a mousedown'd <a>'s href (for IE8 bug)
 		setTimeout(function() { // must be outside of the click's execution
-			if (subjectHref) {
-				subjectEl.attr('href', subjectHref);
+			if (_this.subjectHref) {
+				_this.subjectEl.attr('href', _this.subjectHref);
 			}
 		}, 0);
 	},
 
 
-	// Utils
-	// -----------------------------------------------------------------------------------------------------------------
+	// Call this to stop listening to the user's mouse events
+	stopListening: function(ev) {
+		this.stopDrag(ev); // if there's a current drag, kill it
+
+		if (this.isListening) {
+
+			// remove the scroll handler if there is a scrollEl
+			if (this.scrollEl) {
+				this.scrollEl.off('scroll', this.scrollHandlerProxy);
+				this.scrollHandlerProxy = null;
+			}
+
+			$(document)
+				.off('mousemove', this.mousemoveProxy)
+				.off('mouseup', this.mouseupProxy)
+				.off('selectstart', this.preventDefault);
+
+			this.mousemoveProxy = null;
+			this.mouseupProxy = null;
+
+			this.isListening = false;
+			this.listenStop(ev);
+		}
+	},
+
+
+	// Called when drag listening has stopped
+	listenStop: function(ev) {
+		this.trigger('listenStop', ev);
+	},
 
 
 	// Triggers a callback. Calls a function in the option hash of the same name.
@@ -2774,71 +2448,30 @@ var DragListener = FC.DragListener = Class.extend(ListenerMixin, MouseIgnorerMix
 		if (this.options[name]) {
 			this.options[name].apply(this, Array.prototype.slice.call(arguments, 1));
 		}
-		// makes _methods callable by event name. TODO: kill this
-		if (this['_' + name]) {
-			this['_' + name].apply(this, Array.prototype.slice.call(arguments, 1));
-		}
-	}
-
-
-});
-
-;;
-/*
-this.scrollEl is set in DragListener
-*/
-DragListener.mixin({
-
-	isAutoScroll: false,
-
-	scrollBounds: null, // { top, bottom, left, right }
-	scrollTopVel: null, // pixels per second
-	scrollLeftVel: null, // pixels per second
-	scrollIntervalId: null, // ID of setTimeout for scrolling animation loop
-
-	// defaults
-	scrollSensitivity: 30, // pixels from edge for scrolling to start
-	scrollSpeed: 200, // pixels per second, at maximum speed
-	scrollIntervalMs: 50, // millisecond wait between scroll increment
-
-
-	initAutoScroll: function() {
-		var scrollEl = this.scrollEl;
-
-		this.isAutoScroll =
-			this.options.scroll &&
-			scrollEl &&
-			!scrollEl.is(window) &&
-			!scrollEl.is(document);
-
-		if (this.isAutoScroll) {
-			// debounce makes sure rapid calls don't happen
-			this.listenTo(scrollEl, 'scroll', debounce(this.handleDebouncedScroll, 100));
-		}
 	},
 
 
-	destroyAutoScroll: function() {
-		this.endAutoScroll(); // kill any animation loop
-
-		// remove the scroll handler if there is a scrollEl
-		if (this.isAutoScroll) {
-			this.stopListeningTo(this.scrollEl, 'scroll'); // will probably get removed by unbindHandlers too :(
-		}
+	// Stops a given mouse event from doing it's native browser action. In our case, text selection.
+	preventDefault: function(ev) {
+		ev.preventDefault();
 	},
+
+
+	/* Scrolling
+	------------------------------------------------------------------------------------------------------------------*/
 
 
 	// Computes and stores the bounding rectangle of scrollEl
 	computeScrollBounds: function() {
-		if (this.isAutoScroll) {
-			this.scrollBounds = getOuterRect(this.scrollEl);
+		var el = this.scrollEl;
+
+		this.scrollBounds = el ? getOuterRect(el) : null;
 			// TODO: use getClientRect in future. but prevents auto scrolling when on top of scrollbars
-		}
 	},
 
 
 	// Called when the dragging is in progress and scrolling should be updated
-	updateAutoScroll: function(ev) {
+	updateScroll: function(ev) {
 		var sensitivity = this.scrollSensitivity;
 		var bounds = this.scrollBounds;
 		var topCloseness, bottomCloseness;
@@ -2849,10 +2482,10 @@ DragListener.mixin({
 		if (bounds) { // only scroll if scrollEl exists
 
 			// compute closeness to edges. valid range is from 0.0 - 1.0
-			topCloseness = (sensitivity - (getEvY(ev) - bounds.top)) / sensitivity;
-			bottomCloseness = (sensitivity - (bounds.bottom - getEvY(ev))) / sensitivity;
-			leftCloseness = (sensitivity - (getEvX(ev) - bounds.left)) / sensitivity;
-			rightCloseness = (sensitivity - (bounds.right - getEvX(ev))) / sensitivity;
+			topCloseness = (sensitivity - (ev.pageY - bounds.top)) / sensitivity;
+			bottomCloseness = (sensitivity - (bounds.bottom - ev.pageY)) / sensitivity;
+			leftCloseness = (sensitivity - (ev.pageX - bounds.left)) / sensitivity;
+			rightCloseness = (sensitivity - (bounds.right - ev.pageX)) / sensitivity;
 
 			// translate vertical closeness into velocity.
 			// mouse must be completely in bounds for velocity to happen.
@@ -2939,36 +2572,38 @@ DragListener.mixin({
 
 		// if scrolled all the way, which causes the vels to be zero, stop the animation loop
 		if (!this.scrollTopVel && !this.scrollLeftVel) {
-			this.endAutoScroll();
+			this.stopScrolling();
 		}
 	},
 
 
 	// Kills any existing scrolling animation loop
-	endAutoScroll: function() {
+	stopScrolling: function() {
 		if (this.scrollIntervalId) {
 			clearInterval(this.scrollIntervalId);
 			this.scrollIntervalId = null;
 
-			this.handleScrollEnd();
+			// when all done with scrolling, recompute positions since they probably changed
+			this.scrollStop();
 		}
 	},
 
 
 	// Get called when the scrollEl is scrolled (NOTE: this is delayed via debounce)
-	handleDebouncedScroll: function() {
+	scrollHandler: function() {
 		// recompute all coordinates, but *only* if this is *not* part of our scrolling animation
 		if (!this.scrollIntervalId) {
-			this.handleScrollEnd();
+			this.scrollStop();
 		}
 	},
 
 
 	// Called when scrolling has stopped, whether through auto scroll, or the user scrolling
-	handleScrollEnd: function() {
+	scrollStop: function() {
 	}
 
 });
+
 ;;
 
 /* Tracks mouse movements over a component and raises events about which hit the mouse is over.
@@ -2997,16 +2632,18 @@ var HitDragListener = DragListener.extend({
 
 	// Called when drag listening starts (but a real drag has not necessarily began).
 	// ev might be undefined if dragging was started manually.
-	handleInteractionStart: function(ev) {
+	listenStart: function(ev) {
 		var subjectEl = this.subjectEl;
 		var subjectRect;
 		var origPoint;
 		var point;
 
+		DragListener.prototype.listenStart.apply(this, arguments); // call the super-method
+
 		this.computeCoords();
 
 		if (ev) {
-			origPoint = { left: getEvX(ev), top: getEvY(ev) };
+			origPoint = { left: ev.pageX, top: ev.pageY };
 			point = origPoint;
 
 			// constrain the point to bounds of the element being dragged
@@ -3036,64 +2673,61 @@ var HitDragListener = DragListener.extend({
 			this.origHit = null;
 			this.coordAdjust = null;
 		}
-
-		// call the super-method. do it after origHit has been computed
-		DragListener.prototype.handleInteractionStart.apply(this, arguments);
 	},
 
 
 	// Recomputes the drag-critical positions of elements
 	computeCoords: function() {
 		this.component.prepareHits();
-		this.computeScrollBounds(); // why is this here??????
+		this.computeScrollBounds(); // why is this here???
 	},
 
 
 	// Called when the actual drag has started
-	handleDragStart: function(ev) {
+	dragStart: function(ev) {
 		var hit;
 
-		DragListener.prototype.handleDragStart.apply(this, arguments); // call the super-method
+		DragListener.prototype.dragStart.apply(this, arguments); // call the super-method
 
 		// might be different from this.origHit if the min-distance is large
-		hit = this.queryHit(getEvX(ev), getEvY(ev));
+		hit = this.queryHit(ev.pageX, ev.pageY);
 
 		// report the initial hit the mouse is over
 		// especially important if no min-distance and drag starts immediately
 		if (hit) {
-			this.handleHitOver(hit);
+			this.hitOver(hit);
 		}
 	},
 
 
 	// Called when the drag moves
-	handleDrag: function(dx, dy, ev) {
+	drag: function(dx, dy, ev) {
 		var hit;
 
-		DragListener.prototype.handleDrag.apply(this, arguments); // call the super-method
+		DragListener.prototype.drag.apply(this, arguments); // call the super-method
 
-		hit = this.queryHit(getEvX(ev), getEvY(ev));
+		hit = this.queryHit(ev.pageX, ev.pageY);
 
 		if (!isHitsEqual(hit, this.hit)) { // a different hit than before?
 			if (this.hit) {
-				this.handleHitOut();
+				this.hitOut();
 			}
 			if (hit) {
-				this.handleHitOver(hit);
+				this.hitOver(hit);
 			}
 		}
 	},
 
 
 	// Called when dragging has been stopped
-	handleDragEnd: function() {
-		this.handleHitDone();
-		DragListener.prototype.handleDragEnd.apply(this, arguments); // call the super-method
+	dragStop: function() {
+		this.hitDone();
+		DragListener.prototype.dragStop.apply(this, arguments); // call the super-method
 	},
 
 
 	// Called when a the mouse has just moved over a new hit
-	handleHitOver: function(hit) {
+	hitOver: function(hit) {
 		var isOrig = isHitsEqual(hit, this.origHit);
 
 		this.hit = hit;
@@ -3103,26 +2737,26 @@ var HitDragListener = DragListener.extend({
 
 
 	// Called when the mouse has just moved out of a hit
-	handleHitOut: function() {
+	hitOut: function() {
 		if (this.hit) {
 			this.trigger('hitOut', this.hit);
-			this.handleHitDone();
+			this.hitDone();
 			this.hit = null;
 		}
 	},
 
 
 	// Called after a hitOut. Also called before a dragStop
-	handleHitDone: function() {
+	hitDone: function() {
 		if (this.hit) {
 			this.trigger('hitDone', this.hit);
 		}
 	},
 
 
-	// Called when the interaction ends, whether there was a real drag or not
-	handleInteractionEnd: function() {
-		DragListener.prototype.handleInteractionEnd.apply(this, arguments); // call the super-method
+	// Called when drag listening has stopped
+	listenStop: function() {
+		DragListener.prototype.listenStop.apply(this, arguments); // call the super-method
 
 		this.origHit = null;
 		this.hit = null;
@@ -3132,8 +2766,8 @@ var HitDragListener = DragListener.extend({
 
 
 	// Called when scrolling has stopped, whether through auto scroll, or the user scrolling
-	handleScrollEnd: function() {
-		DragListener.prototype.handleScrollEnd.apply(this, arguments); // call the super-method
+	scrollStop: function() {
+		DragListener.prototype.scrollStop.apply(this, arguments); // call the super-method
 
 		this.computeCoords(); // hits' absolute positions will be in new places. recompute
 	},
@@ -3188,7 +2822,7 @@ function isHitPropsWithin(subHit, superHit) {
 /* Creates a clone of an element and lets it track the mouse as it moves
 ----------------------------------------------------------------------------------------------------------------------*/
 
-var MouseFollower = Class.extend(ListenerMixin, {
+var MouseFollower = Class.extend({
 
 	options: null,
 
@@ -3200,13 +2834,15 @@ var MouseFollower = Class.extend(ListenerMixin, {
 	top0: null,
 	left0: null,
 
-	// the absolute coordinates of the initiating touch/mouse action
-	y0: null,
-	x0: null,
+	// the initial position of the mouse
+	mouseY0: null,
+	mouseX0: null,
 
 	// the number of pixels the mouse has moved from its initial position
 	topDelta: null,
 	leftDelta: null,
+
+	mousemoveProxy: null, // document mousemove handler, bound to the MouseFollower's `this`
 
 	isFollowing: false,
 	isHidden: false,
@@ -3224,8 +2860,8 @@ var MouseFollower = Class.extend(ListenerMixin, {
 		if (!this.isFollowing) {
 			this.isFollowing = true;
 
-			this.y0 = getEvY(ev);
-			this.x0 = getEvX(ev);
+			this.mouseY0 = ev.pageY;
+			this.mouseX0 = ev.pageX;
 			this.topDelta = 0;
 			this.leftDelta = 0;
 
@@ -3233,12 +2869,7 @@ var MouseFollower = Class.extend(ListenerMixin, {
 				this.updatePosition();
 			}
 
-			if (getEvIsTouch(ev)) {
-				this.listenTo($(document), 'touchmove', this.handleMove);
-			}
-			else {
-				this.listenTo($(document), 'mousemove', this.handleMove);
-			}
+			$(document).on('mousemove', this.mousemoveProxy = proxy(this, 'mousemove'));
 		}
 	},
 
@@ -3263,7 +2894,7 @@ var MouseFollower = Class.extend(ListenerMixin, {
 		if (this.isFollowing && !this.isAnimating) { // disallow more than one stop animation at a time
 			this.isFollowing = false;
 
-			this.stopListeningTo($(document));
+			$(document).off('mousemove', this.mousemoveProxy);
 
 			if (shouldRevert && revertDuration && !this.isHidden) { // do a revert animation?
 				this.isAnimating = true;
@@ -3289,7 +2920,6 @@ var MouseFollower = Class.extend(ListenerMixin, {
 		if (!el) {
 			this.sourceEl.width(); // hack to force IE8 to compute correct bounding box
 			el = this.el = this.sourceEl.clone()
-				.addClass(this.options.additionalClass || '')
 				.css({
 					position: 'absolute',
 					visibility: '', // in case original element was hidden (commonly through hideEvents())
@@ -3301,13 +2931,8 @@ var MouseFollower = Class.extend(ListenerMixin, {
 					height: this.sourceEl.height(), // explicit width in case there was a 'bottom' value
 					opacity: this.options.opacity || '',
 					zIndex: this.options.zIndex
-				});
-
-			// we don't want long taps or any mouse interaction causing selection/menus.
-			// would use preventSelection(), but that prevents selectstart, causing problems.
-			el.addClass('fc-unselectable');
-
-			el.appendTo(this.parentEl);
+				})
+				.appendTo(this.parentEl);
 		}
 
 		return el;
@@ -3347,9 +2972,9 @@ var MouseFollower = Class.extend(ListenerMixin, {
 
 
 	// Gets called when the user moves the mouse
-	handleMove: function(ev) {
-		this.topDelta = getEvY(ev) - this.y0;
-		this.leftDelta = getEvX(ev) - this.x0;
+	mousemove: function(ev) {
+		this.topDelta = ev.pageY - this.mouseY0;
+		this.leftDelta = ev.pageX - this.mouseX0;
 
 		if (!this.isHidden) {
 			this.updatePosition();
@@ -3384,7 +3009,7 @@ var MouseFollower = Class.extend(ListenerMixin, {
 /* An abstract class comprised of a "grid" of areas that each represent a specific datetime
 ----------------------------------------------------------------------------------------------------------------------*/
 
-var Grid = FC.Grid = Class.extend(ListenerMixin, MouseIgnorerMixin, {
+var Grid = FC.Grid = Class.extend({
 
 	view: null, // a View object
 	isRTL: null, // shortcut to the view's isRTL option
@@ -3394,6 +3019,8 @@ var Grid = FC.Grid = Class.extend(ListenerMixin, MouseIgnorerMixin, {
 
 	el: null, // the containing element
 	elsByFill: null, // a hash of jQuery element sets used for rendering each fill. Keyed by fill name.
+
+	externalDragStartProxy: null, // binds the Grid's scope to externalDragStart (in DayGrid.events)
 
 	// derived from options
 	eventTimeFormat: null,
@@ -3407,19 +3034,13 @@ var Grid = FC.Grid = Class.extend(ListenerMixin, MouseIgnorerMixin, {
 	// TODO: port isTimeScale into same system?
 	largeUnit: null,
 
-	dayDragListener: null,
-	segDragListener: null,
-	segResizeListener: null,
-	externalDragListener: null,
-
 
 	constructor: function(view) {
 		this.view = view;
 		this.isRTL = view.opt('isRTL');
-		this.elsByFill = {};
 
-		this.dayDragListener = this.buildDayDragListener();
-		this.initMouseIgnoring();
+		this.elsByFill = {};
+		this.externalDragStartProxy = proxy(this, 'externalDragStart');
 	},
 
 
@@ -3552,11 +3173,20 @@ var Grid = FC.Grid = Class.extend(ListenerMixin, MouseIgnorerMixin, {
 	// Sets the container element that the grid should render inside of.
 	// Does other DOM-related initializations.
 	setElement: function(el) {
-		this.el = el;
-		preventSelection(el);
+		var _this = this;
 
-		this.bindDayHandler('touchstart', this.dayTouchStart);
-		this.bindDayHandler('mousedown', this.dayMousedown);
+		this.el = el;
+
+		// attach a handler to the grid's root element.
+		// jQuery will take care of unregistering them when removeElement gets called.
+		el.on('mousedown', function(ev) {
+			if (
+				!$(ev.target).is('.fc-event-container *, .fc-more') && // not an an event element, or "more.." link
+				!$(ev.target).closest('.fc-popover').length // not on a popover (like the "more.." events one)
+			) {
+				_this.dayMousedown(ev);
+			}
+		});
 
 		// attach event-element-related handlers. in Grid.events
 		// same garbage collection note as above.
@@ -3566,27 +3196,10 @@ var Grid = FC.Grid = Class.extend(ListenerMixin, MouseIgnorerMixin, {
 	},
 
 
-	bindDayHandler: function(name, handler) {
-		var _this = this;
-
-		// attach a handler to the grid's root element.
-		// jQuery will take care of unregistering them when removeElement gets called.
-		this.el.on(name, function(ev) {
-			if (
-				!$(ev.target).is('.fc-event-container *, .fc-more') && // not an an event element, or "more.." link
-				!$(ev.target).closest('.fc-popover').length // not on a popover (like the "more.." events one)
-			) {
-				return handler.call(_this, ev);
-			}
-		});
-	},
-
-
 	// Removes the grid's container element from the DOM. Undoes any other DOM-related attachments.
 	// DOES NOT remove any content beforehand (doesn't clear events or call unrenderDates), unlike View
 	removeElement: function() {
 		this.unbindGlobalHandlers();
-		this.clearDragListeners();
 
 		this.el.remove();
 
@@ -3619,47 +3232,18 @@ var Grid = FC.Grid = Class.extend(ListenerMixin, MouseIgnorerMixin, {
 
 	// Binds DOM handlers to elements that reside outside the grid, such as the document
 	bindGlobalHandlers: function() {
-		this.listenTo($(document), {
-			dragstart: this.externalDragStart, // jqui
-			sortstart: this.externalDragStart // jqui
-		});
+		$(document).on('dragstart sortstart', this.externalDragStartProxy); // jqui
 	},
 
 
 	// Unbinds DOM handlers from elements that reside outside the grid
 	unbindGlobalHandlers: function() {
-		this.stopListeningTo($(document));
+		$(document).off('dragstart sortstart', this.externalDragStartProxy); // jqui
 	},
 
 
 	// Process a mousedown on an element that represents a day. For day clicking and selecting.
 	dayMousedown: function(ev) {
-		if (!this.isIgnoringMouse) {
-			this.dayDragListener.startInteraction(ev, {
-				//distance: 5, // needs more work if we want dayClick to fire correctly
-			});
-		}
-	},
-
-
-	dayTouchStart: function(ev) {
-		var view = this.view;
-
-		// HACK to prevent a user's clickaway for unselecting a range or an event
-		// from causing a dayClick.
-		if (view.isSelected || view.selectedEvent) {
-			this.tempIgnoreMouse();
-		}
-
-		this.dayDragListener.startInteraction(ev, {
-			delay: this.view.opt('longPressDelay')
-		});
-	},
-
-
-	// Creates a listener that tracks the user's drag across day elements.
-	// For day clicking and selecting.
-	buildDayDragListener: function() {
 		var _this = this;
 		var view = this.view;
 		var isSelectable = view.opt('selectable');
@@ -3670,21 +3254,14 @@ var Grid = FC.Grid = Class.extend(ListenerMixin, MouseIgnorerMixin, {
 		// if the drag ends on the same day, it is a 'dayClick'.
 		// if 'selectable' is enabled, this listener also detects selections.
 		var dragListener = new HitDragListener(this, {
+			//distance: 5, // needs more work if we want dayClick to fire correctly
 			scroll: view.opt('dragScroll'),
-			interactionStart: function() {
-				dayClickHit = dragListener.origHit; // for dayClick, where no dragging happens
-			},
 			dragStart: function() {
 				view.unselect(); // since we could be rendering a new selection, we want to clear any old one
 			},
 			hitOver: function(hit, isOrig, origHit) {
 				if (origHit) { // click needs to have started on a hit
-
-					// if user dragged to another cell at any point, it can no longer be a dayClick
-					if (!isOrig) {
-						dayClickHit = null;
-					}
-
+					dayClickHit = isOrig ? hit : null; // single-hit selection is a day click
 					if (isSelectable) {
 						selectionSpan = _this.computeSelection(
 							_this.getHitSpan(origHit),
@@ -3705,46 +3282,23 @@ var Grid = FC.Grid = Class.extend(ListenerMixin, MouseIgnorerMixin, {
 				_this.unrenderSelection();
 				enableCursor();
 			},
-			interactionEnd: function(ev, isCancelled) {
-				if (!isCancelled) {
-					if (
-						dayClickHit &&
-						!_this.isIgnoringMouse // see hack in dayTouchStart
-					) {
-						view.triggerDayClick(
-							_this.getHitSpan(dayClickHit),
-							_this.getHitEl(dayClickHit),
-							ev
-						);
-					}
-					if (selectionSpan) {
-						// the selection will already have been rendered. just report it
-						view.reportSelection(selectionSpan, ev);
-					}
-					enableCursor();
+			listenStop: function(ev) {
+				if (dayClickHit) {
+					view.triggerDayClick(
+						_this.getHitSpan(dayClickHit),
+						_this.getHitEl(dayClickHit),
+						ev
+					);
 				}
+				if (selectionSpan) {
+					// the selection will already have been rendered. just report it
+					view.reportSelection(selectionSpan, ev);
+				}
+				enableCursor();
 			}
 		});
 
-		return dragListener;
-	},
-
-
-	// Kills all in-progress dragging.
-	// Useful for when public API methods that result in re-rendering are invoked during a drag.
-	// Also useful for when touch devices misbehave and don't fire their touchend.
-	clearDragListeners: function() {
-		this.dayDragListener.endInteraction();
-
-		if (this.segDragListener) {
-			this.segDragListener.endInteraction(); // will clear this.segDragListener
-		}
-		if (this.segResizeListener) {
-			this.segResizeListener.endInteraction(); // will clear this.segResizeListener
-		}
-		if (this.externalDragListener) {
-			this.externalDragListener.endInteraction(); // will clear this.externalDragListener
-		}
+		dragListener.mousedown(ev); // start listening, which will eventually initiate a dragStart
 	},
 
 
@@ -3754,11 +3308,10 @@ var Grid = FC.Grid = Class.extend(ListenerMixin, MouseIgnorerMixin, {
 
 
 	// Renders a mock event at the given event location, which contains zoned start/end properties.
-	// Returns all mock event elements.
 	renderEventLocationHelper: function(eventLocation, sourceSeg) {
 		var fakeEvent = this.fabricateHelperEvent(eventLocation, sourceSeg);
 
-		return this.renderHelper(fakeEvent, sourceSeg); // do the actual rendering
+		this.renderHelper(fakeEvent, sourceSeg); // do the actual rendering
 	},
 
 
@@ -3786,7 +3339,6 @@ var Grid = FC.Grid = Class.extend(ListenerMixin, MouseIgnorerMixin, {
 
 
 	// Renders a mock event. Given zoned event date properties.
-	// Must return all mock event elements.
 	renderHelper: function(eventLocation, sourceSeg) {
 		// subclasses must implement
 	},
@@ -4066,8 +3618,7 @@ Grid.mixin({
 
 	// Unrenders all events currently rendered on the grid
 	unrenderEvents: function() {
-		this.handleSegMouseout(); // trigger an eventMouseout if user's mouse is over an event
-		this.clearDragListeners();
+		this.triggerSegMouseout(); // trigger an eventMouseout if user's mouse is over an event
 
 		this.unrenderFgSegs();
 		this.unrenderBgSegs();
@@ -4176,9 +3727,20 @@ Grid.mixin({
 
 	// Generates a semicolon-separated CSS string to be used for the default rendering of a background event.
 	// Called by the fill system.
+	// TODO: consolidate with getEventSkinCss?
 	bgEventSegCss: function(seg) {
+		var view = this.view;
+		var event = seg.event;
+		var source = event.source || {};
+
 		return {
-			'background-color': this.getSegSkinCss(seg)['background-color']
+			'background-color':
+				event.backgroundColor ||
+				event.color ||
+				source.backgroundColor ||
+				source.color ||
+				view.opt('eventBackgroundColor') ||
+				view.opt('eventColor')
 		};
 	},
 
@@ -4195,44 +3757,48 @@ Grid.mixin({
 
 	// Attaches event-element-related handlers to the container element and leverage bubbling
 	bindSegHandlers: function() {
-		this.bindSegHandler('touchstart', this.handleSegTouchStart);
-		this.bindSegHandler('touchend', this.handleSegTouchEnd);
-		this.bindSegHandler('mouseenter', this.handleSegMouseover);
-		this.bindSegHandler('mouseleave', this.handleSegMouseout);
-		this.bindSegHandler('mousedown', this.handleSegMousedown);
-		this.bindSegHandler('click', this.handleSegClick);
-	},
-
-
-	// Executes a handler for any a user-interaction on a segment.
-	// Handler gets called with (seg, ev), and with the `this` context of the Grid
-	bindSegHandler: function(name, handler) {
 		var _this = this;
+		var view = this.view;
 
-		this.el.on(name, '.fc-event-container > *', function(ev) {
-			var seg = $(this).data('fc-seg'); // grab segment data. put there by View::renderEvents
+		$.each(
+			{
+				mouseenter: function(seg, ev) {
+					_this.triggerSegMouseover(seg, ev);
+				},
+				mouseleave: function(seg, ev) {
+					_this.triggerSegMouseout(seg, ev);
+				},
+				click: function(seg, ev) {
+					return view.trigger('eventClick', this, seg.event, ev); // can return `false` to cancel
+				},
+				mousedown: function(seg, ev) {
+					if ($(ev.target).is('.fc-resizer') && view.isEventResizable(seg.event)) {
+						_this.segResizeMousedown(seg, ev, $(ev.target).is('.fc-start-resizer'));
+					}
+					else if (view.isEventDraggable(seg.event)) {
+						_this.segDragMousedown(seg, ev);
+					}
+				}
+			},
+			function(name, func) {
+				// attach the handler to the container element and only listen for real event elements via bubbling
+				_this.el.on(name, '.fc-event-container > *', function(ev) {
+					var seg = $(this).data('fc-seg'); // grab segment data. put there by View::renderEvents
 
-			// only call the handlers if there is not a drag/resize in progress
-			if (seg && !_this.isDraggingSeg && !_this.isResizingSeg) {
-				return handler.call(_this, seg, ev); // context will be the Grid
+					// only call the handlers if there is not a drag/resize in progress
+					if (seg && !_this.isDraggingSeg && !_this.isResizingSeg) {
+						return func.call(this, seg, ev); // `this` will be the event element
+					}
+				});
 			}
-		});
-	},
-
-
-	handleSegClick: function(seg, ev) {
-		return this.view.trigger('eventClick', seg.el[0], seg.event, ev); // can return `false` to cancel
+		);
 	},
 
 
 	// Updates internal state and triggers handlers for when an event element is moused over
-	handleSegMouseover: function(seg, ev) {
-		if (
-			!this.isIgnoringMouse &&
-			!this.mousedOverSeg
-		) {
+	triggerSegMouseover: function(seg, ev) {
+		if (!this.mousedOverSeg) {
 			this.mousedOverSeg = seg;
-			seg.el.addClass('fc-allow-mouse-resize');
 			this.view.trigger('eventMouseover', seg.el[0], seg.event, ev);
 		}
 	},
@@ -4240,132 +3806,56 @@ Grid.mixin({
 
 	// Updates internal state and triggers handlers for when an event element is moused out.
 	// Can be given no arguments, in which case it will mouseout the segment that was previously moused over.
-	handleSegMouseout: function(seg, ev) {
+	triggerSegMouseout: function(seg, ev) {
 		ev = ev || {}; // if given no args, make a mock mouse event
 
 		if (this.mousedOverSeg) {
 			seg = seg || this.mousedOverSeg; // if given no args, use the currently moused-over segment
 			this.mousedOverSeg = null;
-			seg.el.removeClass('fc-allow-mouse-resize');
 			this.view.trigger('eventMouseout', seg.el[0], seg.event, ev);
 		}
 	},
-
-
-	handleSegMousedown: function(seg, ev) {
-		var isResizing = this.startSegResize(seg, ev, { distance: 5 });
-
-		if (!isResizing && this.view.isEventDraggable(seg.event)) {
-			this.buildSegDragListener(seg)
-				.startInteraction(ev, {
-					distance: 5
-				});
-		}
-	},
-
-
-	handleSegTouchStart: function(seg, ev) {
-		var view = this.view;
-		var event = seg.event;
-		var isSelected = view.isEventSelected(event);
-		var isDraggable = view.isEventDraggable(event);
-		var isResizable = view.isEventResizable(event);
-		var isResizing = false;
-		var dragListener;
-
-		if (isSelected && isResizable) {
-			// only allow resizing of the event is selected
-			isResizing = this.startSegResize(seg, ev);
-		}
-
-		if (!isResizing && (isDraggable || isResizable)) { // allowed to be selected?
-
-			dragListener = isDraggable ?
-				this.buildSegDragListener(seg) :
-				this.buildSegSelectListener(seg); // seg isn't draggable, but still needs to be selected
-
-			dragListener.startInteraction(ev, { // won't start if already started
-				delay: isSelected ? 0 : this.view.opt('longPressDelay') // do delay if not already selected
-			});
-		}
-
-		// a long tap simulates a mouseover. ignore this bogus mouseover.
-		this.tempIgnoreMouse();
-	},
-
-
-	handleSegTouchEnd: function(seg, ev) {
-		// touchstart+touchend = click, which simulates a mouseover.
-		// ignore this bogus mouseover.
-		this.tempIgnoreMouse();
-	},
-
-
-	// returns boolean whether resizing actually started or not.
-	// assumes the seg allows resizing.
-	// `dragOptions` are optional.
-	startSegResize: function(seg, ev, dragOptions) {
-		if ($(ev.target).is('.fc-resizer')) {
-			this.buildSegResizeListener(seg, $(ev.target).is('.fc-start-resizer'))
-				.startInteraction(ev, dragOptions);
-			return true;
-		}
-		return false;
-	},
-
 
 
 	/* Event Dragging
 	------------------------------------------------------------------------------------------------------------------*/
 
 
-	// Builds a listener that will track user-dragging on an event segment.
+	// Called when the user does a mousedown on an event, which might lead to dragging.
 	// Generic enough to work with any type of Grid.
-	// Has side effect of setting/unsetting `segDragListener`
-	buildSegDragListener: function(seg) {
+	segDragMousedown: function(seg, ev) {
 		var _this = this;
 		var view = this.view;
 		var calendar = view.calendar;
 		var el = seg.el;
 		var event = seg.event;
-		var isDragging;
-		var mouseFollower; // A clone of the original element that will move with the mouse
 		var dropLocation; // zoned event date properties
 
-		if (this.segDragListener) {
-			return this.segDragListener;
-		}
+		// A clone of the original element that will move with the mouse
+		var mouseFollower = new MouseFollower(seg.el, {
+			parentEl: view.el,
+			opacity: view.opt('dragOpacity'),
+			revertDuration: view.opt('dragRevertDuration'),
+			zIndex: 2 // one above the .fc-view
+		});
 
 		// Tracks mouse movement over the *view's* coordinate map. Allows dragging and dropping between subcomponents
 		// of the view.
-		var dragListener = this.segDragListener = new HitDragListener(view, {
+		var dragListener = new HitDragListener(view, {
+			distance: 5,
 			scroll: view.opt('dragScroll'),
 			subjectEl: el,
 			subjectCenter: true,
-			interactionStart: function(ev) {
-				isDragging = false;
-				mouseFollower = new MouseFollower(seg.el, {
-					additionalClass: 'fc-dragging',
-					parentEl: view.el,
-					opacity: dragListener.isTouch ? null : view.opt('dragOpacity'),
-					revertDuration: view.opt('dragRevertDuration'),
-					zIndex: 2 // one above the .fc-view
-				});
+			listenStart: function(ev) {
 				mouseFollower.hide(); // don't show until we know this is a real drag
 				mouseFollower.start(ev);
 			},
 			dragStart: function(ev) {
-				if (dragListener.isTouch && !view.isEventSelected(event)) {
-					// if not previously selected, will fire after a delay. then, select the event
-					view.selectEvent(event);
-				}
-				isDragging = true;
-				_this.handleSegMouseout(seg, ev); // ensure a mouseout on the manipulated event has been reported
+				_this.triggerSegMouseout(seg, ev); // ensure a mouseout on the manipulated event has been reported
 				_this.segDragStart(seg, ev);
 				view.hideEvent(event); // hide all event segments. our mouseFollower will take over
 			},
 			hitOver: function(hit, isOrig, origHit) {
-				var dragHelperEls;
 
 				// starting hit could be forced (DayGrid.limit)
 				if (seg.hit) {
@@ -4385,13 +3875,7 @@ Grid.mixin({
 				}
 
 				// if a valid drop location, have the subclass render a visual indication
-				if (dropLocation && (dragHelperEls = view.renderDrag(dropLocation, seg))) {
-
-					dragHelperEls.addClass('fc-dragging');
-					if (!dragListener.isTouch) {
-						_this.applyDragOpacity(dragHelperEls);
-					}
-
+				if (dropLocation && view.renderDrag(dropLocation, seg)) {
 					mouseFollower.hide(); // if the subclass is already using a mock event "helper", hide our own
 				}
 				else {
@@ -4407,54 +3891,27 @@ Grid.mixin({
 				mouseFollower.show(); // show in case we are moving out of all hits
 				dropLocation = null;
 			},
-			hitDone: function() { // Called after a hitOut OR before a dragEnd
+			hitDone: function() { // Called after a hitOut OR before a dragStop
 				enableCursor();
 			},
-			interactionEnd: function(ev) {
+			dragStop: function(ev) {
 				// do revert animation if hasn't changed. calls a callback when finished (whether animation or not)
 				mouseFollower.stop(!dropLocation, function() {
-					if (isDragging) {
-						view.unrenderDrag();
-						view.showEvent(event);
-						_this.segDragStop(seg, ev);
-					}
+					view.unrenderDrag();
+					view.showEvent(event);
+					_this.segDragStop(seg, ev);
+
 					if (dropLocation) {
 						view.reportEventDrop(event, dropLocation, this.largeUnit, el, ev);
 					}
 				});
-				_this.segDragListener = null;
-			}
-		});
-
-		return dragListener;
-	},
-
-
-	// seg isn't draggable, but let's use a generic DragListener
-	// simply for the delay, so it can be selected.
-	// Has side effect of setting/unsetting `segDragListener`
-	buildSegSelectListener: function(seg) {
-		var _this = this;
-		var view = this.view;
-		var event = seg.event;
-
-		if (this.segDragListener) {
-			return this.segDragListener;
-		}
-
-		var dragListener = this.segDragListener = new DragListener({
-			dragStart: function(ev) {
-				if (dragListener.isTouch && !view.isEventSelected(event)) {
-					// if not previously selected, will fire after a delay. then, select the event
-					view.selectEvent(event);
-				}
 			},
-			interactionEnd: function(ev) {
-				_this.segDragListener = null;
+			listenStop: function() {
+				mouseFollower.stop(); // put in listenStop in case there was a mousedown but the drag never started
 			}
 		});
 
-		return dragListener;
+		dragListener.mousedown(ev); // start listening, which will eventually lead to a dragStart
 	},
 
 
@@ -4570,8 +4027,8 @@ Grid.mixin({
 		var dropLocation; // a null value signals an unsuccessful drag
 
 		// listener that tracks mouse movement over date-associated pixel regions
-		var dragListener = _this.externalDragListener = new HitDragListener(this, {
-			interactionStart: function() {
+		var dragListener = new HitDragListener(this, {
+			listenStart: function() {
 				_this.isDraggingExternal = true;
 			},
 			hitOver: function(hit) {
@@ -4595,16 +4052,17 @@ Grid.mixin({
 			hitOut: function() {
 				dropLocation = null; // signal unsuccessful
 			},
-			hitDone: function() { // Called after a hitOut OR before a dragEnd
+			hitDone: function() { // Called after a hitOut OR before a dragStop
 				enableCursor();
 				_this.unrenderDrag();
 			},
-			interactionEnd: function(ev) {
+			dragStop: function() {
 				if (dropLocation) { // element was dropped on a valid hit
 					_this.view.reportExternalDrop(meta, dropLocation, el, ev, ui);
 				}
+			},
+			listenStop: function() {
 				_this.isDraggingExternal = false;
-				_this.externalDragListener = null;
 			}
 		});
 
@@ -4645,7 +4103,6 @@ Grid.mixin({
 	// `dropLocation` contains hypothetical start/end/allDay values the event would have if dropped. end can be null.
 	// `seg` is the internal segment object that is being dragged. If dragging an external element, `seg` is null.
 	// A truthy returned value indicates this method has rendered a helper element.
-	// Must return elements used for any mock events.
 	renderDrag: function(dropLocation, seg) {
 		// subclasses must implement
 	},
@@ -4661,28 +4118,24 @@ Grid.mixin({
 	------------------------------------------------------------------------------------------------------------------*/
 
 
-	// Creates a listener that tracks the user as they resize an event segment.
+	// Called when the user does a mousedown on an event's resizer, which might lead to resizing.
 	// Generic enough to work with any type of Grid.
-	buildSegResizeListener: function(seg, isStart) {
+	segResizeMousedown: function(seg, ev, isStart) {
 		var _this = this;
 		var view = this.view;
 		var calendar = view.calendar;
 		var el = seg.el;
 		var event = seg.event;
 		var eventEnd = calendar.getEventEnd(event);
-		var isDragging;
 		var resizeLocation; // zoned event date properties. falsy if invalid resize
 
 		// Tracks mouse movement over the *grid's* coordinate map
-		var dragListener = this.segResizeListener = new HitDragListener(this, {
+		var dragListener = new HitDragListener(this, {
+			distance: 5,
 			scroll: view.opt('dragScroll'),
 			subjectEl: el,
-			interactionStart: function() {
-				isDragging = false;
-			},
 			dragStart: function(ev) {
-				isDragging = true;
-				_this.handleSegMouseout(seg, ev); // ensure a mouseout on the manipulated event has been reported
+				_this.triggerSegMouseout(seg, ev); // ensure a mouseout on the manipulated event has been reported
 				_this.segResizeStart(seg, ev);
 			},
 			hitOver: function(hit, isOrig, origHit) {
@@ -4717,18 +4170,16 @@ Grid.mixin({
 				view.showEvent(event);
 				enableCursor();
 			},
-			interactionEnd: function(ev) {
-				if (isDragging) {
-					_this.segResizeStop(seg, ev);
-				}
+			dragStop: function(ev) {
+				_this.segResizeStop(seg, ev);
+
 				if (resizeLocation) { // valid date to resize to?
 					view.reportEventResize(event, resizeLocation, this.largeUnit, el, ev);
 				}
-				_this.segResizeListener = null;
 			}
 		});
 
-		return dragListener;
+		dragListener.mousedown(ev); // start listening, which will eventually lead to a dragStart
 	},
 
 
@@ -4805,7 +4256,6 @@ Grid.mixin({
 
 	// Renders a visual indication of an event being resized.
 	// `range` has the updated dates of the event. `seg` is the original segment object involved in the drag.
-	// Must return elements used for any mock events.
 	renderEventResize: function(range, seg) {
 		// subclasses must implement
 	},
@@ -4851,7 +4301,6 @@ Grid.mixin({
 
 	// Generic utility for generating the HTML classNames for an event segment's element
 	getSegClasses: function(seg, isDraggable, isResizable) {
-		var view = this.view;
 		var event = seg.event;
 		var classes = [
 			'fc-event',
@@ -4869,18 +4318,12 @@ Grid.mixin({
 			classes.push('fc-resizable');
 		}
 
-		// event is currently selected? attach a className.
-		if (view.isEventSelected(event)) {
-			classes.push('fc-selected');
-		}
-
 		return classes;
 	},
 
 
 	// Utility for generating event skin-related CSS properties
-	getSegSkinCss: function(seg) {
-		var event = seg.event;
+	getEventSkinCss: function(event) {
 		var view = this.view;
 		var source = event.source || {};
 		var eventColor = event.color;
@@ -5856,7 +5299,10 @@ var DayGrid = FC.DayGrid = Grid.extend(DayTableMixin, {
 		// if a segment from the same calendar but another component is being dragged, render a helper event
 		if (seg && !seg.el.closest(this.el).length) {
 
-			return this.renderEventLocationHelper(eventLocation, seg); // returns mock event elements
+			this.renderEventLocationHelper(eventLocation, seg);
+			this.applyDragOpacity(this.helperEls);
+
+			return true; // a helper has been rendered
 		}
 	},
 
@@ -5875,7 +5321,7 @@ var DayGrid = FC.DayGrid = Grid.extend(DayTableMixin, {
 	// Renders a visual indication of an event being resized
 	renderEventResize: function(eventLocation, seg) {
 		this.renderHighlight(this.eventToSpan(eventLocation));
-		return this.renderEventLocationHelper(eventLocation, seg); // returns mock event elements
+		this.renderEventLocationHelper(eventLocation, seg);
 	},
 
 
@@ -5921,9 +5367,7 @@ var DayGrid = FC.DayGrid = Grid.extend(DayTableMixin, {
 			helperNodes.push(skeletonEl[0]);
 		});
 
-		return ( // must return the elements rendered
-			this.helperEls = $(helperNodes) // array -> jQuery set
-		);
+		this.helperEls = $(helperNodes); // array -> jQuery set
 	},
 
 
@@ -6102,7 +5546,7 @@ DayGrid.mixin({
 		var isResizableFromEnd = !disableResizing && event.allDay &&
 			seg.isEnd && view.isEventResizableFromEnd(event);
 		var classes = this.getSegClasses(seg, isDraggable, isResizableFromStart || isResizableFromEnd);
-		var skinCss = cssToStr(this.getSegSkinCss(seg));
+		var skinCss = cssToStr(this.getEventSkinCss(event));
 		var timeHtml = '';
 		var timeText;
 		var titleHtml;
@@ -6709,7 +6153,6 @@ var TimeGrid = FC.TimeGrid = Grid.extend(DayTableMixin, {
 	labelInterval: null, // duration of how often a label should be displayed for a slot
 
 	colEls: null, // cells elements in the day-row background
-	slatContainerEl: null, // div that wraps all the slat rows
 	slatEls: null, // elements running horizontally across all columns
 	nowIndicatorEls: null,
 
@@ -6729,8 +6172,7 @@ var TimeGrid = FC.TimeGrid = Grid.extend(DayTableMixin, {
 	renderDates: function() {
 		this.el.html(this.renderHtml());
 		this.colEls = this.el.find('.fc-day');
-		this.slatContainerEl = this.el.find('.fc-slats');
-		this.slatEls = this.slatContainerEl.find('tr');
+		this.slatEls = this.el.find('.fc-slats tr');
 
 		this.colCoordCache = new CoordCache({
 			els: this.colEls,
@@ -7009,11 +6451,6 @@ var TimeGrid = FC.TimeGrid = Grid.extend(DayTableMixin, {
 	},
 
 
-	getTotalSlatHeight: function() {
-		return this.slatContainerEl.outerHeight();
-	},
-
-
 	// Computes the top coordinate, relative to the bounds of the grid, of the given date.
 	// A `startOfDayDate` must be given for avoiding ambiguity over how to treat midnight.
 	computeDateTop: function(date, startOfDayDate) {
@@ -7062,10 +6499,13 @@ var TimeGrid = FC.TimeGrid = Grid.extend(DayTableMixin, {
 	renderDrag: function(eventLocation, seg) {
 
 		if (seg) { // if there is event information for this drag, render a helper event
+			this.renderEventLocationHelper(eventLocation, seg);
 
-			// returns mock event elements
-			// signal that a helper has been rendered
-			return this.renderEventLocationHelper(eventLocation, seg);
+			for (var i = 0; i < this.helperSegs.length; i++) {
+				this.applyDragOpacity(this.helperSegs[i].el);
+			}
+
+			return true; // signal that a helper has been rendered
 		}
 		else {
 			// otherwise, just render a highlight
@@ -7087,7 +6527,7 @@ var TimeGrid = FC.TimeGrid = Grid.extend(DayTableMixin, {
 
 	// Renders a visual indication of an event being resized
 	renderEventResize: function(eventLocation, seg) {
-		return this.renderEventLocationHelper(eventLocation, seg); // returns mock event elements
+		this.renderEventLocationHelper(eventLocation, seg);
 	},
 
 
@@ -7103,7 +6543,7 @@ var TimeGrid = FC.TimeGrid = Grid.extend(DayTableMixin, {
 
 	// Renders a mock "helper" event. `sourceSeg` is the original segment object and might be null (an external drag)
 	renderHelper: function(event, sourceSeg) {
-		return this.renderHelperSegs(this.eventToSegs(event), sourceSeg); // returns mock event elements
+		this.renderHelperSegs(this.eventToSegs(event), sourceSeg);
 	},
 
 
@@ -7297,7 +6737,6 @@ TimeGrid.mixin({
 
 
 	renderHelperSegs: function(segs, sourceSeg) {
-		var helperEls = [];
 		var i, seg;
 		var sourceEl;
 
@@ -7315,12 +6754,9 @@ TimeGrid.mixin({
 					'margin-right': sourceEl.css('margin-right')
 				});
 			}
-			helperEls.push(seg.el[0]);
 		}
 
 		this.helperSegs = segs;
-
-		return $(helperEls); // must return rendered helpers
 	},
 
 
@@ -7466,7 +6902,7 @@ TimeGrid.mixin({
 		var isResizableFromStart = !disableResizing && seg.isStart && view.isEventResizableFromStart(event);
 		var isResizableFromEnd = !disableResizing && seg.isEnd && view.isEventResizableFromEnd(event);
 		var classes = this.getSegClasses(seg, isDraggable, isResizableFromStart || isResizableFromEnd);
-		var skinCss = cssToStr(this.getSegSkinCss(seg));
+		var skinCss = cssToStr(this.getEventSkinCss(event));
 		var timeText;
 		var fullTimeText; // more verbose time text. for the print stylesheet
 		var startTimeText; // just the start time text
@@ -7831,7 +7267,7 @@ function isSlotSegCollision(seg1, seg2) {
 /* An abstract class from which other views inherit from
 ----------------------------------------------------------------------------------------------------------------------*/
 
-var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
+var View = FC.View = Class.extend({
 
 	type: null, // subclass' view name (string)
 	name: null, // deprecated. use `type` instead
@@ -7858,9 +7294,12 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 
 	isRTL: false,
 	isSelected: false, // boolean whether a range of time is user-selected or not
-	selectedEvent: null,
 
 	eventOrderSpecs: null, // criteria for ordering events when they have same date/time
+
+	// subclasses can optionally use a scroll container
+	scrollerEl: null, // the element that will most likely scroll when content is too tall
+	scrollTop: null, // cached vertical scroll value
 
 	// classNames styled by jqui themes
 	widgetHeaderClass: null,
@@ -7871,12 +7310,12 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	nextDayThreshold: null,
 	isHiddenDayHash: null,
 
-	// now indicator
-	isNowIndicatorRendered: null,
-	initialNowDate: null, // result first getNow call
-	initialNowQueriedMs: null, // ms time the getNow was called
-	nowIndicatorTimeoutID: null, // for refresh timing of now indicator
-	nowIndicatorIntervalID: null, // "
+	// document handlers, bound to `this` object
+	documentMousedownProxy: null, // TODO: doesn't work with touch
+
+	// for refresh timing of now indicator
+	nowIndicatorTimeoutID: null,
+	nowIndicatorIntervalID: null,
 
 
 	constructor: function(calendar, type, options, intervalDuration) {
@@ -7892,6 +7331,8 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 		this.isRTL = this.opt('isRTL');
 
 		this.eventOrderSpecs = parseFieldSpecs(this.opt('eventOrder'));
+
+		this.documentMousedownProxy = proxy(this, 'documentMousedown');
 
 		this.initialize();
 	},
@@ -8144,6 +7585,22 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	},
 
 
+	// If the view has already been displayed, tears it down and displays it again.
+	// Will re-render the events if necessary, which display/clear DO NOT do.
+	// TODO: make behavior more consistent.
+	redisplay: function() {
+		if (this.isSkeletonRendered) {
+			var wasEventsRendered = this.isEventsRendered;
+			this.clearEvents(); // won't trigger handlers if events never rendered
+			this.clearView();
+			this.displayView();
+			if (wasEventsRendered) { // only render and trigger handlers if events previously rendered
+				this.displayEvents(this.calendar.getEventCache());
+			}
+		}
+	},
+
+
 	// Displays the view's non-event content, such as date-related content or anything required by events.
 	// Renders the view's non-content skeleton if necessary.
 	// Can be asynchronous and return a promise.
@@ -8161,7 +7618,10 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 		this.renderDates();
 		this.updateSize();
 		this.renderBusinessHours(); // might need coordinates, so should go after updateSize()
-		this.startNowIndicator();
+
+		if (this.opt('nowIndicator')) {
+			this.startNowIndicator();
+		}
 	},
 
 
@@ -8218,14 +7678,13 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 
 	// Binds DOM handlers to elements that reside outside the view container, such as the document
 	bindGlobalHandlers: function() {
-		this.listenTo($(document), 'mousedown', this.handleDocumentMousedown);
-		this.listenTo($(document), 'touchstart', this.processUnselect);
+		$(document).on('mousedown', this.documentMousedownProxy);
 	},
 
 
 	// Unbinds DOM handlers from elements that reside outside the view container
 	unbindGlobalHandlers: function() {
-		this.stopListeningTo($(document));
+		$(document).off('mousedown', this.documentMousedownProxy);
 	},
 
 
@@ -8264,42 +7723,34 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	// TODO: somehow do this for the current whole day's background too
 	startNowIndicator: function() {
 		var _this = this;
-		var unit;
-		var update;
+		var unit = this.getNowIndicatorUnit();
+		var initialNow; // result first getNow call
+		var initialNowQueried; // ms time of then getNow was called
 		var delay; // ms wait value
 
-		if (this.opt('nowIndicator')) {
-			unit = this.getNowIndicatorUnit();
-			if (unit) {
-				update = proxy(this, 'updateNowIndicator'); // bind to `this`
-
-				this.initialNowDate = this.calendar.getNow();
-				this.initialNowQueriedMs = +new Date();
-				this.renderNowIndicator(this.initialNowDate);
-				this.isNowIndicatorRendered = true;
-
-				// wait until the beginning of the next interval
-				delay = this.initialNowDate.clone().startOf(unit).add(1, unit) - this.initialNowDate;
-				this.nowIndicatorTimeoutID = setTimeout(function() {
-					_this.nowIndicatorTimeoutID = null;
-					update();
-					delay = +moment.duration(1, unit);
-					delay = Math.max(100, delay); // prevent too frequent
-					_this.nowIndicatorIntervalID = setInterval(update, delay); // update every interval
-				}, delay);
-			}
-		}
-	},
-
-
-	// rerenders the now indicator, computing the new current time from the amount of time that has passed
-	// since the initial getNow call.
-	updateNowIndicator: function() {
-		if (this.isNowIndicatorRendered) {
-			this.unrenderNowIndicator();
-			this.renderNowIndicator(
-				this.initialNowDate.clone().add(new Date() - this.initialNowQueriedMs) // add ms
+		// rerenders the now indicator, computing the new current time from the amount of time that has passed
+		// since the initial getNow call.
+		function update() {
+			_this.unrenderNowIndicator();
+			_this.renderNowIndicator(
+				initialNow.clone().add(new Date() - initialNowQueried) // add ms
 			);
+		}
+
+		if (unit) {
+			initialNow = this.calendar.getNow();
+			initialNowQueried = +new Date();
+			this.renderNowIndicator(initialNow);
+
+			// wait until the beginning of the next interval
+			delay = initialNow.clone().startOf(unit).add(1, unit) - initialNow;
+			this.nowIndicatorTimeoutID = setTimeout(function() {
+				this.nowIndicatorTimeoutID = null;
+				update();
+				delay = +moment.duration(1, unit);
+				delay = Math.max(100, delay); // prevent too frequent
+				this.nowIndicatorIntervalID = setInterval(update, delay); // update every interval
+			}, delay);
 		}
 	},
 
@@ -8307,19 +7758,19 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	// Immediately unrenders the view's current time indicator and stops any re-rendering timers.
 	// Won't cause side effects if indicator isn't rendered.
 	stopNowIndicator: function() {
-		if (this.isNowIndicatorRendered) {
+		var cleared = false;
 
-			if (this.nowIndicatorTimeoutID) {
-				clearTimeout(this.nowIndicatorTimeoutID);
-				this.nowIndicatorTimeoutID = null;
-			}
-			if (this.nowIndicatorIntervalID) {
-				clearTimeout(this.nowIndicatorIntervalID);
-				this.nowIndicatorIntervalID = null;
-			}
+		if (this.nowIndicatorTimeoutID) {
+			clearTimeout(this.nowIndicatorTimeoutID);
+			cleared = true;
+		}
+		if (this.nowIndicatorIntervalID) {
+			clearTimeout(this.nowIndicatorIntervalID);
+			cleared = true;
+		}
 
+		if (cleared) { // is the indicator currently display?
 			this.unrenderNowIndicator();
-			this.isNowIndicatorRendered = false;
 		}
 	},
 
@@ -8357,7 +7808,6 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 
 		this.updateHeight(isResize);
 		this.updateWidth(isResize);
-		this.updateNowIndicator();
 
 		if (isResize) {
 			this.setScroll(scrollState);
@@ -8393,6 +7843,27 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	------------------------------------------------------------------------------------------------------------------*/
 
 
+	// Given the total height of the view, return the number of pixels that should be used for the scroller.
+	// Utility for subclasses.
+	computeScrollerHeight: function(totalHeight) {
+		var scrollerEl = this.scrollerEl;
+		var both;
+		var otherHeight; // cumulative height of everything that is not the scrollerEl in the view (header+borders)
+
+		both = this.el.add(scrollerEl);
+
+		// fuckin IE8/9/10/11 sometimes returns 0 for dimensions. this weird hack was the only thing that worked
+		both.css({
+			position: 'relative', // cause a reflow, which will force fresh dimension recalculation
+			left: -1 // ensure reflow in case the el was already relative. negative is less likely to cause new scroll
+		});
+		otherHeight = this.el.outerHeight() - scrollerEl.height(); // grab the dimensions
+		both.css({ position: '', left: '' }); // undo hack
+
+		return totalHeight - otherHeight;
+	},
+
+
 	// Computes the initial pre-configured scroll state prior to allowing the user to change it.
 	// Given the scroll state from the previous rendering. If first time rendering, given null.
 	computeInitialScroll: function(previousScrollState) {
@@ -8402,13 +7873,17 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 
 	// Retrieves the view's current natural scroll state. Can return an arbitrary format.
 	queryScroll: function() {
-		// subclasses must implement
+		if (this.scrollerEl) {
+			return this.scrollerEl.scrollTop(); // operates on scrollerEl by default
+		}
 	},
 
 
 	// Sets the view's scroll state. Will accept the same format computeInitialScroll and queryScroll produce.
 	setScroll: function(scrollState) {
-		// subclasses must implement
+		if (this.scrollerEl) {
+			return this.scrollerEl.scrollTop(scrollState); // operates on scrollerEl by default
+		}
 	},
 
 
@@ -8623,8 +8098,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 
 
 	// Renders a visual indication of a event or external-element drag over the given drop zone.
-	// If an external-element, seg will be `null`.
-	// Must return elements used for any mock events.
+	// If an external-element, seg will be `null`
 	renderDrag: function(dropLocation, seg) {
 		// subclasses must implement
 	},
@@ -8687,7 +8161,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	},
 
 
-	/* Selection (time range)
+	/* Selection
 	------------------------------------------------------------------------------------------------------------------*/
 
 
@@ -8745,75 +8219,17 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	},
 
 
-	/* Event Selection
-	------------------------------------------------------------------------------------------------------------------*/
-
-
-	selectEvent: function(event) {
-		if (!this.selectedEvent || this.selectedEvent !== event) {
-			this.unselectEvent();
-			this.renderedEventSegEach(function(seg) {
-				seg.el.addClass('fc-selected');
-			}, event);
-			this.selectedEvent = event;
-		}
-	},
-
-
-	unselectEvent: function() {
-		if (this.selectedEvent) {
-			this.renderedEventSegEach(function(seg) {
-				seg.el.removeClass('fc-selected');
-			}, this.selectedEvent);
-			this.selectedEvent = null;
-		}
-	},
-
-
-	isEventSelected: function(event) {
-		// event references might change on refetchEvents(), while selectedEvent doesn't,
-		// so compare IDs
-		return this.selectedEvent && this.selectedEvent._id === event._id;
-	},
-
-
-	/* Mouse / Touch Unselecting (time range & event unselection)
-	------------------------------------------------------------------------------------------------------------------*/
-	// TODO: move consistently to down/start or up/end?
-	// TODO: don't kill previous selection if touch scrolling
-
-
-	handleDocumentMousedown: function(ev) {
-		if (isPrimaryMouseButton(ev)) {
-			this.processUnselect(ev);
-		}
-	},
-
-
-	processUnselect: function(ev) {
-		this.processRangeUnselect(ev);
-		this.processEventUnselect(ev);
-	},
-
-
-	processRangeUnselect: function(ev) {
+	// Handler for unselecting when the user clicks something and the 'unselectAuto' setting is on
+	documentMousedown: function(ev) {
 		var ignore;
 
-		// is there a time-range selection?
-		if (this.isSelected && this.opt('unselectAuto')) {
+		// is there a selection, and has the user made a proper left click?
+		if (this.isSelected && this.opt('unselectAuto') && isPrimaryMouseButton(ev)) {
+
 			// only unselect if the clicked element is not identical to or inside of an 'unselectCancel' element
 			ignore = this.opt('unselectCancel');
 			if (!ignore || !$(ev.target).closest(ignore).length) {
 				this.unselect(ev);
-			}
-		}
-	},
-
-
-	processEventUnselect: function(ev) {
-		if (this.selectedEvent) {
-			if (!$(ev.target).closest('.fc-selected').length) {
-				this.unselectEvent();
 			}
 		}
 	},
@@ -8927,127 +8343,6 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 		var range = this.computeDayRange(event); // event is range-ish
 
 		return range.end.diff(range.start, 'days') > 1;
-	}
-
-});
-
-;;
-
-/*
-Embodies a div that has potential scrollbars
-*/
-var Scroller = FC.Scroller = Class.extend({
-
-	el: null, // the guaranteed outer element
-	scrollEl: null, // the element with the scrollbars
-	overflowX: null,
-	overflowY: null,
-
-
-	constructor: function(options) {
-		options = options || {};
-		this.overflowX = options.overflowX || options.overflow || 'auto';
-		this.overflowY = options.overflowY || options.overflow || 'auto';
-	},
-
-
-	render: function() {
-		this.el = this.renderEl();
-		this.applyOverflow();
-	},
-
-
-	renderEl: function() {
-		return (this.scrollEl = $('<div class="fc-scroller"></div>'));
-	},
-
-
-	// sets to natural height, unlocks overflow
-	clear: function() {
-		this.setHeight('auto');
-		this.applyOverflow();
-	},
-
-
-	destroy: function() {
-		this.el.remove();
-	},
-
-
-	// Overflow
-	// -----------------------------------------------------------------------------------------------------------------
-
-
-	applyOverflow: function() {
-		this.scrollEl.css({
-			'overflow-x': this.overflowX,
-			'overflow-y': this.overflowY
-		});
-	},
-
-
-	// Causes any 'auto' overflow values to resolves to 'scroll' or 'hidden'.
-	// Useful for preserving scrollbar widths regardless of future resizes.
-	// Can pass in scrollbarWidths for optimization.
-	lockOverflow: function(scrollbarWidths) {
-		var overflowX = this.overflowX;
-		var overflowY = this.overflowY;
-
-		scrollbarWidths = scrollbarWidths || this.getScrollbarWidths();
-
-		if (overflowX === 'auto') {
-			overflowX = (
-					scrollbarWidths.top || scrollbarWidths.bottom || // horizontal scrollbars?
-					// OR scrolling pane with massless scrollbars?
-					this.scrollEl[0].scrollWidth - 1 > this.scrollEl[0].clientWidth
-						// subtract 1 because of IE off-by-one issue
-				) ? 'scroll' : 'hidden';
-		}
-
-		if (overflowY === 'auto') {
-			overflowY = (
-					scrollbarWidths.left || scrollbarWidths.right || // vertical scrollbars?
-					// OR scrolling pane with massless scrollbars?
-					this.scrollEl[0].scrollHeight - 1 > this.scrollEl[0].clientHeight
-						// subtract 1 because of IE off-by-one issue
-				) ? 'scroll' : 'hidden';
-		}
-
-		this.scrollEl.css({ 'overflow-x': overflowX, 'overflow-y': overflowY });
-	},
-
-
-	// Getters / Setters
-	// -----------------------------------------------------------------------------------------------------------------
-
-
-	setHeight: function(height) {
-		this.scrollEl.height(height);
-	},
-
-
-	getScrollTop: function() {
-		return this.scrollEl.scrollTop();
-	},
-
-
-	setScrollTop: function(top) {
-		this.scrollEl.scrollTop(top);
-	},
-
-
-	getClientWidth: function() {
-		return this.scrollEl[0].clientWidth;
-	},
-
-
-	getClientHeight: function() {
-		return this.scrollEl[0].clientHeight;
-	},
-
-
-	getScrollbarWidths: function() {
-		return getScrollbarWidths(this.scrollEl);
 	}
 
 });
@@ -9308,7 +8603,7 @@ var Calendar = FC.Calendar = Class.extend({
 });
 
 
-Calendar.mixin(EmitterMixin);
+Calendar.mixin(Emitter);
 
 
 function Calendar_constructor(element, overrides) {
@@ -10069,9 +9364,7 @@ Calendar.defaults = {
 	dayPopoverFormat: 'LL',
 	
 	handleWindowResize: true,
-	windowResizeDelay: 200, // milliseconds before an updateSize happens
-
-	longPressDelay: 1000
+	windowResizeDelay: 200 // milliseconds before an updateSize happens
 	
 };
 
@@ -11639,8 +10932,6 @@ function backupEventDates(event) {
 
 var BasicView = FC.BasicView = View.extend({
 
-	scroller: null,
-
 	dayGridClass: DayGrid, // class the dayGrid will be instantiated from (overridable by subclasses)
 	dayGrid: null, // the main subcomponent that does most of the heavy lifting
 
@@ -11655,11 +10946,6 @@ var BasicView = FC.BasicView = View.extend({
 
 	initialize: function() {
 		this.dayGrid = this.instantiateDayGrid();
-
-		this.scroller = new Scroller({
-			overflowX: 'hidden',
-			overflowY: 'auto'
-		});
 	},
 
 
@@ -11712,12 +10998,9 @@ var BasicView = FC.BasicView = View.extend({
 		this.el.addClass('fc-basic-view').html(this.renderSkeletonHtml());
 		this.renderHead();
 
-		this.scroller.render();
-		var dayGridContainerEl = this.scroller.el.addClass('fc-day-grid-container');
-		var dayGridEl = $('<div class="fc-day-grid" />').appendTo(dayGridContainerEl);
-		this.el.find('.fc-body > tr > td').append(dayGridContainerEl);
+		this.scrollerEl = this.el.find('.fc-day-grid-container');
 
-		this.dayGrid.setElement(dayGridEl);
+		this.dayGrid.setElement(this.el.find('.fc-day-grid'));
 		this.dayGrid.renderDates(this.hasRigidRows());
 	},
 
@@ -11736,7 +11019,6 @@ var BasicView = FC.BasicView = View.extend({
 	unrenderDates: function() {
 		this.dayGrid.unrenderDates();
 		this.dayGrid.removeElement();
-		this.scroller.destroy();
 	},
 
 
@@ -11757,7 +11039,11 @@ var BasicView = FC.BasicView = View.extend({
 				'</thead>' +
 				'<tbody class="fc-body">' +
 					'<tr>' +
-						'<td class="' + this.widgetContentClass + '"></td>' +
+						'<td class="' + this.widgetContentClass + '">' +
+							'<div class="fc-day-grid-container">' +
+								'<div class="fc-day-grid"/>' +
+							'</div>' +
+						'</td>' +
 					'</tr>' +
 				'</tbody>' +
 			'</table>';
@@ -11800,10 +11086,9 @@ var BasicView = FC.BasicView = View.extend({
 	setHeight: function(totalHeight, isAuto) {
 		var eventLimit = this.opt('eventLimit');
 		var scrollerHeight;
-		var scrollbarWidths;
 
 		// reset all heights to be natural
-		this.scroller.clear();
+		unsetScroller(this.scrollerEl);
 		uncompensateScroll(this.headRowEl);
 
 		this.dayGrid.removeSegPopover(); // kill the "more" popover if displayed
@@ -11813,8 +11098,6 @@ var BasicView = FC.BasicView = View.extend({
 			this.dayGrid.limitRows(eventLimit); // limit the levels first so the height can redistribute after
 		}
 
-		// distribute the height to the rows
-		// (totalHeight is a "recommended" value if isAuto)
 		scrollerHeight = this.computeScrollerHeight(totalHeight);
 		this.setGridHeight(scrollerHeight, isAuto);
 
@@ -11823,30 +11106,14 @@ var BasicView = FC.BasicView = View.extend({
 			this.dayGrid.limitRows(eventLimit); // limit the levels after the grid's row heights have been set
 		}
 
-		if (!isAuto) { // should we force dimensions of the scroll container?
+		if (!isAuto && setPotentialScroller(this.scrollerEl, scrollerHeight)) { // using scrollbars?
 
-			this.scroller.setHeight(scrollerHeight);
-			scrollbarWidths = this.scroller.getScrollbarWidths();
+			compensateScroll(this.headRowEl, getScrollbarWidths(this.scrollerEl));
 
-			if (scrollbarWidths.left || scrollbarWidths.right) { // using scrollbars?
-
-				compensateScroll(this.headRowEl, scrollbarWidths);
-
-				// doing the scrollbar compensation might have created text overflow which created more height. redo
-				scrollerHeight = this.computeScrollerHeight(totalHeight);
-				this.scroller.setHeight(scrollerHeight);
-			}
-
-			// guarantees the same scrollbar widths
-			this.scroller.lockOverflow(scrollbarWidths);
+			// doing the scrollbar compensation might have created text overflow which created more height. redo
+			scrollerHeight = this.computeScrollerHeight(totalHeight);
+			this.scrollerEl.height(scrollerHeight);
 		}
-	},
-
-
-	// given a desired total height of the view, returns what the height of the scroller should be
-	computeScrollerHeight: function(totalHeight) {
-		return totalHeight -
-			subtractInnerElHeight(this.el, this.scroller.el); // everything that's NOT the scroller
 	},
 
 
@@ -11858,20 +11125,6 @@ var BasicView = FC.BasicView = View.extend({
 		else {
 			distributeHeight(this.dayGrid.rowEls, height, true); // true = compensate for height-hogging rows
 		}
-	},
-
-
-	/* Scroll
-	------------------------------------------------------------------------------------------------------------------*/
-
-
-	queryScroll: function() {
-		return this.scroller.getScrollTop();
-	},
-
-
-	setScroll: function(top) {
-		this.scroller.setScrollTop(top);
 	},
 
 
@@ -12110,8 +11363,6 @@ fcViews.month = {
 
 var AgendaView = FC.AgendaView = View.extend({
 
-	scroller: null,
-
 	timeGridClass: TimeGrid, // class used to instantiate the timeGrid. subclasses can override
 	timeGrid: null, // the main time-grid subcomponent of this view
 
@@ -12121,10 +11372,11 @@ var AgendaView = FC.AgendaView = View.extend({
 	axisWidth: null, // the width of the time axis running down the side
 
 	headContainerEl: null, // div that hold's the timeGrid's rendered date header
-	noScrollRowEls: null, // set of fake row elements that must compensate when scroller has scrollbars
+	noScrollRowEls: null, // set of fake row elements that must compensate when scrollerEl has scrollbars
 
 	// when the time-grid isn't tall enough to occupy the given height, we render an <hr> underneath
 	bottomRuleEl: null,
+	bottomRuleHeight: null,
 
 
 	initialize: function() {
@@ -12133,11 +11385,6 @@ var AgendaView = FC.AgendaView = View.extend({
 		if (this.opt('allDaySlot')) { // should we display the "all-day" area?
 			this.dayGrid = this.instantiateDayGrid(); // the all-day subcomponent of this view
 		}
-
-		this.scroller = new Scroller({
-			overflowX: 'hidden',
-			overflowY: 'auto'
-		});
 	},
 
 
@@ -12178,12 +11425,10 @@ var AgendaView = FC.AgendaView = View.extend({
 		this.el.addClass('fc-agenda-view').html(this.renderSkeletonHtml());
 		this.renderHead();
 
-		this.scroller.render();
-		var timeGridWrapEl = this.scroller.el.addClass('fc-time-grid-container');
-		var timeGridEl = $('<div class="fc-time-grid" />').appendTo(timeGridWrapEl);
-		this.el.find('.fc-body > tr > td').append(timeGridWrapEl);
+		// the element that wraps the time-grid that will probably scroll
+		this.scrollerEl = this.el.find('.fc-time-grid-container');
 
-		this.timeGrid.setElement(timeGridEl);
+		this.timeGrid.setElement(this.el.find('.fc-time-grid'));
 		this.timeGrid.renderDates();
 
 		// the <hr> that sometimes displays under the time-grid
@@ -12220,8 +11465,6 @@ var AgendaView = FC.AgendaView = View.extend({
 			this.dayGrid.unrenderDates();
 			this.dayGrid.removeElement();
 		}
-
-		this.scroller.destroy();
 	},
 
 
@@ -12243,6 +11486,9 @@ var AgendaView = FC.AgendaView = View.extend({
 								'<hr class="fc-divider ' + this.widgetHeaderClass + '"/>' :
 								''
 								) +
+							'<div class="fc-time-grid-container">' +
+								'<div class="fc-time-grid"/>' +
+							'</div>' +
 						'</td>' +
 					'</tr>' +
 				'</tbody>' +
@@ -12322,11 +11568,16 @@ var AgendaView = FC.AgendaView = View.extend({
 	setHeight: function(totalHeight, isAuto) {
 		var eventLimit;
 		var scrollerHeight;
-		var scrollbarWidths;
+
+		if (this.bottomRuleHeight === null) {
+			// calculate the height of the rule the very first time
+			this.bottomRuleHeight = this.bottomRuleEl.outerHeight();
+		}
+		this.bottomRuleEl.hide(); // .show() will be called later if this <hr> is necessary
 
 		// reset all dimensions back to the original state
-		this.bottomRuleEl.hide(); // .show() will be called later if this <hr> is necessary
-		this.scroller.clear(); // sets height to 'auto' and clears overflow
+		this.scrollerEl.css('overflow', '');
+		unsetScroller(this.scrollerEl);
 		uncompensateScroll(this.noScrollRowEls);
 
 		// limit number of events in the all-day area
@@ -12342,44 +11593,26 @@ var AgendaView = FC.AgendaView = View.extend({
 			}
 		}
 
-		if (!isAuto) { // should we force dimensions of the scroll container?
+		if (!isAuto) { // should we force dimensions of the scroll container, or let the contents be natural height?
 
 			scrollerHeight = this.computeScrollerHeight(totalHeight);
-			this.scroller.setHeight(scrollerHeight);
-			scrollbarWidths = this.scroller.getScrollbarWidths();
-
-			if (scrollbarWidths.left || scrollbarWidths.right) { // using scrollbars?
+			if (setPotentialScroller(this.scrollerEl, scrollerHeight)) { // using scrollbars?
 
 				// make the all-day and header rows lines up
-				compensateScroll(this.noScrollRowEls, scrollbarWidths);
+				compensateScroll(this.noScrollRowEls, getScrollbarWidths(this.scrollerEl));
 
 				// the scrollbar compensation might have changed text flow, which might affect height, so recalculate
 				// and reapply the desired height to the scroller.
 				scrollerHeight = this.computeScrollerHeight(totalHeight);
-				this.scroller.setHeight(scrollerHeight);
+				this.scrollerEl.height(scrollerHeight);
 			}
-
-			// guarantees the same scrollbar widths
-			this.scroller.lockOverflow(scrollbarWidths);
-
-			// if there's any space below the slats, show the horizontal rule.
-			// this won't cause any new overflow, because lockOverflow already called.
-			if (this.timeGrid.getTotalSlatHeight() < scrollerHeight) {
+			else { // no scrollbars
+				// still, force a height and display the bottom rule (marks the end of day)
+				this.scrollerEl.height(scrollerHeight).css('overflow', 'hidden'); // in case <hr> goes outside
 				this.bottomRuleEl.show();
 			}
 		}
 	},
-
-
-	// given a desired total height of the view, returns what the height of the scroller should be
-	computeScrollerHeight: function(totalHeight) {
-		return totalHeight -
-			subtractInnerElHeight(this.el, this.scroller.el); // everything that's NOT the scroller
-	},
-
-
-	/* Scroll
-	------------------------------------------------------------------------------------------------------------------*/
 
 
 	// Computes the initial pre-configured scroll state prior to allowing the user to change it
@@ -12395,16 +11628,6 @@ var AgendaView = FC.AgendaView = View.extend({
 		}
 
 		return top;
-	},
-
-
-	queryScroll: function() {
-		return this.scroller.getScrollTop();
-	},
-
-
-	setScroll: function(top) {
-		this.scroller.setScrollTop(top);
 	},
 
 
