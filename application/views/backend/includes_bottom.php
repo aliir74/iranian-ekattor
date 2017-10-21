@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="assets/js/select2/select2.css">
 	<link rel="stylesheet" href="assets/js/selectboxit/jquery.selectBoxIt.css">
     <!--Manual-->
-    <link rel="stylesheet" href="assets/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="assets/css/bootstrap-datepicker.min.css">
 
    	<!-- Bottom Scripts -->
 	<script src="assets/js/gsap/main-gsap.js"></script>
