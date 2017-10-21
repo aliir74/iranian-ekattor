@@ -25,6 +25,9 @@
     <!---->
 	<script src="assets/js/fullcalendar/fullcalendar.min.js"></script>
     <script src="assets/js/bootstrap-datepicker.js"></script>
+    <!-- manual datepicker-->
+    <script src="assets/js/bootstrap-datepicker.fa.js"></script>
+    <!---->
     <script src="assets/js/fileinput.js"></script>
     
     <script src="assets/js/jquery.dataTables.min.js"></script>
