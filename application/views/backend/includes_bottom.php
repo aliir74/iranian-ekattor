@@ -29,7 +29,7 @@
     
     <script src="assets/js/jquery.dataTables.min.js"></script>
 	<script src="assets/js/datatables/TableTools.min.js"></script>
-	<script src="assets/js/dataTables.bootstrap.js"></script>
+	<script src="assets/js/dataTables.bootstrap.js"></script>p
 	<script src="assets/js/datatables/jquery.dataTables.columnFilter.js"></script>
 	<script src="assets/js/datatables/lodash.min.js"></script>
 	<script src="assets/js/datatables/responsive/js/datatables.responsive.js"></script>
