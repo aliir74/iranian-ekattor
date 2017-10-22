@@ -39,8 +39,8 @@
         </li>
 
         <!-- STUDENT -->
-        <!--
-        <li class="<?php
+
+        <!--<li class="<?php
 /*        if ($page_name == 'student_add' ||
                 $page_name == 'student_information' ||
                 $page_name == 'student_marksheet')
@@ -50,16 +50,16 @@
                 <i class="fa fa-group"></i>
                 <span><?php /*echo get_phrase('student'); */?></span>
             </a>
-            <ul>
+            <ul>-->
                 <!-- STUDENT ADMISSION -->
-                <li class="<?php /*if ($page_name == 'student_add') echo 'active'; */?> ">
+                <!--<li class="<?php /*if ($page_name == 'student_add') echo 'active'; */?> ">
                     <a href="<?php /*echo base_url(); */?>index.php?<?php /*echo $account_type; */?>/student_add">
                         <span><i class="entypo-dot"></i> <?php /*echo get_phrase('admit_student'); */?></span>
                     </a>
                 </li>
-
+-->
                 <!-- STUDENT INFORMATION -->
-                <li class="<?php /*if ($page_name == 'student_information' || $page_name == 'student_marksheet' || $page_name == 'student_profile') echo 'opened active'; */?> ">
+   <!--             <li class="<?php /*if ($page_name == 'student_information' || $page_name == 'student_marksheet' || $page_name == 'student_profile') echo 'opened active'; */?> ">
                     <a href="#">
                         <span><i class="entypo-dot"></i> <?php /*echo get_phrase('student_information'); */?></span>
                     </a>
@@ -77,8 +77,8 @@
                 </li>
 
             </ul>
-        </li>-->
-
+        </li>
+-->
         <!-- TEACHER -->
         <!--
         <li class="<?php /*if ($page_name == 'teacher') echo 'active'; */?> ">
