@@ -1,5 +1,6 @@
 <?php
-  $school_title = $this->frontend_model->get_frontend_general_settings('school_title');
+  //$school_title = $this->frontend_model->get_frontend_general_settings('school_title');
+  $school_title = 'دبیرستان دوره اول علامه حلی ۲ تهران'
   $theme = $this->frontend_model->get_frontend_general_settings('theme');
 ?>
 <!doctype html>
