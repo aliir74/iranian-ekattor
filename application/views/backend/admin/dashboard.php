@@ -90,17 +90,6 @@
 
 </div>
 
-
-
-<!--<link rel='stylesheet' href='assets/js/fullcalendar/lib/cupertino/jquery-ui.min.css' />-->
-<link href='assets/js/fullcalendar/dist/fullcalendar.css' rel='stylesheet' />
-<link href='assets/js/fullcalendar/dist/fullcalendar.print.css' rel='stylesheet' media='print' />
-<!--<script src='/school/assets/js/fullcalendar/lib/jquery.min.js'></script>
-<script src='/school/assets/js/fullcalendar/lib/moment.min.js'></script>
-<script src="/school/assets/js/fullcalendar/lib/moment-jalaali.js"></script>
-<script src='/school/assets/js/fullcalendar/fullcalendar.min.js'></script>
-<script src="/school/assets/js/fullcalendar/lang/fa.js"></script>-->
-<!--<script src='/school/assets/js/fullcalendar/lang-all.js'></script>-->
 <script>
     $(document).ready(function() {
         function renderCalendar() {

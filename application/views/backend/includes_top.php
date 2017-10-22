@@ -8,6 +8,10 @@
 
 <link rel="stylesheet" href="assets/css/custom.css">
 
+<!--Manual-->
+<link href='assets/js/fullcalendar/dist/fullcalendar.css' rel='stylesheet' />
+<link href='assets/js/fullcalendar/dist/fullcalendar.print.css' rel='stylesheet' media='print' />
+
 <?php
     $skin_colour = $this->db->get_where('settings' , array(
         'type' => 'skin_colour'

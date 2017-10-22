@@ -82,11 +82,6 @@
 	
 </div>
 
-
-<link href='assets/js/fullcalendar/dist/fullcalendar.css' rel='stylesheet' />
-<link href='assets/js/fullcalendar/dist/fullcalendar.print.css' rel='stylesheet' media='print' />
-
-
     <script>
   $(document).ready(function() {
 	  
