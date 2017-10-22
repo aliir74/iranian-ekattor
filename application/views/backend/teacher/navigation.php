@@ -39,52 +39,54 @@
         </li>
 
         <!-- STUDENT -->
+        <!--
         <li class="<?php
-        if ($page_name == 'student_add' ||
+/*        if ($page_name == 'student_add' ||
                 $page_name == 'student_information' ||
                 $page_name == 'student_marksheet')
             echo 'opened active has-sub';
-        ?> ">
+        */?> ">
             <a href="#">
                 <i class="fa fa-group"></i>
-                <span><?php echo get_phrase('student'); ?></span>
+                <span><?php /*echo get_phrase('student'); */?></span>
             </a>
             <ul>
                 <!-- STUDENT ADMISSION -->
-                <li class="<?php if ($page_name == 'student_add') echo 'active'; ?> ">
-                    <a href="<?php echo base_url(); ?>index.php?<?php echo $account_type; ?>/student_add">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('admit_student'); ?></span>
+                <li class="<?php /*if ($page_name == 'student_add') echo 'active'; */?> ">
+                    <a href="<?php /*echo base_url(); */?>index.php?<?php /*echo $account_type; */?>/student_add">
+                        <span><i class="entypo-dot"></i> <?php /*echo get_phrase('admit_student'); */?></span>
                     </a>
                 </li>
 
                 <!-- STUDENT INFORMATION -->
-                <li class="<?php if ($page_name == 'student_information' || $page_name == 'student_marksheet' || $page_name == 'student_profile') echo 'opened active'; ?> ">
+                <li class="<?php /*if ($page_name == 'student_information' || $page_name == 'student_marksheet' || $page_name == 'student_profile') echo 'opened active'; */?> ">
                     <a href="#">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('student_information'); ?></span>
+                        <span><i class="entypo-dot"></i> <?php /*echo get_phrase('student_information'); */?></span>
                     </a>
                     <ul>
-                        <?php $classes = $this->db->get('class')->result_array();
+                        <?php /*$classes = $this->db->get('class')->result_array();
                             foreach ($classes as $row):
-                        ?>
-                            <li class="<?php if ($page_name == 'student_information' && $class_id == $row['class_id']) echo 'active'; ?>">
-                                <a href="<?php echo base_url(); ?>index.php?<?php echo $account_type; ?>/student_information/<?php echo $row['class_id']; ?>">
-                                    <span><?php echo get_phrase('class'); ?> <?php echo $row['name']; ?></span>
+                        */?>
+                            <li class="<?php /*if ($page_name == 'student_information' && $class_id == $row['class_id']) echo 'active'; */?>">
+                                <a href="<?php /*echo base_url(); */?>index.php?<?php /*echo $account_type; */?>/student_information/<?php /*echo $row['class_id']; */?>">
+                                    <span><?php /*echo get_phrase('class'); */?> <?php /*echo $row['name']; */?></span>
                                 </a>
                             </li>
-                        <?php endforeach; ?>
+                        <?php /*endforeach; */?>
                     </ul>
                 </li>
 
             </ul>
-        </li>
+        </li>-->
 
         <!-- TEACHER -->
-        <li class="<?php if ($page_name == 'teacher') echo 'active'; ?> ">
-            <a href="<?php echo base_url(); ?>index.php?<?php echo $account_type; ?>/teacher_list">
+        <!--
+        <li class="<?php /*if ($page_name == 'teacher') echo 'active'; */?> ">
+            <a href="<?php /*echo base_url(); */?>index.php?<?php /*echo $account_type; */?>/teacher_list">
                 <i class="entypo-users"></i>
-                <span><?php echo get_phrase('teacher'); ?></span>
+                <span><?php /*echo get_phrase('teacher'); */?></span>
             </a>
-        </li>
+        </li>-->
 
 
 
