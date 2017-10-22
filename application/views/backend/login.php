@@ -1,7 +1,8 @@
 <!doctype html>
 <?php
 //$system_title = $this->db->get_where('settings', array('type' => 'system_title'))->row()->description;
-$system_name  = $this->db->get_where('settings', array('type' => 'system_name'))->row()->description;
+//$system_name  = $this->db->get_where('settings', array('type' => 'system_name'))->row()->description;
+$system_name = "دبیرستان دوره اول علامه حلی ۲ تهران"
 ?>
 
 <html class="no-js" lang="">
