@@ -103,7 +103,7 @@
               isJalaali: true,
               lang: 'fa',
               editable: false,
-              firstDay: 0,
+              //firstDay: 0,
               height: 530,
               droppable: false,
               isRTL: true,
