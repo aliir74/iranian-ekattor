@@ -101,13 +101,17 @@
               //defaultView: 'basicWeek',
               isRTL: true,
               isJalaali: true,
-              // defaultDate: '2016-05-12',
               lang: 'fa',
               editable: false,
               firstDay: 0,
               height: 530,
               droppable: false,
-
+              isRTL: true,
+              isJalaali: true,
+              // defaultDate: '2016-05-12',
+              lang: 'fa',
+              buttonIcons: false, // show the prev/next text
+              weekNumbers: true,
               events: [
                   <?php
                   $notices = $this->db->get('noticeboard')->result_array();
