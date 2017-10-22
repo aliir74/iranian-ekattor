@@ -7,7 +7,8 @@
                        <div class="col">
                            <div class="form-head clearfix">
                                 <div class="school-info pull-left w-50">
-                                    <h2><?php echo $school_title; ?></h2>
+                                    <!--<h2><?php /*echo $school_title; */?></h2>-->
+                                    <h2>دبیرستان دوره اول علامه حلی ۲ تهران</h2>
                                     <p><?php echo $this->frontend_model->get_frontend_general_settings('address'); ?></p>
                                     <p><?php echo $this->frontend_model->get_frontend_general_settings('phone'); ?></p>
                                     <h3 class=""><?php echo get_phrase('admission_form'); ?></h3>

@@ -9,7 +9,8 @@ $header_logo = $this->frontend_model->get_frontend_general_settings('header_logo
                     <div class="logo-container text-center">
                       <a href="<?php echo base_url();?>index.php?home">
                           <img src="<?php echo base_url();?>uploads/frontend/<?php echo $header_logo;?>" alt="">
-                          <h2><?php echo $school_title; ?></h2>
+                          <!--<h2><?php /*echo $school_title; */?></h2>-->
+                          <h2>دبیرستان دوره اول علامه حلی ۲ تهران</h2>
                       </a>
                     </div>
                 </div>
