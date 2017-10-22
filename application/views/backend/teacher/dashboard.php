@@ -83,6 +83,9 @@
 </div>
 
 
+<link href='assets/js/fullcalendar/dist/fullcalendar.css' rel='stylesheet' />
+<link href='assets/js/fullcalendar/dist/fullcalendar.print.css' rel='stylesheet' media='print' />
+
 
     <script>
   $(document).ready(function() {
@@ -96,9 +99,12 @@
 					},
 					
 					//defaultView: 'basicWeek',
-					
+                    isRTL: true,
+                    isJalaali: true,
+                    // defaultDate: '2016-05-12',
+                    lang: 'fa',
 					editable: false,
-					firstDay: 1,
+					firstDay: 0,
 					height: 530,
 					droppable: false,
 					
@@ -118,6 +124,7 @@
 						
 					]
 				});
+      renderCalendar();
 	});
   </script>
 
