@@ -90,40 +90,41 @@
     <script>
   $(document).ready(function() {
 	  
-	  var calendar = $('#notice_calendar');
-				
-				$('#notice_calendar').fullCalendar({
-					header: {
-						left: 'title',
-						right: 'today prev,next'
-					},
-					
-					//defaultView: 'basicWeek',
-                    isRTL: true,
-                    isJalaali: true,
-                    // defaultDate: '2016-05-12',
-                    lang: 'fa',
-					editable: false,
-					firstDay: 0,
-					height: 530,
-					droppable: false,
-					
-					events: [
-						<?php 
-						$notices	=	$this->db->get('noticeboard')->result_array();
-						foreach($notices as $row):
-						?>
-						{
-							title: "<?php echo $row['notice_title'];?>",
-							start: new Date(<?php echo date('Y',$row['create_timestamp']);?>, <?php echo date('m',$row['create_timestamp'])-1;?>, <?php echo date('d',$row['create_timestamp']);?>),
-							end:	new Date(<?php echo date('Y',$row['create_timestamp']);?>, <?php echo date('m',$row['create_timestamp'])-1;?>, <?php echo date('d',$row['create_timestamp']);?>) 
-						},
-						<?php 
-						endforeach
-						?>
-						
-					]
-				});
+	  function renderCalendar() {
+          $('#notice_calendar').fullCalendar({
+              header: {
+                  right: 'next,prev today',
+                  center: 'title',
+                  left: 'agendaDay,agendaWeek,month'
+              },
+
+              //defaultView: 'basicWeek',
+              isRTL: true,
+              isJalaali: true,
+              // defaultDate: '2016-05-12',
+              lang: 'fa',
+              editable: false,
+              firstDay: 0,
+              height: 530,
+              droppable: false,
+
+              events: [
+                  <?php
+                  $notices = $this->db->get('noticeboard')->result_array();
+                  foreach($notices as $row):
+                  ?>
+                  {
+                      title: "<?php echo $row['notice_title'];?>",
+                      start: new Date(<?php echo date('Y', $row['create_timestamp']);?>, <?php echo date('m', $row['create_timestamp']) - 1;?>, <?php echo date('d', $row['create_timestamp']);?>),
+                      end: new Date(<?php echo date('Y', $row['create_timestamp']);?>, <?php echo date('m', $row['create_timestamp']) - 1;?>, <?php echo date('d', $row['create_timestamp']);?>)
+                  },
+                  <?php
+                  endforeach
+                  ?>
+
+              ]
+          });
+      }
       renderCalendar();
 	});
   </script>
