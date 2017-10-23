@@ -10,7 +10,7 @@
         <?php echo $page_title; ?> | <?php echo $school_title;?>
       </title>
         <?php include 'metas.php'; ?>
-        <?php include 'stylesheets.php'; ?>
+        <?php include 'styleisheets.php'; ?>
     </head>
     <body>
 
