@@ -87,10 +87,7 @@ $('#submit_button').attr('disabled', 'disabled');
 	$("#generate_csv").click(function(){
 		var class_id 	= $('#class_id').val();
 		var section_id 	= $('#section_id').val();
-
-		if(class_id == '' || section_id == '')
-			toastr.error("<?php echo get_phrase('please_make_sure_class_and_section_is_selected'); ?>");
-		else {
+		
 			$.ajax({
 			  	url: '<?php echo base_url();?>index.php?admin/generate_bulk_student_csv/' + class_id + '/' + section_id,
 			  	success: function(response) {

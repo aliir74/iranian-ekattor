@@ -246,7 +246,7 @@ class Crud_model extends CI_Model {
         $this->db->insert('document',$data);
 
         $document_id            = $this->db->insert_id();
-        $move_uploaded_file($_FILES["file_name"]["tmp_name"], "uploads/document/" . $_FILES["file_name"]["name"]);
+        move_uploaded_file($_FILES["file_name"]["tmp_name"], "uploads/document/" . $_FILES["file_name"]["name"]);
     }
 
     function select_study_material_info()

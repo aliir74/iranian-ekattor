@@ -2759,7 +2759,7 @@ class Admin extends CI_Controller
             redirect(base_url(), 'refresh');
 
        if ($param1 == 'import') {
-          if ($this->input->post('class_id') != '' && $this->input->post('section_id') != '') {
+          if ($this->input->post('class_id') != '') {
 
               move_uploaded_file($_FILES['userfile']['tmp_name'], 'uploads/bulk_student.csv');
               $csv = array_map('str_getcsv', file('uploads/bulk_student.csv'));
