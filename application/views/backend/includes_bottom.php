@@ -25,7 +25,7 @@
     <script src="assets/js/fullcalendar/dist/fullcalendar.js"></script>
     <script src="assets/js/fullcalendar/lang/fa.js"></script>
     <!---->
-	<script src="assets/js/fullcalendar/fullcalendar.min.js"></script>
+	<!--<script src="assets/js/fullcalendar/fullcalendar.min.js"></script>-->
     <script src="assets/js/bootstrap-datepicker.js"></script>
     <!-- manual datepicker-->
     <!--<script src="assets/js/bootstrap-datepicker.fa.js"></script>-->
