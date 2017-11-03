@@ -94,9 +94,9 @@
                           <?php $running_year = $this->db->get_where('settings' , array('type'=>'running_year'))->row()->description;?>
                           <option value="" disabled="true"><?php echo get_phrase('select_running_session');?></option>
                           <?php for($i = 0; $i < 10; $i++):?>
-                              <option value="<?php echo (2016+$i);?>-<?php echo (2016+$i+1);?>"
-                                <?php if($running_year == (2016+$i).'-'.(2016+$i+1)) echo 'selected';?>>
-                                  <?php echo (2016+$i);?>-<?php echo (2016+$i+1);?>
+                              <option value="<?php echo (1396+$i);?>-<?php echo (1396+$i+1);?>"
+                                <?php if($running_year == (1396+$i).'-'.(1396+$i+1)) echo 'selected';?>>
+                                  <?php echo (1396+$i);?>-<?php echo (1396+$i+1);?>
                               </option>
                           <?php endfor;?>
                           </select>
