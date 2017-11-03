@@ -14,12 +14,12 @@
 
                 <?php echo form_open(base_url() . 'index.php?admin/study_material/create', array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data')); ?>
 
-                <div class="form-group">
+                <div class="form-group" style="display: none;">
                     <label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('date'); ?></label>
 
                     <div class="col-sm-5">
                         <input type="text" name="timestamp" class="form-control datepicker" data-format="D, dd MM yyyy"
-                               placeholder="<?php echo get_phrase('select_date');?>" value="<?php echo date('m/d/Y'); ?>" required disabled>
+                               placeholder="<?php echo get_phrase('select_date');?>" value="<?php echo date('m/d/Y'); ?>" required>
                     </div>
                 </div>
 

@@ -18,12 +18,12 @@ foreach ($single_study_material_info as $row) {
 
                     <form role="form" class="form-horizontal form-groups-bordered" action="<?php echo base_url(); ?>index.php?admin/study_material/update/<?php echo $row['document_id'] ?>" method="post" enctype="multipart/form-data">
 
-                        <div class="form-group">
+                        <div class="form-group" style="display: none;">
                             <label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('date'); ?></label>
 
                             <div class="col-sm-5">
                                 <input type="text" name="timestamp" class="form-control datepicker" data-format="D, dd MM yyyy"
-                                       placeholder="date here" value="<?php echo date("d M, Y", $row['timestamp']); ?>" disabled>
+                                       placeholder="date here" value="<?php echo date("d M, Y", $row['timestamp']); ?>">
                             </div>
                         </div>
 
