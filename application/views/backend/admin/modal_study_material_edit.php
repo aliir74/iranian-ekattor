@@ -23,7 +23,7 @@ foreach ($single_study_material_info as $row) {
 
                             <div class="col-sm-5">
                                 <input type="text" name="timestamp" class="form-control datepicker" data-format="D, dd MM yyyy"
-                                       placeholder="date here" value="<?php echo date("d M, Y", $row['timestamp']); ?>">
+                                       placeholder="date here" value="<?php echo date("d M, Y", $row['timestamp']); ?>" disabled>
                             </div>
                         </div>
 

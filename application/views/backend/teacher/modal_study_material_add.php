@@ -19,7 +19,7 @@
 
                     <div class="col-sm-5">
                         <input type="text" name="timestamp" class="form-control datepicker" data-format="D, dd MM yyyy"
-                               placeholder="<?php echo get_phrase('select_date'); ?>" required>
+                               placeholder="<?php echo get_phrase('select_date'); ?>" value="<?php echo date('m/d/Y'); ?>" required disabled>
                     </div>
                 </div>
 

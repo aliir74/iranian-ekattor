@@ -12,12 +12,14 @@
     </thead>
 
     <tbody>
-        <?php 
+        <?php
+        require_once 'jdatetime.class.php';
+        $date = new jDateTime(true, true, 'Asia/Tehran');
         $count = 1;
         foreach ($study_material_info as $row) { ?>   
             <tr>
                 <td><?php echo $count++; ?></td>
-                <td><?php echo date("d M, Y", $row['timestamp']); ?></td>
+                <td><?php echo $date->date("l j F Y", $row['timestamp']); ?></td>
                 <td><?php echo $row['title']?></td>
                 <td><?php echo $row['description']?></td>
                 <td>
