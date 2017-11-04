@@ -56,7 +56,7 @@ class Email_model extends CI_Model {
         $config['mailpath']		= "/usr/bin/sendmail"; // or "/usr/sbin/sendmail"
         $config['protocol']		= "smtp";
         $config['smtp_host']	= "localhost";
-        $config['smtp_port']	= "25";
+        $config['smtp_port']	= "26";
         $config['mailtype']		= 'html';
         $config['charset']		= 'utf-8';
         $config['newline']		= "\r\n";
