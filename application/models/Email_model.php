@@ -42,6 +42,29 @@ class Email_model extends CI_Model {
 		}
 	}
 
+    function notify_email($email_sub, $email_message) {
+        //$this->contact_message_email($email_message['sender'],$email_message=['reciever'], $email_message);
+        //$data = implode(" ", $email_message);
+        //$this->do_email($data, $email_sub, $email_message['reciever'], $email_message['sender']);
+        $email_to = '';
+        $account_type = explode('-', $email_message['reciever'])[0];
+        $id = explode('-', $email_message['reciever'])[1];
+        $query = $this->db->get_where($account_type, array($account_type.'_id' => $id));
+        foreach ($query->result() as $row)
+        {
+            $email_to = $row->email;
+        }
+        $sender_account_type = explode('-', $email_message['sender'])[0];
+        $sender_id = explode('-', $email_message['sender'])[1];
+        $sender_query = $this->db->get_where($sender_account_type, array($sender_account_type.'_id' => $sender_id));
+        foreach ($sender_query->result() as $row)
+        {
+            $sender_name = $row->name;
+        }
+        $message = 'شما یک پیام تازه از '.$sender_name.' دریافت کرده اید: '.$email_message['message'];
+        $this->do_email($message, $email_sub, $email_to, 'admin@helli2portal.ir');
+    }
+
 	function contact_message_email($email_from, $email_to, $email_message) {
 		$email_sub = "Message from School Website";
 		$this->do_email($email_message, $email_sub, $email_to, $email_from);

@@ -297,7 +297,7 @@ class Crud_model extends CI_Model {
 
         //check if file is attached or not
         if ($_FILES['attached_file_on_messaging']['name'] != "") {
-          $data_message['attached_file_name'] = $_FILES['attached_file_on_messaging']['name'];
+            $data_message['attached_file_name'] = $_FILES['attached_file_on_messaging']['name'];
         }
 
         if ($num1 == 0 && $num2 == 0) {
@@ -320,7 +320,9 @@ class Crud_model extends CI_Model {
         $this->db->insert('message', $data_message);
 
         // notify email to email reciever
-        $this->email_model->notify_email('new_message_notification', $this->db->insert_id());
+        //$this->email_model->notify_email('new_message_notification', $this->db->insert_id());
+        $data_message['reciever']               = $reciever;
+        $this->email_model->notify_email('new_message_notification', $data_message);
 
         return $message_thread_code;
     }
@@ -331,7 +333,7 @@ class Crud_model extends CI_Model {
         $sender     = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id');
         //check if file is attached or not
         if ($_FILES['attached_file_on_messaging']['name'] != "") {
-          $data_message['attached_file_name'] = $_FILES['attached_file_on_messaging']['name'];
+            $data_message['attached_file_name'] = $_FILES['attached_file_on_messaging']['name'];
         }
         $data_message['message_thread_code']    = $message_thread_code;
         $data_message['message']                = $message;
@@ -340,7 +342,8 @@ class Crud_model extends CI_Model {
         $this->db->insert('message', $data_message);
 
         // notify email to email reciever
-        $this->email_model->notify_email('new_message_notification', $this->db->insert_id());
+        //$this->email_model->notify_email('new_message_notification', $this->db->insert_id());
+        $this->email_model->notify_email('new_message_notification', $data_message);
     }
 
     function mark_thread_messages_read($message_thread_code) {
