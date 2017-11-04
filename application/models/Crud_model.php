@@ -343,6 +343,11 @@ class Crud_model extends CI_Model {
 
         // notify email to email reciever
         //$this->email_model->notify_email('new_message_notification', $this->db->insert_id());
+        $query = $this->db->get_where("message_thread", array('message_thread_code' => $message_thread_code));
+        foreach ($query->result() as $row)
+        {
+            $data_message['reciever'] = $row->reciever;
+        }
         $this->email_model->notify_email('new_message_notification', $data_message);
     }
 
