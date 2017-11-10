@@ -52,7 +52,7 @@ $user_id = $this->session->userdata('login_user_id');
             </td>
             <td>
                 <a  onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_study_material_edit/<?php echo $row['document_id']?>');"
-                    class="btn btn-default btn-sm btn-icon icon-left">
+                    class="btn btn-default btn-sm btn-icon icon-left" <?php if($user_id != $row['teacher_id']) echo "disabled"; ?>>
                     <i class="entypo-pencil"></i>
                     <?php echo get_phrase('edit');?>
                 </a>
