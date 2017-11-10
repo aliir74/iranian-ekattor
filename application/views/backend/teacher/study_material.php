@@ -56,7 +56,6 @@ $user_id = $this->session->userdata('login_user_id');
                     <i class="entypo-pencil"></i>
                     <?php echo get_phrase('edit');?>
                 </a>
-                <?php $current_user = $this->session->userdata('login_type') . '-' . $this->session->userdata('login_user_id'); echo $current_user;?>
                 <a href="<?php echo base_url();?>index.php?teacher/study_material/delete/<?php echo $row['document_id']?>"
                    class="btn btn-danger btn-sm btn-icon icon-left" onclick="return confirm('Are you sure to delete?');" <?php if($user_id != $row['teacher_id']) echo "disabled"; ?>>
                     <i class="entypo-cancel"></i>
