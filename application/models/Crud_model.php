@@ -243,6 +243,8 @@ class Crud_model extends CI_Model {
         $data['file_type']     	   = $this->input->post('file_type');
         $data['class_id'] 	       = $this->input->post('class_id');
         $data['subject_id']         = $this->input->post('subject_id');
+        if($this->session->userdata('login_type') == 'teacher')
+            $data['teacher_id']         = $this->session->userdata('login_user_id');
         $this->db->insert('document',$data);
 
         $document_id            = $this->db->insert_id();
