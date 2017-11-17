@@ -8,11 +8,13 @@ if (!defined('BASEPATH'))
  *  http://codecanyon.net/user/Creativeitem
  *  http://support.creativeitem.com
  */
+
 require_once 'jdatetime.class.php';
 $jdate = new jDateTime(true, true, 'Asia/Tehran');
+$my_file = 'log.txt';
+$handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
 class Admin extends CI_Controller
 {
-
     function __construct()
 	{
 		parent::__construct();
@@ -22,6 +24,8 @@ class Admin extends CI_Controller
        /*cache control*/
 		$this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
 		$this->output->set_header('Pragma: no-cache');
+
+
     }
 
     /***default functin, redirects to login page if no admin logged in yet***/
@@ -1335,10 +1339,14 @@ class Admin extends CI_Controller
     }
     function attendance_selector()
     {
+        global $jdate, $handle;
         $data['class_id']   = $this->input->post('class_id');
         $data['year']       = $this->input->post('year');
         //$data['timestamp']  = strtotime($this->input->post('timestamp'));
         $persian_data_string = ($this->input->post('timestamp')).explode('/');
+        fwrite($handle, $this->input->post('timestamp'));
+        fwrite($handle, $persian_data_string);
+        fclose($handle);
         $data['timestamp']  = $jdate->mktime(0, 0, 0, $persian_data_string[0], $persian_data_string[1], $persian_data_string[2]);
         $data['section_id'] = $this->input->post('section_id');
         $query = $this->db->get_where('attendance' ,array(
