@@ -13,6 +13,7 @@ require_once 'jdatetime.class.php';
 $jdate = new jDateTime(true, true, 'Asia/Tehran');
 $my_file = 'log.txt';
 $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
+fwrite($handle, 'hello');
 class Admin extends CI_Controller
 {
     function __construct()
@@ -1344,9 +1345,9 @@ class Admin extends CI_Controller
         $data['class_id']   = $this->input->post('class_id');
         $data['year']       = $this->input->post('year');
         //$data['timestamp']  = strtotime($this->input->post('timestamp'));
-        $persian_data_string = ($this->input->post('timestamp')).explode('/');
+        $persian_data_string = explode('/', ($this->input->post('timestamp')));
         fwrite($handle, $this->input->post('timestamp'));
-        fwrite($handle, $persian_data_string);
+        fwrite($handle, implode(" ", $persian_data_string));
         fclose($handle);
         $data['timestamp']  = $jdate->mktime(0, 0, 0, $persian_data_string[0], $persian_data_string[1], $persian_data_string[2]);
         $data['section_id'] = $this->input->post('section_id');
