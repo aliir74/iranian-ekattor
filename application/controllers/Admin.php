@@ -8,7 +8,7 @@ if (!defined('BASEPATH'))
  *  http://codecanyon.net/user/Creativeitem
  *  http://support.creativeitem.com
  */
-require_once '../jdatetime.class.php';
+require_once 'jdatetime.class.php';
 $jdate = new jDateTime(true, true, 'Asia/Tehran');
 class Admin extends CI_Controller
 {
