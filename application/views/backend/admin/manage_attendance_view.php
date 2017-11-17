@@ -1,5 +1,6 @@
 <hr />
-
+<?php
+$jdate = new jDateTime(true, true, 'Asia/Tehran'); ?>
 <?php echo form_open(base_url() . 'index.php?admin/attendance_selector/'); ?>
 <div class="row">
 
@@ -47,7 +48,7 @@
         <div class="form-group">
             <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('date'); ?></label>
             <input type="text" class="form-control datepicker" name="timestamp" data-format="dd-mm-yyyy"
-                   value="<?php echo date("d-m-Y", $timestamp); ?>"/>
+                   value="<?php echo $jdate->date("d/m/Y", $timestamp); ?>"/>
             <?php echo $timestamp ?>
         </div>
     </div>
@@ -78,7 +79,7 @@
                 <?php echo get_phrase('section'); ?> <?php echo $this->db->get_where('section', array('section_id' => $section_id))->row()->name; ?>
             </h4>
             <h4 style="color: #696969;">
-                <?php echo date("d M Y", $timestamp); ?>
+                <?php echo $jdate->date("d M Y", $timestamp); ?>
             </h4>
         </div>
     </div>
