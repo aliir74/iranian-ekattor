@@ -8,9 +8,12 @@ if (!defined('BASEPATH'))
  *  http://codecanyon.net/user/Creativeitem
  *  http://support.creativeitem.com
  */
+require_once '../jdatetime.class.php';
+$jdate = new jDateTime(true, true, 'Asia/Tehran');
 class Admin extends CI_Controller
 {
-	function __construct()
+
+    function __construct()
 	{
 		parent::__construct();
 		$this->load->database();
@@ -1334,7 +1337,9 @@ class Admin extends CI_Controller
     {
         $data['class_id']   = $this->input->post('class_id');
         $data['year']       = $this->input->post('year');
-        $data['timestamp']  = strtotime($this->input->post('timestamp'));
+        //$data['timestamp']  = strtotime($this->input->post('timestamp'));
+        $persian_data_string = ($this->input->post('timestamp')).explode('/');
+        $data['timestamp']  = $jdate->mktime(0, 0, 0, $persian_data_string[0], $persian_data_string[1], $persian_data_string[2]);
         $data['section_id'] = $this->input->post('section_id');
         $query = $this->db->get_where('attendance' ,array(
             'class_id'=>$data['class_id'],
