@@ -1,5 +1,6 @@
 <hr />
-
+<?php
+$jdate = new jDateTime(true, true, 'Asia/Tehran'); ?>
 <?php echo form_open(base_url() . 'index.php?admin/attendance_selector/');?>
 <div class="row">
 
@@ -39,7 +40,7 @@
 		<div class="form-group">
 		<label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('date');?></label>
 			<input type="text" class="form-control datepicker" name="timestamp" data-format="dd-mm-yyyy"
-				value="<?php echo date("d-m-Y");?>"/>
+				value="<?php echo $jdate->date("d/m/Y", false, false);?>"/>
 		</div>
 	</div>
 	<input type="hidden" name="year" value="<?php echo $running_year;?>">
