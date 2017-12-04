@@ -6,16 +6,16 @@
 
 @font-face {
     font-family: 'bnazanin';
-    src:url('assets/fonts/fonts/BNazanin.eot?#') format('eot'),
-    url('assets/fonts/fonts/BNazanin.woff') format('woff'),
-    url('assets/fonts/fonts/BNazanin.ttf') format('truetype');
+    src:url('/assets/fonts/fonts/BNazanin.eot?#') format('eot'),
+    url('/assets/fonts/fonts/BNazanin.woff') format('woff'),
+    url('/assets/fonts/fonts/BNazanin.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'btitr';
-    src:url('~/assets/fonts/fonts/BTitrBold.eot?#') format('eot'),
-    url('~/assets/fonts/fonts/BTitrBold.woff') format('woff'),
-    url('~/assets/fonts/fonts/BTitrBold.ttf') format('truetype');
+    src:url('/assets/fonts/fonts/BTitrBold.eot?#') format('eot'),
+    url('/assets/fonts/fonts/BTitrBold.woff') format('woff'),
+    url('/assets/fonts/fonts/BTitrBold.ttf') format('truetype');
 }
 
 
