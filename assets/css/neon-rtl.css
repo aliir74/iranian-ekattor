@@ -35,7 +35,9 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /*font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+  /*manual css*/
+  font-family: "B Titr", Tahoma;
 }
 .navbar-brand {
   float: right;

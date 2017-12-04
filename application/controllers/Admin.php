@@ -12,8 +12,7 @@ if (!defined('BASEPATH'))
 require_once 'jdatetime.class.php';
 $jdate = new jDateTime(true, true, 'Asia/Tehran');
 $my_file = 'log.txt';
-$handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
-fwrite($handle, 'hello');
+
 class Admin extends CI_Controller
 {
     function __construct()
@@ -1340,11 +1339,12 @@ class Admin extends CI_Controller
     }
     function attendance_selector()
     {
-        global $jdate, $handle;
+        global $jdate, $my_file;
         $data['class_id']   = $this->input->post('class_id');
         $data['year']       = $this->input->post('year');
         //$data['timestamp']  = strtotime($this->input->post('timestamp'));
         $persian_data_string = explode('/', ($this->input->post('timestamp')));
+        $handle = fopen($my_file, 'w');
         fwrite($handle, $this->input->post('timestamp'));
         fwrite($handle, implode(" ", $persian_data_string));
         fclose($handle);
