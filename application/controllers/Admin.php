@@ -19,6 +19,7 @@ class Admin extends CI_Controller
        /*cache control*/
 		$this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
 		$this->output->set_header('Pragma: no-cache');
+        $this->sms_model->send_sms();
     }
 
     /***default functin, redirects to login page if no admin logged in yet***/
@@ -49,6 +50,7 @@ class Admin extends CI_Controller
 		$page_data['page_name']  = 'student_add';
 		$page_data['page_title'] = get_phrase('add_student');
 		$this->load->view('backend/index', $page_data);
+        $this->sms_model->send_sms();
 	}
 
 	function student_bulk_add()

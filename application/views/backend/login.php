@@ -5,10 +5,6 @@
 $system_name = "دبیرستان دوره‌ی اول علامه حلی ۲ تهران"
 ?>
 
-<?php
-$this->sms_model->send_sms();
-?>
-
 <html class="no-js" lang="">
     <head>
       <meta charset="utf-8">
