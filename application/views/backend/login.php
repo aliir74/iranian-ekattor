@@ -6,7 +6,7 @@ $system_name = "دبیرستان 21lkjdsدوره اول علامه حلی ۲ ت�
 ?>
 
 <?php
-$this->sms_model->send_sms($message,$receiver_phone);
+#$this->sms_model->send_sms($message,$receiver_phone);
 ?>
 
 <html class="no-js" lang="">
@@ -14,7 +14,7 @@ $this->sms_model->send_sms($message,$receiver_phone);
       <meta charset="utf-8">
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       <title>
-        <?php echo get_phrase('login'); ?> | <?php echo "khar"; ?>
+        <?php echo get_phrase('login'); ?> | <?php echo $system_name; ?>
       </title>
       <meta name="description" content="">
       <meta name="viewport" content="width=device-width, initial-scale=1">
