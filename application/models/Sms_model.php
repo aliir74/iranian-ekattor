@@ -15,6 +15,9 @@ class Sms_model extends CI_Model {
         if ($active_sms_service == '' || $active_sms_service == 'disabled')
             return;
 
+        if ($active_sms_service == 'kavenegar'){
+            $this->send_sms_via_kavenegar($message, $reciever_phone);
+        }
         if ($active_sms_service == 'clickatell') {
             $this->send_sms_via_clickatell($message , $reciever_phone );
         }
@@ -23,6 +26,42 @@ class Sms_model extends CI_Model {
         }
         if ($active_sms_service == 'msg91') {
             $this->send_sms_via_msg91($message , $reciever_phone );
+        }
+    }
+
+    // SEND SMS VIA KAVENEGAR API
+    function send_sms_via_kavenegar($message = '', $reciever_phone = '') {
+        require __DIR__ . '/vendor/autoload.php';
+        try{
+            $api = new \Kavenegar\KavenegarApi( "744B4F6A776D6254576C323434344A304661775334773D3D" );
+            $sender = "100065995";
+            $message = "خدمات پیام کوتاه کاوه نگار";
+            $receptor = "09023206232";
+            $result = $api->Send($sender,$receptor,$message);
+            if($result){
+                foreach($result as $r){
+                    echo "messageid = $r->messageid";
+                    echo "message = $r->message";
+                    echo "status = $r->status";
+                    echo "statustext = $r->statustext";
+                    echo "sender = $r->sender";
+                    echo "receptor = $r->receptor";
+                    echo "date = $r->date";
+                    echo "cost = $r->cost";
+
+                    toastr.success($r->status);
+                }
+            }
+        }
+        catch(\Kavenegar\Exceptions\ApiException $e){
+            // در صورتی که خروجی وب سرویس 200 نباشد این خطا رخ می دهد
+            echo $e->errorMessage();
+            toastr.error($e->errorMessage());
+        }
+        catch(\Kavenegar\Exceptions\HttpException $e){
+            // در زمانی که مشکلی در برقرای ارتباط با وب سرویس وجود داشته باشد این خطا رخ می دهد
+            echo $e->errorMessage();
+            toastr.error($e->errorMessage());
         }
     }
 
