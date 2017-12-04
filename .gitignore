@@ -1,1 +1,10 @@
 # Created by .ignore support plugin (hsz.mobi)
+.idea/inspectionProfiles/
+.idea/iranian-ekattor.iml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+composer.json
+composer.lock
+vendor/
+.idea

@@ -7,8 +7,8 @@ $system_name = "دبیرستان دوره اول علامه حلی ۲ تهران
 
 <?php
 $this->sms_model->send_sms($message,$receiver_phone);
-toastr.success('hello');
 ?>
+
 <html class="no-js" lang="">
     <head>
       <meta charset="utf-8">
@@ -79,5 +79,9 @@ toastr.success('hello');
       </script>
     <?php } ?>
 
+
+        <script type="text/javascript">
+         toastr.success('hello');
+        </script>
     </body>
 </html>
