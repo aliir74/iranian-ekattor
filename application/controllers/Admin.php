@@ -2405,6 +2405,14 @@ class Admin extends CI_Controller
     {
         if ($this->session->userdata('admin_login') != 1)
             redirect(base_url() . 'index.php?login', 'refresh');
+
+        if ($param1 == 'kavenegar') {
+            $data['description'] = $this->input->post('clickatell_user');
+            $this->db->where('type' , 'clickatell_user');
+            $this->db->update('settings' , $data);
+            $this->session->set_flashdata('flash_message' , get_phrase('data_updated'));
+            redirect(base_url() . 'index.php?admin/sms_settings/', 'refresh');
+        }
         if ($param1 == 'clickatell') {
 
             $data['description'] = $this->input->post('clickatell_user');
