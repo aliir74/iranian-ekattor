@@ -61,7 +61,7 @@
                               	</option>
                                 <option value="kavenegar"
                                     <?php if ($active_sms_service == 'kavenegar') echo 'selected';?>>
-                                    Clickatell
+                                    Kavenegar
                                 </option>
                         		<option value="clickatell"
                         			<?php if ($active_sms_service == 'clickatell') echo 'selected';?>>
