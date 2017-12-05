@@ -127,6 +127,8 @@
                             <br>
                             <span class="badge badge-primary">
                                 <?php
+                                if ($active_sms_service == 'kavenegar')
+                                    echo 'Kavenegar ' . get_phrase('activated');
                                 if ($active_sms_service == 'clickatell')
                                     echo 'Clickatell ' . get_phrase('activated');
                                 if ($active_sms_service == 'twilio')

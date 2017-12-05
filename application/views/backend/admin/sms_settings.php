@@ -19,14 +19,15 @@
                         <?php endif;?>
                     </a>
                 </li>
+                <!--
 				<li>
 					<a href="#v-home" data-toggle="tab">
 						Clickatell Settings
-						<?php if ($active_sms_service == 'clickatell'):?>
-							<span class="badge badge-success"><?php echo get_phrase('active');?></span>
-						<?php endif;?>
+						<?php /*if ($active_sms_service == 'clickatell'):*/?>
+							<span class="badge badge-success"><?php /*echo get_phrase('active');*/?></span>
+						<?php /*endif;*/?>
 					</a>
-				</li>
+				</li>-->
 				<li>
 					<a href="#v-profile" data-toggle="tab">
 						Twilio Settings
@@ -63,10 +64,10 @@
                                     <?php if ($active_sms_service == 'kavenegar') echo 'selected';?>>
                                     Kavenegar
                                 </option>
-                        		<option value="clickatell"
-                        			<?php if ($active_sms_service == 'clickatell') echo 'selected';?>>
+                        		<!--<option value="clickatell"
+                        			<?php /*if ($active_sms_service == 'clickatell') echo 'selected';*/?>>
                         				Clickatell
-                        		</option>
+                        		</option>-->
                         		<option value="twilio"
                         			<?php if ($active_sms_service == 'twilio') echo 'selected';?>>
                         				Twilio
@@ -108,37 +109,37 @@
                     <?php echo form_close();?>
                 </div>
 
-				<div class="tab-pane" id="v-home">
-					<?php echo form_open(base_url() . 'index.php?admin/sms_settings/clickatell' ,
-						array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
+				<!--<div class="tab-pane" id="v-home">
+					<?php /*echo form_open(base_url() . 'index.php?admin/sms_settings/clickatell' ,
+						array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));*/?>
 						<div class="form-group">
-	                      <label  class="col-sm-3 control-label"><?php echo get_phrase('clickatell_username');?></label>
+	                      <label  class="col-sm-3 control-label"><?php /*echo get_phrase('clickatell_username');*/?></label>
 	                      	<div class="col-sm-5">
 	                          	<input type="text" class="form-control" name="clickatell_user"
-	                            	value="<?php echo $this->db->get_where('settings' , array('type' =>'clickatell_user'))->row()->description;?>" required>
+	                            	value="<?php /*echo $this->db->get_where('settings' , array('type' =>'clickatell_user'))->row()->description;*/?>" required>
 	                      	</div>
 	                  	</div>
 	                  	<div class="form-group">
-	                        <label  class="col-sm-3 control-label"><?php echo get_phrase('clickatell_password');?></label>
+	                        <label  class="col-sm-3 control-label"><?php /*echo get_phrase('clickatell_password');*/?></label>
 	                        <div class="col-sm-5">
 	                            <input type="text" class="form-control" name="clickatell_password"
-	                                value="<?php echo $this->db->get_where('settings' , array('type' =>'clickatell_password'))->row()->description;?>" required>
+	                                value="<?php /*echo $this->db->get_where('settings' , array('type' =>'clickatell_password'))->row()->description;*/?>" required>
 	                        </div>
 	                    </div>
 	                    <div class="form-group">
-	                      <label  class="col-sm-3 control-label"><?php echo get_phrase('clickatell_api_id');?></label>
+	                      <label  class="col-sm-3 control-label"><?php /*echo get_phrase('clickatell_api_id');*/?></label>
 	                        <div class="col-sm-5">
 	                            <input type="text" class="form-control" name="clickatell_api_id"
-	                                value="<?php echo $this->db->get_where('settings' , array('type' =>'clickatell_api_id'))->row()->description;?>" required>
+	                                value="<?php /*echo $this->db->get_where('settings' , array('type' =>'clickatell_api_id'))->row()->description;*/?>" required>
 	                        </div>
 	                    </div>
 	                    <div class="form-group">
 		                    <div class="col-sm-offset-3 col-sm-5">
-		                        <button type="submit" class="btn btn-info"><?php echo get_phrase('save');?></button>
+		                        <button type="submit" class="btn btn-info"><?php /*echo get_phrase('save');*/?></button>
 		                    </div>
 		                </div>
-	                <?php echo form_close();?>
-				</div>
+	                <?php /*echo form_close();*/?>
+				</div>-->
 				<div class="tab-pane" id="v-profile">
 					<?php echo form_open(base_url() . 'index.php?admin/sms_settings/twilio' ,
 						array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>

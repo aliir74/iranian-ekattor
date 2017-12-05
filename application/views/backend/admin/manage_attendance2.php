@@ -292,6 +292,19 @@
         <div class="col-md-4"></div>
     </div>
     <?php endif;?>
+    <?php
+    if ($active_sms_service == 'kavenegar'):
+        ?>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="alert alert-info">
+                    <?php echo "پیامک با سیستم پیامکی کاوه نگار ارسال خواهد شد";?>
+                </div>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+    <?php endif;?>
     <?php 
         if ($active_sms_service == 'clickatell'):
     ?>
