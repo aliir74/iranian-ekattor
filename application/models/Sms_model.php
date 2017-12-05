@@ -31,8 +31,8 @@ class Sms_model extends CI_Model {
 
     // SEND SMS VIA KAVENEGAR API
     function send_sms_via_kavenegar($message = '', $reciever_phone = '') {
-        $api_key = "744B4F6A776D6254576C323434344A304661775334773D3D";
-        $url = "https://api.kavenegar.com/v1/".$api_key."/sms/send.json?receptor="."09023206232"."&message=".urlencode("خیلی خری مریم:دی !");
+        $api_key = $this->db->get_where('settings', array('type' => 'clickatell_user'))->row()->description;
+        $url = "https://api.kavenegar.com/v1/".$api_key."/sms/send.json?receptor=".$reciever_phone."&message=".urlencode($message);
         $response = file_get_contents($url);
         echo $response;
     }
