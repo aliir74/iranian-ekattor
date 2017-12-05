@@ -31,7 +31,7 @@ class Sms_model extends CI_Model {
 
     // SEND SMS VIA KAVENEGAR API
     function send_sms_via_kavenegar($message = '', $reciever_phone = '') {
-        #log_message('error', 'into sms function');
+        log_message('error', 'into sms function');
         require '../../vendor/autoload.php';
         show_error('into sms function');
         try{
