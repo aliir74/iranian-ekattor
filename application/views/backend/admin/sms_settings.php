@@ -96,9 +96,12 @@
                         array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
                     <div class="form-group">
                         <label  class="col-sm-3 control-label"><?php echo "API Key";?></label>
-                        <div class="col-sm-5">
+                        <div class="col-sm-9">
                             <input type="text" class="form-control" name="api_key"
                                    value="<?php echo $this->db->get_where('settings' , array('type' =>'clickatell_user'))->row()->description;?>" required>
+                        </div>
+                        <div class="">
+                            برای دسترسی به کلید خود به سایت <a>kavenegar.com</a> مراجعه کنید
                         </div>
                     </div>
                     <div class="form-group">
