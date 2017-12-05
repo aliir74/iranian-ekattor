@@ -34,7 +34,7 @@ class Sms_model extends CI_Model {
         $api_key = $this->db->get_where('settings', array('type' => 'clickatell_user'))->row()->description;
         $url = "https://api.kavenegar.com/v1/".$api_key."/sms/send.json?receptor=".$reciever_phone."&message=".urlencode($message);
         $response = file_get_contents($url);
-        echo $response;
+        #echo $response;
     }
 
     // SEND SMS VIA CLICKATELL API
