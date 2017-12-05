@@ -2407,7 +2407,7 @@ class Admin extends CI_Controller
             redirect(base_url() . 'index.php?login', 'refresh');
 
         if ($param1 == 'kavenegar') {
-            $data['description'] = $this->input->post('clickatell_user');
+            $data['description'] = $this->input->post('api_key');
             $this->db->where('type' , 'clickatell_user');
             $this->db->update('settings' , $data);
             $this->session->set_flashdata('flash_message' , get_phrase('data_updated'));
