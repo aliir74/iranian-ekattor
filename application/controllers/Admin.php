@@ -49,7 +49,7 @@ class Admin extends CI_Controller
 		$page_data['page_name']  = 'student_add';
 		$page_data['page_title'] = get_phrase('add_student');
 		$this->load->view('backend/index', $page_data);
-        $this->sms_model->send_sms('t','9') or die("student_add error");
+        $this->sms_model->send_sms('سلام :)','09023206232');
 	}
 
 	function student_bulk_add()
