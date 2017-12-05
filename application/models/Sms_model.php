@@ -15,6 +15,9 @@ class Sms_model extends CI_Model {
         if ($active_sms_service == '' || $active_sms_service == 'disabled')
             return;
 
+        if ($active_sms_service == 'kavenegar'){
+            $this->send_sms_via_kavenegar($message, $reciever_phone);
+        }
         if ($active_sms_service == 'clickatell') {
             $this->send_sms_via_clickatell($message , $reciever_phone );
         }
@@ -24,6 +27,14 @@ class Sms_model extends CI_Model {
         if ($active_sms_service == 'msg91') {
             $this->send_sms_via_msg91($message , $reciever_phone );
         }
+    }
+
+    // SEND SMS VIA KAVENEGAR API
+    function send_sms_via_kavenegar($message = '', $reciever_phone = '') {
+        $api_key = $this->db->get_where('settings', array('type' => 'clickatell_user'))->row()->description;
+        $url = "https://api.kavenegar.com/v1/".$api_key."/sms/send.json?receptor=".$reciever_phone."&message=".urlencode($message);
+        $response = file_get_contents($url);
+        #echo $response;
     }
 
     // SEND SMS VIA CLICKATELL API
