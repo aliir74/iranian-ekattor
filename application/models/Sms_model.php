@@ -31,44 +31,10 @@ class Sms_model extends CI_Model {
 
     // SEND SMS VIA KAVENEGAR API
     function send_sms_via_kavenegar($message = '', $reciever_phone = '') {
-        #log_message('error', 'into sms function');
         $api_key = "744B4F6A776D6254576C323434344A304661775334773D3D";
         $url = "https://api.kavenegar.com/v1/".$api_key."/sms/send.json?receptor="."09023206232"."&message=".urlencode("خیلی خری مریم:دی !");
         $response = file_get_contents($url);
-        show_error($response);
-        /*require __DIR__ . '/vendor/autoload.php';
-        show_error('into sms function');
-        try{
-            show_error('into try exception function');
-            $api = new \Kavenegar\KavenegarApi( "744B4F6A776D6254576C323434344A304661775334773D3D" );
-            show_error('after create class');
-            $sender = "100065995";
-            $message = "خدمات پیام کوتاه کاوه نگار";
-            $receptor = "09023206232";
-            $result = $api->Send($sender,$receptor,$message) or die('send sms error');
-            show_error('after send sms api');
-            if($result){
-                foreach($result as $r){
-                    echo "messageid = $r->messageid";
-                    echo "message = $r->message";
-                    echo "status = $r->status";
-                    echo "statustext = $r->statustext";
-                    echo "sender = $r->sender";
-                    echo "receptor = $r->receptor";
-                    echo "date = $r->date";
-                    echo "cost = $r->cost";
-
-                }
-            }
-        }
-        catch(\Kavenegar\Exceptions\ApiException $e){
-            // در صورتی که خروجی وب سرویس 200 نباشد این خطا رخ می دهد
-            echo $e->errorMessage();
-        }
-        catch(\Kavenegar\Exceptions\HttpException $e){
-            // در زمانی که مشکلی در برقرای ارتباط با وب سرویس وجود داشته باشد این خطا رخ می دهد
-            echo $e->errorMessage();
-        }*/
+        echo $response;
     }
 
     // SEND SMS VIA CLICKATELL API
