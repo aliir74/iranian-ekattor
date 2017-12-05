@@ -33,7 +33,8 @@ class Sms_model extends CI_Model {
     function send_sms_via_kavenegar($message = '', $reciever_phone = '') {
         #log_message('error', 'into sms function');
         $api_key = "744B4F6A776D6254576C323434344A304661775334773D3D";
-        $response = file_get_contents("https://api.kavenegar.com/v1/".$api_key."/sms/send.json?receptor="."09023206232"."&message="."حالت خوبه؟");
+        #$response = file_get_contents("https://api.kavenegar.com/v1/".$api_key."/sms/send.json?receptor="."09023206232"."&message="."حالت خوبه؟");
+        $response = http_get("https://api.kavenegar.com/v1/".$api_key."/sms/send.json?receptor="."09023206232"."&message="."حالت خوبه؟");
         show_error($response);
         /*require __DIR__ . '/vendor/autoload.php';
         show_error('into sms function');
