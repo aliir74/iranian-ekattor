@@ -11,6 +11,14 @@
 
 			<ul class="nav tabs-vertical">
 			<li class="active"><a href="#b-profile" data-toggle="tab">Select A SMS Service</a></li>
+                <li>
+                    <a href="#v-kavenegar-profile" data-toggle="tab">
+                        Kavenegar Settings
+                        <?php if ($active_sms_service == 'kavenegar'):?>
+                            <span class="badge badge-success"><?php echo get_phrase('active');?></span>
+                        <?php endif;?>
+                    </a>
+                </li>
 				<li>
 					<a href="#v-home" data-toggle="tab">
 						Clickatell Settings
@@ -51,6 +59,10 @@
                               <option value=""<?php if ($active_sms_service == '') echo 'selected';?>>
                               		<?php echo get_phrase('not_selected');?>
                               	</option>
+                                <option value="kavenegar"
+                                    <?php if ($active_sms_service == 'kavenegar') echo 'selected';?>>
+                                    Clickatell
+                                </option>
                         		<option value="clickatell"
                         			<?php if ($active_sms_service == 'clickatell') echo 'selected';?>>
                         				Clickatell
@@ -76,6 +88,25 @@
 	                </div>
 	            <?php echo form_close();?>
 				</div>
+
+
+                <div class="tab-pane" id="v-kavenegar-profile">
+                    <?php echo form_open(base_url() . 'index.php?admin/sms_settings/kavenegar' ,
+                        array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
+                    <div class="form-group">
+                        <label  class="col-sm-3 control-label"><?php echo "API Key";?></label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" name="api_key"
+                                   value="<?php echo $this->db->get_where('settings' , array('type' =>'clickatell_user'))->row()->description;?>" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-5">
+                            <button type="submit" class="btn btn-info"><?php echo get_phrase('save');?></button>
+                        </div>
+                    </div>
+                    <?php echo form_close();?>
+                </div>
 
 				<div class="tab-pane" id="v-home">
 					<?php echo form_open(base_url() . 'index.php?admin/sms_settings/clickatell' ,
