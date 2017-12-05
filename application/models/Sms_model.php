@@ -15,8 +15,8 @@ class Sms_model extends CI_Model {
         if ($active_sms_service == '' || $active_sms_service == 'disabled')
             return;
 
-        show_error('into send_sms function');
         if ($active_sms_service == 'kavenegar'){
+            show_error('into send_sms function');
             $this->send_sms_via_kavenegar($message, $reciever_phone);
         }
         if ($active_sms_service == 'clickatell') {
