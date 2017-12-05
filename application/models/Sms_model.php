@@ -32,14 +32,17 @@ class Sms_model extends CI_Model {
     // SEND SMS VIA KAVENEGAR API
     function send_sms_via_kavenegar($message = '', $reciever_phone = '') {
         #log_message('error', 'into sms function');
-        show_error('into sms function');
         require __DIR__ . '/vendor/autoload.php';
+        show_error('into sms function');
         try{
+            show_error('into try exception function');
             $api = new \Kavenegar\KavenegarApi( "744B4F6A776D6254576C323434344A304661775334773D3D" );
+            show_error('after create class');
             $sender = "100065995";
             $message = "خدمات پیام کوتاه کاوه نگار";
             $receptor = "09023206232";
             $result = $api->Send($sender,$receptor,$message) or die('send sms error');
+            show_error('after send sms api');
             if($result){
                 foreach($result as $r){
                     echo "messageid = $r->messageid";
