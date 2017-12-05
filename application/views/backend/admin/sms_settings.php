@@ -100,8 +100,8 @@
                             <input type="text" class="form-control" name="api_key"
                                    value="<?php echo $this->db->get_where('settings' , array('type' =>'clickatell_user'))->row()->description;?>" required>
                         </div>
-                        <div class="">
-                            برای دسترسی به کلید خود به سایت <a>kavenegar.com</a> مراجعه کنید
+                        <div class="col-sm-6">
+                            برای دسترسی به کلید خود به سایت <a href="http://kavenegar.com">کاوه‌نگار</a> مراجعه کنید
                         </div>
                     </div>
                     <div class="form-group">
