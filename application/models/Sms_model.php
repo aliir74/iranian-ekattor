@@ -9,13 +9,13 @@ class Sms_model extends CI_Model {
     //COMMON FUNCTION FOR SENDING SMS
     function send_sms($message = '' , $reciever_phone = '')
     {
-        show_error('into send_sms function');
         $active_sms_service = $this->db->get_where('settings' , array(
             'type' => 'active_sms_service'
         ))->row()->description;
         if ($active_sms_service == '' || $active_sms_service == 'disabled')
             return;
 
+        show_error('into send_sms function');
         if ($active_sms_service == 'kavenegar'){
             $this->send_sms_via_kavenegar($message, $reciever_phone);
         }
