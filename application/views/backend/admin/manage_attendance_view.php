@@ -80,9 +80,9 @@ $date = new jDateTime(true, true, 'Asia/Tehran');
             <div class="icon"><i class="entypo-chart-area"></i></div>
 
             <h3 style="color: #696969;"><?php echo get_phrase('attendance_for_class'); ?> <?php echo $this->db->get_where('class', array('class_id' => $class_id))->row()->name; ?></h3>
-            <h4 style="color: #696969;">
-                <?php echo get_phrase('section'); ?> <?php echo $this->db->get_where('section', array('section_id' => $section_id))->row()->name; ?>
-            </h4>
+            <!--<h4 style="color: #696969;">
+                <?php /*echo get_phrase('section'); */?> <?php /*echo $this->db->get_where('section', array('section_id' => $section_id))->row()->name; */?>
+            </h4>-->
             <h4 style="color: #696969;">
                 <?php echo $date->date("d M Y", (int)$timestamp); ?>
             </h4>
