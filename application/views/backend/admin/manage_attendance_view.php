@@ -127,7 +127,7 @@ $date = new jDateTime(true, true, 'Asia/Tehran');
                     $select_id = 0;
                     $attendance_of_students = $this->db->get_where('attendance', array(
                                 'class_id' => $class_id,
-                                'section_id' => $section_id,
+                                /*'section_id' => $section_id,*/
                                 'year' => $running_year,
                                 'timestamp' => $timestamp
                             ))->result_array();
