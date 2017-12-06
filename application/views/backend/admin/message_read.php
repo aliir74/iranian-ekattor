@@ -1,6 +1,6 @@
 <?php
-require_once 'jdatetime.class.php';
-$date = new jDateTime(true, true, 'Asia/Tehran');
+#require_once 'jdatetime.class.php';
+#$date = new jDateTime(true, true, 'Asia/Tehran');
 $messages = $this->db->get_where('message', array('message_thread_code' => $current_message_thread_code))->result_array();
 foreach ($messages as $row):
 
@@ -19,7 +19,7 @@ foreach ($messages as $row):
         </div>
 
         <div class="mail-date" style="padding:7px;">
-            <?php $date->date("l j F Y", $row['timestamp']); ?>
+            <?php /*$date->date("l j F Y", $row['timestamp']); */?>
         </div>
 
     </div>
