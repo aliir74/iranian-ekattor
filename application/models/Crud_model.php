@@ -239,9 +239,9 @@ class Crud_model extends CI_Model {
     function save_study_material_info()
     {
         global $jdate;
+        show_error($jdate->mktime(0,0,0,10,2,1368));
         #$data['timestamp']         = strtotime($this->input->post('timestamp'));
         $var = explode('/', $this->input->post('timestamp'));
-        echo (int)$var[0].(int)$var[1].(int)$var[2];
         $data['timestamp']         = $jdate->mktime(0, 0, 0, (int)$var[0], (int)$var[1], (int)$var[2]);
         $data['title'] 		       = $this->input->post('title');
         $data['description']       = $this->input->post('description');
