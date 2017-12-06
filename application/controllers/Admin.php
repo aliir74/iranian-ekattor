@@ -1493,8 +1493,8 @@ class Admin extends CI_Controller
         ///////ATTENDANCE REPORT /////
      function attendance_report() {
 	    global $jdate;
-         #$page_data['month']        = date('m');
-         $page_data['month']        = $jdate->date('m', false, false);
+         $page_data['month']        = date('m');
+         #$page_data['month']        = $jdate->date('m', false, false);
          $page_data['page_name']    = 'attendance_report';
          $page_data['page_title']   = get_phrase('attendance_report');
          $this->load->view('backend/index',$page_data);
