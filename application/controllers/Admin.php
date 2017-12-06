@@ -9,7 +9,7 @@ if (!defined('BASEPATH'))
  *  http://codecanyon.net/user/Creativeitem
  *  http://support.creativeitem.com
  */
-
+require_once (APPPATH.'libraries/jdatetime.class.php');
 $jdate = new jDateTime(true, true, 'Asia/Tehran');
 
 function ptg2($str) {
