@@ -1,5 +1,5 @@
 <?php
-require '../libraries/jdatetime.class.php';
+require_once '../libraries/jdatetime.class.php';
 $jdate = new jDateTime(true, true, 'Asia/Tehran');
 
 if (!defined('BASEPATH'))
