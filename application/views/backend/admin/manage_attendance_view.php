@@ -52,9 +52,6 @@ $date = new jDateTime(true, true, 'Asia/Tehran');
             <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('date'); ?></label>
             <input type="text" class="form-control datepicker" name="timestamp" data-format="dd-mm-yyyy"
                    value="<?php echo $date->date("d/m/Y", (int)$timestamp); ?>"/>
-            <?php
-            echo 'iman'.($timestamp);
-            ?>
         </div>
     </div>
 
@@ -85,9 +82,6 @@ $date = new jDateTime(true, true, 'Asia/Tehran');
             </h4>-->
             <h4 style="color: #696969;">
                 <?php echo $date->date("d M Y", (int)$timestamp); ?>
-            </h4>
-            <h4>
-                <?php echo ($timestamp.'ali'); ?>
             </h4>
         </div>
     </div>
