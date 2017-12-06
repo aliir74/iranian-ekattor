@@ -26,13 +26,13 @@
                 <label class="col-sm-3 control-label"><?php echo get_phrase('day');?></label>
                 <div class="col-sm-5">
                     <select name="day" class="form-control selectboxit" style="width:100%;">
-                        <option value="sunday">sunday</option>
-                        <option value="monday">monday</option>
-                        <option value="tuesday">tuesday</option>
-                        <option value="wednesday">wednesday</option>
-                        <option value="thursday">thursday</option>
-                        <option value="friday">friday</option>
-                        <option value="saturday">saturday</option>
+                        <option value="saturday">شنبه</option>
+                        <option value="sunday">یکشنبه</option>
+                        <option value="monday">دوشنبه</option>
+                        <option value="tuesday">سه‌شنبه</option>
+                        <option value="wednesday">چهارشنبه</option>
+                        <option value="thursday">پنج‌شنبه</option>
+                        <option value="friday">جمعه</option>
                     </select>
                 </div>
             </div>
