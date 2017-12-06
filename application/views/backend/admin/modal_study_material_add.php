@@ -14,7 +14,7 @@
 
                 <?php echo form_open(base_url() . 'index.php?admin/study_material/create', array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data')); ?>
 
-                <div class="form-group" style="display: none;">
+                <div class="form-group" style="">
                     <label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('date'); ?></label>
 
                     <div class="col-sm-5">
