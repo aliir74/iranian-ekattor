@@ -240,9 +240,6 @@ class Crud_model extends CI_Model {
     function save_study_material_info()
     {
         global $jdate;
-        show_error($jdate->mktime(0,0,0,10,2,1368));
-
-
         #$data['timestamp']         = strtotime($this->input->post('timestamp'));
         $var = explode('/', $this->input->post('timestamp'));
         show_error(jalali_to_gregorian((int)$var[2], (int)$var[1], (int)$var[0], True));
