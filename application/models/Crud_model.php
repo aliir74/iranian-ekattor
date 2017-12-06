@@ -1,6 +1,7 @@
 <?php
 require_once(APPPATH.'libraries/jdatetime.class.php');
 $jdate = new jDateTime(true, true, 'Asia/Tehran');
+include(APPPATH.'libraries/gregorian_jalali.php');
 
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
@@ -240,8 +241,11 @@ class Crud_model extends CI_Model {
     {
         global $jdate;
         show_error($jdate->mktime(0,0,0,10,2,1368));
+
+
         #$data['timestamp']         = strtotime($this->input->post('timestamp'));
         $var = explode('/', $this->input->post('timestamp'));
+        show_error(jalali_to_gregorian((int)$var[2], (int)$var[1], (int)$var[0], True));
         $data['timestamp']         = $jdate->mktime(0, 0, 0, (int)$var[0], (int)$var[1], (int)$var[2]);
         $data['title'] 		       = $this->input->post('title');
         $data['description']       = $this->input->post('description');
