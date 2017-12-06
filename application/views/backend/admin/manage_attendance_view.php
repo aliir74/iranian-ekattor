@@ -51,11 +51,11 @@ $date = new jDateTime(true, true, 'Asia/Tehran');
         <div class="form-group">
             <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('date'); ?></label>
             <input type="text" class="form-control datepicker" name="timestamp" data-format="dd-mm-yyyy"
-                   value="<?php echo $date->date("d-m-Y", (int)$timestamp); ?>"/>
+                   value="<?php echo $date->date("d/m/Y", (int)$timestamp); ?>"/>
+            <?php
+            echo ($timestamp);
+            ?>
         </div>
-        <?php
-        echo $timestamp;
-        ?>
     </div>
 
     <input type="hidden" name="year" value="<?php echo $running_year; ?>">
