@@ -42,7 +42,7 @@ $date = new jDateTime(true, true, 'Asia/Tehran');
 		<div class="form-group">
 		<label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('date');?></label>
 			<input type="text" class="form-control datepicker" name="timestamp" data-format="dd-mm-yyyy"
-				value="<?php echo $date->date("d-m-Y");?>"/>
+				value="<?php echo $date->date("d/m/Y");?>"/>
 		</div>
 	</div>
 	<input type="hidden" name="year" value="<?php echo $running_year;?>">
