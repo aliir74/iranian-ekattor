@@ -53,7 +53,7 @@ $date = new jDateTime(true, true, 'Asia/Tehran');
             <input type="text" class="form-control datepicker" name="timestamp" data-format="dd-mm-yyyy"
                    value="<?php echo $date->date("d/m/Y", (int)$timestamp); ?>"/>
             <?php
-            echo ($timestamp);
+            echo 'iman'.($timestamp);
             ?>
         </div>
     </div>
@@ -110,7 +110,7 @@ $date = new jDateTime(true, true, 'Asia/Tehran');
 
     <div class="col-md-8">
 
-        <?php echo form_open(base_url() . 'index.php?admin/attendance_update/' . $class_id . '//' . $timestamp); ?>
+        <?php echo form_open(base_url() . 'index.php?admin/attendance_update/' . $class_id . '/'. $section_id. '/' . $timestamp); ?>
         <div id="attendance_update">
             <table class="table table-bordered">
                 <thead>
