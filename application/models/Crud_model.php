@@ -1,5 +1,5 @@
 <?php
-$jdate = new jDateTime(true, true, 'Asia/Tehran');
+#$jdate = new jDateTime(true, true, 'Asia/Tehran');
 
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
@@ -237,7 +237,7 @@ class Crud_model extends CI_Model {
     ////////STUDY MATERIAL//////////
     function save_study_material_info()
     {
-        global $jdate;
+        #global $jdate;
         $data['timestamp']         = strtotime($this->input->post('timestamp'));
         $var = explode('/', $this->input->post('timestamp'));
         echo $var;
