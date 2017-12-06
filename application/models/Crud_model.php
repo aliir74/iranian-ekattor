@@ -241,7 +241,7 @@ class Crud_model extends CI_Model {
         global $jdate;
         #$data['timestamp']         = strtotime($this->input->post('timestamp'));
         $var = explode('/', $this->input->post('timestamp'));
-        show_error($var);
+        echo ($var);
         $data['timestamp']         = $jdate->mktime(0, 0, 0, (int)$var[0], (int)$var[1], (int)$var[2]);
         $data['title'] 		       = $this->input->post('title');
         $data['description']       = $this->input->post('description');
