@@ -38,7 +38,7 @@ $date = new jDateTime(true, true, 'Asia/Tehran');
 	</div>
     </div>-->
 	
-        <div class="col-md-5">
+        <div class="col-md-4">
 		<div class="form-group">
 		<label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('date');?></label>
 			<input type="text" class="form-control datepicker" name="timestamp" data-format="dd-mm-yyyy"
