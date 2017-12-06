@@ -1340,6 +1340,8 @@ class Admin extends CI_Controller
         $data['class_id']   = $this->input->post('class_id');
         $data['year']       = $this->input->post('year');
         $data['timestamp']  = strtotime(ptg($this->input->post('timestamp')));
+        log_message('error', $data['timestamp']);
+        log_message('error', $this->input->post('timestamp'));
         #show_error($this->input->post('timestamp').'     '.ptg($this->input->post('timestamp')).'      '.$data['timestamp']);
         #$data['timestamp']  = strtotime($this->input->post('timestamp'));
         $data['section_id'] = $this->input->post('section_id');
