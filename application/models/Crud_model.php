@@ -1,5 +1,6 @@
 <?php
-#require_once '../libraries/jdatetime.class.php';
+show_error(APPPATH);
+require_once(APPPATH.'libraries/jdatetime.class.php');
 #$jdate = new jDateTime(true, true, 'Asia/Tehran');
 
 if (!defined('BASEPATH'))
