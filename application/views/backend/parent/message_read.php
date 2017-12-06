@@ -1,5 +1,5 @@
 <?php
-require_once 'jdatetime.class.php';
+require_once(APPPATH.'libraries/jdatetime.class.php');
 $date = new jDateTime(true, true, 'Asia/Tehran');
 $messages = $this->db->get_where('message', array('message_thread_code' => $current_message_thread_code))->result_array();
 foreach ($messages as $row):

@@ -27,7 +27,7 @@ $user_id = $this->session->userdata('login_user_id');
 
     <tbody>
     <?php
-    require_once 'jdatetime.class.php';
+    require_once(APPPATH.'libraries/jdatetime.class.php');
     $date = new jDateTime(true, true, 'Asia/Tehran');
     $count = 1;
     foreach ($study_material_info as $row) { ?>
