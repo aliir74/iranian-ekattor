@@ -1372,7 +1372,10 @@ class Admin extends CI_Controller
             }
 
         }
-        redirect(base_url().'index.php?admin/manage_attendance_view/'.$data['class_id'].'/'.'0'.'/'.$data['timestamp'],'refresh');
+        /* this hardcoding section_id is for correct url decoding
+        and giving timestamp correctly. this manual section_id doesnt use anywhere */
+        $data['section_id'] = 0;
+        redirect(base_url().'index.php?admin/manage_attendance_view/'.$data['class_id'].'/'.$data['section_id'].'/'.$data['timestamp'],'refresh');
     }
 
     function attendance_update($class_id = '' , $section_id = '' , $timestamp = '')
