@@ -24,29 +24,29 @@ $date = new jDateTime(true, true, 'Asia/Tehran');
         </div>
     </div>
 
-
+<!--
 <div id="section_holder">
     <div class="col-md-3">
 
         <div class="form-group">
-            <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('section'); ?></label>
+            <label class="control-label" style="margin-bottom: 5px;"><?php /*echo get_phrase('section'); */?></label>
             <select name="section_id" id="section_id" class="form-control selectboxit">
                 <?php
-                $sections = $this->db->get_where('section', array(
+/*                $sections = $this->db->get_where('section', array(
                             'class_id' => $class_id
                         ))->result_array();
                 foreach ($sections as $row):
-                    ?>
-                    <option value="<?php echo $row['section_id']; ?>"
-                            <?php if ($section_id == $row['section_id']) echo 'selected'; ?>>
-                            <?php echo $row['name']; ?>
+                    */?>
+                    <option value="<?php /*echo $row['section_id']; */?>"
+                            <?php /*if ($section_id == $row['section_id']) echo 'selected'; */?>>
+                            <?php /*echo $row['name']; */?>
                     </option>
-                <?php endforeach; ?>
+                <?php /*endforeach; */?>
             </select>
         </div>
 
     </div>
-</div>
+</div>-->
     <div class="col-md-3">
         <div class="form-group">
             <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('date'); ?></label>
