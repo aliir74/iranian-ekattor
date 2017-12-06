@@ -9,6 +9,15 @@ if (!defined('BASEPATH'))
  *  http://support.creativeitem.com
  */
 
+function ptg2($str) {
+    /*manually added*/
+    include(APPPATH.'libraries/gregorian_jalali.php');
+    $var = explode('/', $str);
+    $gdate = jalali_to_gregorian((int)$var[2], (int)$var[1], (int)$var[0], True);
+    $new_var = explode('/', $gdate);
+    $new_str = sprintf("%02d", $new_var[1]).'/'.sprintf("%02d", $new_var[2]).'/'.sprintf("%04d", $new_var[0]);
+    return $new_str;
+}
 
 
 class Admin extends CI_Controller
@@ -1339,13 +1348,13 @@ class Admin extends CI_Controller
     {
         $data['class_id']   = $this->input->post('class_id');
         $data['year']       = $this->input->post('year');
-        $data['timestamp']  = strtotime(ptg($this->input->post('timestamp')));
+        $data['timestamp']  = strtotime(ptg2($this->input->post('timestamp')));
 
         log_message('error', $this->input->post('timestamp'));
-        log_message('error', ptg($this->input->post('timestamp')));
-        log_message('error', strtotime(ptg($this->input->post('timestamp'))));
+        log_message('error', ptg2($this->input->post('timestamp')));
+        log_message('error', strtotime(ptg2($this->input->post('timestamp'))));
         log_message('error', $data['timestamp']);
-        #show_error($this->input->post('timestamp').'     '.ptg($this->input->post('timestamp')).'      '.$data['timestamp']);
+        #show_error($this->input->post('timestamp').'     '.ptg2($this->input->post('timestamp')).'      '.$data['timestamp']);
         #$data['timestamp']  = strtotime($this->input->post('timestamp'));
         $data['section_id'] = $this->input->post('section_id');
         $query = $this->db->get_where('attendance' ,array(
@@ -1540,7 +1549,7 @@ class Admin extends CI_Controller
             $data['amount_paid']        = $this->input->post('amount_paid');
             $data['due']                = $data['amount'] - $data['amount_paid'];
             $data['status']             = $this->input->post('status');
-            $data['creation_timestamp'] = strtotime(ptg($this->input->post('date')));
+            $data['creation_timestamp'] = strtotime(ptg2($this->input->post('date')));
             #$data['creation_timestamp'] = strtotime($this->input->post('date'));
             $data['year']               = $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
             if ($this->input->post('description') != null) {
@@ -1556,7 +1565,7 @@ class Admin extends CI_Controller
             $data2['payment_type']      =  'income';
             $data2['method']            =   $this->input->post('method');
             $data2['amount']            =   $this->input->post('amount_paid');
-            $data2['timestamp']         =   strtotime(ptg($this->input->post('date')));
+            $data2['timestamp']         =   strtotime(ptg2($this->input->post('date')));
             #$data2['timestamp']         =   strtotime($this->input->post('date'));
             $data2['year']              =  $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
             if ($this->input->post('description') != null) {
@@ -1578,7 +1587,7 @@ class Admin extends CI_Controller
                 $data['amount_paid']        = $this->input->post('amount_paid');
                 $data['due']                = $data['amount'] - $data['amount_paid'];
                 $data['status']             = $this->input->post('status');
-                $data['creation_timestamp'] = strtotime(ptg($this->input->post('date')));
+                $data['creation_timestamp'] = strtotime(ptg2($this->input->post('date')));
                 $data['year']               = $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
 
                 $this->db->insert('invoice', $data);
@@ -1591,7 +1600,7 @@ class Admin extends CI_Controller
                 $data2['payment_type']      =  'income';
                 $data2['method']            =   $this->input->post('method');
                 $data2['amount']            =   $this->input->post('amount_paid');
-                $data2['timestamp']         =   strtotime(ptg($this->input->post('date')));
+                $data2['timestamp']         =   strtotime(ptg2($this->input->post('date')));
                 $data2['year']               =   $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
 
                 $this->db->insert('payment' , $data2);
@@ -1607,7 +1616,7 @@ class Admin extends CI_Controller
             $data['description']        = $this->input->post('description');
             $data['amount']             = $this->input->post('amount');
             $data['status']             = $this->input->post('status');
-            $data['creation_timestamp'] = strtotime(ptg($this->input->post('date')));
+            $data['creation_timestamp'] = strtotime(ptg2($this->input->post('date')));
 
             $this->db->where('invoice_id', $param2);
             $this->db->update('invoice', $data);
@@ -1626,7 +1635,7 @@ class Admin extends CI_Controller
             $data['payment_type'] =   'income';
             $data['method']       =   $this->input->post('method');
             $data['amount']       =   $this->input->post('amount');
-            $data['timestamp']    =   strtotime(ptg($this->input->post('timestamp')));
+            $data['timestamp']    =   strtotime(ptg2($this->input->post('timestamp')));
             $data['year']         =   $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
             $this->db->insert('payment' , $data);
 
@@ -1696,7 +1705,7 @@ class Admin extends CI_Controller
             $data['payment_type']        =   'expense';
             $data['method']              =   $this->input->post('method');
             $data['amount']              =   $this->input->post('amount');
-            $data['timestamp']           =   strtotime(ptg($this->input->post('timestamp')));
+            $data['timestamp']           =   strtotime(ptg2($this->input->post('timestamp')));
             $data['year']                =   $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
             if ($this->input->post('description') != null) {
                 $data['description']     =   $this->input->post('description');
@@ -1712,7 +1721,7 @@ class Admin extends CI_Controller
             $data['payment_type']        =   'expense';
             $data['method']              =   $this->input->post('method');
             $data['amount']              =   $this->input->post('amount');
-            $data['timestamp']           =   strtotime(ptg($this->input->post('timestamp')));
+            $data['timestamp']           =   strtotime(ptg2($this->input->post('timestamp')));
             $data['year']                =   $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
             if ($this->input->post('description') != null) {
                 $data['description']     =   $this->input->post('description');
@@ -1945,7 +1954,7 @@ class Admin extends CI_Controller
             $data['notice_title']     = $this->input->post('notice_title');
             $data['notice']           = $this->input->post('notice');
             $data['show_on_website']  = $this->input->post('show_on_website');
-            $data['create_timestamp'] = strtotime(ptg($this->input->post('create_timestamp')));
+            $data['create_timestamp'] = strtotime(ptg2($this->input->post('create_timestamp')));
             if ($_FILES['image']['name'] != '') {
               $data['image']  = $_FILES['image']['name'];
               move_uploaded_file($_FILES['image']['tmp_name'], 'uploads/frontend/noticeboard/'. $_FILES['image']['name']);
@@ -1960,7 +1969,7 @@ class Admin extends CI_Controller
                 $parents  = $this->db->get('parent')->result_array();
                 $students = $this->db->get('student')->result_array();
                 $teachers = $this->db->get('teacher')->result_array();
-                $date     = ptg($this->input->post('create_timestamp'));
+                $date     = ptg2($this->input->post('create_timestamp'));
                 #$date     = $this->input->post('create_timestamp');
                 $message  = $data['notice_title'] . ' ';
                 $message .= get_phrase('on') . ' ' . $date;
@@ -1986,7 +1995,7 @@ class Admin extends CI_Controller
             $data['notice_title']     = $this->input->post('notice_title');
             $data['notice']           = $this->input->post('notice');
             $data['show_on_website']  = $this->input->post('show_on_website');
-            $data['create_timestamp'] = strtotime(ptg($this->input->post('create_timestamp')));
+            $data['create_timestamp'] = strtotime(ptg2($this->input->post('create_timestamp')));
             if ($_FILES['image']['name'] != '') {
               $data['image']  = $_FILES['image']['name'];
               move_uploaded_file($_FILES['image']['tmp_name'], 'uploads/frontend/noticeboard/'. $_FILES['image']['name']);
@@ -2005,7 +2014,7 @@ class Admin extends CI_Controller
                 $parents  = $this->db->get('parent')->result_array();
                 $students = $this->db->get('student')->result_array();
                 $teachers = $this->db->get('teacher')->result_array();
-                $date     = ptg($this->input->post('create_timestamp'));
+                $date     = ptg2($this->input->post('create_timestamp'));
                 #$date     = $this->input->post('create_timestamp');
                 $message  = $data['notice_title'] . ' ';
                 $message .= get_phrase('on') . ' ' . $date;
