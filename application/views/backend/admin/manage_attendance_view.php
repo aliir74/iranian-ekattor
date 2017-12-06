@@ -7,7 +7,7 @@ $date = new jDateTime(true, true, 'Asia/Tehran');
 <?php echo form_open(base_url() . 'index.php?admin/attendance_selector/'); ?>
 <div class="row">
 
-    <div class="col-md-3">
+    <div class="col-md-5">
         <div class="form-group">
             <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('class'); ?></label>
             <select name="class_id" class="form-control selectboxit" onchange="select_section(this.value)"  id = "class_selection">
@@ -47,7 +47,7 @@ $date = new jDateTime(true, true, 'Asia/Tehran');
 
     </div>
 </div>-->
-    <div class="col-md-3">
+    <div class="col-md-5">
         <div class="form-group">
             <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('date'); ?></label>
             <input type="text" class="form-control datepicker" name="timestamp" data-format="dd-mm-yyyy"
