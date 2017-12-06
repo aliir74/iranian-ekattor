@@ -10,7 +10,7 @@
 
         ?>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="form-group">
                 <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('class'); ?></label>
                 <select class="form-control selectboxit" name="class_id" onchange="select_section(this.value)">
@@ -23,18 +23,18 @@
         </div>
     <?php endif; ?>
 
-    <div id="section_holder">
+    <!--<div id="section_holder">
         <div class="col-md-3">
             <div class="form-group">
-                <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('section'); ?></label>
+                <label class="control-label" style="margin-bottom: 5px;"><?php /*echo get_phrase('section'); */?></label>
                 <select class="form-control selectboxit" name="section_id">
-                    <option value=""><?php echo get_phrase('select_class_first') ?></option>
+                    <option value=""><?php /*echo get_phrase('select_class_first') */?></option>
 
                 </select>
             </div>
         </div>
-    </div>
-    <div class="col-md-2">
+    </div>-->
+    <div class="col-md-3">
          <div class="form-group">
             <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('month'); ?></label>
             <select name="month" class="form-control selectboxit">
@@ -91,7 +91,7 @@
     <input type="hidden" name="operation" value="selection">
     <input type="hidden" name="year" value="<?php echo $running_year;?>">
 
-	<div class="col-md-2" style="margin-top: 20px;">
+	<div class="col-md-3" style="margin-top: 20px;">
 		<button type="submit" class="btn btn-info"><?php echo get_phrase('show_report');?></button>
 	</div>
 </div>
