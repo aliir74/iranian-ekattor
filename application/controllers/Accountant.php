@@ -10,16 +10,6 @@ if (!defined('BASEPATH'))
  *	http://support.creativeitem.com
  */
 
-/* persian date to georgian date for timestamp */
-function ptg($str) {
-    /*manually added*/
-    include(APPPATH.'libraries/gregorian_jalali.php');
-    $var = explode('/', $str);
-    $gdate = jalali_to_gregorian((int)$var[2], (int)$var[1], (int)$var[0], True);
-    $new_var = explode('/', $gdate);
-    $new_str = sprintf("%02d", $new_var[1]).'/'.sprintf("%02d", $new_var[2]).'/'.sprintf("%04d", $new_var[0]);
-    return $new_str;
-}
 
 class Accountant extends CI_Controller
 {
