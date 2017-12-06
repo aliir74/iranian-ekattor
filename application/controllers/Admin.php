@@ -11,7 +11,7 @@ if (!defined('BASEPATH'))
 
 function ptg2($str) {
     /*manually added*/
-    include(APPPATH.'libraries/gregorian_jalali.php');
+    #include(APPPATH.'libraries/gregorian_jalali.php');
     $var = explode('/', $str);
     $gdate = jalali_to_gregorian((int)$var[2], (int)$var[1], (int)$var[0], True);
     $new_var = explode('/', $gdate);
