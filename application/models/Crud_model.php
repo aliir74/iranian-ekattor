@@ -1,10 +1,21 @@
 <?php
 require_once(APPPATH.'libraries/jdatetime.class.php');
 $jdate = new jDateTime(true, true, 'Asia/Tehran');
-include(APPPATH.'libraries/gregorian_jalali.php');
 
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
+
+/* persian date to georgian date for timestamp */
+function ptg($str) {
+    /*manually added*/
+    include(APPPATH.'libraries/gregorian_jalali.php');
+    $var = explode('/', $str);
+    $gdate = jalali_to_gregorian((int)$var[2], (int)$var[1], (int)$var[0], True);
+    $new_var = explode('/', $gdate);
+    $new_str = sprintf("%02d", $new_var[1]).'/'.sprintf("%02d", $new_var[2]).'/'.sprintf("%04d", $new_var[0]);
+    return $new_str;
+}
+
 
 class Crud_model extends CI_Model {
 
@@ -239,13 +250,7 @@ class Crud_model extends CI_Model {
     ////////STUDY MATERIAL//////////
     function save_study_material_info()
     {
-        global $jdate;
-        #$data['timestamp']         = strtotime($this->input->post('timestamp'));
-        $var = explode('/', $this->input->post('timestamp'));
-        $gdate = jalali_to_gregorian((int)$var[2], (int)$var[1], (int)$var[0], True);
-        $new_var = explode('/', $gdate);
-        #show_error($this->input->post('timestamp').'\n'.$gdate.'\n'.$new_var.'\n\n\n'.sprintf("%02d", $new_var[2]).'/'.sprintf("%02d", $new_var[1]).'/'.sprintf("%04d", $new_var[0]));
-        $data['timestamp']         = strtotime(sprintf("%02d", $new_var[1]).'/'.sprintf("%02d", $new_var[2]).'/'.sprintf("%04d", $new_var[0]));
+        $data['timestamp']         = strtotime(ptg($this->input->post('timestamp')));
         $data['title'] 		       = $this->input->post('title');
         $data['description']       = $this->input->post('description');
         $data['file_name'] 	       = $_FILES["file_name"]["name"];
@@ -279,7 +284,7 @@ class Crud_model extends CI_Model {
 
     function update_study_material_info($document_id)
     {
-        $data['timestamp']      = strtotime($this->input->post('timestamp'));
+        $data['timestamp']      = strtotime(ptg($this->input->post('timestamp')));
         $data['title'] 		= $this->input->post('title');
         $data['description']    = $this->input->post('description');
         $data['class_id'] 	= $this->input->post('class_id');
@@ -414,8 +419,8 @@ class Crud_model extends CI_Model {
     {
         $data['book_id']            = $this->input->post('book_id');
         $data['student_id']         = $this->session->userdata('login_user_id');
-        $data['issue_start_date']   = strtotime($this->input->post('issue_start_date'));
-        $data['issue_end_date']     = strtotime($this->input->post('issue_end_date'));
+        $data['issue_start_date']   = strtotime(ptg($this->input->post('issue_start_date')));
+        $data['issue_end_date']     = strtotime(ptg($this->input->post('issue_end_date')));
 
         $this->db->insert('book_request', $data);
     }

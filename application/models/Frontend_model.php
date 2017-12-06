@@ -1,5 +1,17 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+
+/* persian date to georgian date for timestamp */
+function ptg($str) {
+    /*manually added*/
+    include(APPPATH.'libraries/gregorian_jalali.php');
+    $var = explode('/', $str);
+    $gdate = jalali_to_gregorian((int)$var[2], (int)$var[1], (int)$var[0], True);
+    $new_var = explode('/', $gdate);
+    $new_str = sprintf("%02d", $new_var[1]).'/'.sprintf("%02d", $new_var[2]).'/'.sprintf("%04d", $new_var[0]);
+    return $new_str;
+}
+
 class Frontend_model extends CI_Model {
 
     public function __construct() {
@@ -58,14 +70,14 @@ class Frontend_model extends CI_Model {
     // add event
     function add_event() {
       $data['title']  = $this->input->post('title');
-      $data['timestamp']  = strtotime($this->input->post('timestamp'));
+      $data['timestamp']  = strtotime(ptg($this->input->post('timestamp')));
       $data['status'] = $this->input->post('status');
       $this->db->insert('frontend_events', $data);
     }
     // edit event
     function edit_event($event_id) {
       $data['title']  = $this->input->post('title');
-      $data['timestamp']  = strtotime($this->input->post('timestamp'));
+      $data['timestamp']  = strtotime(ptg($this->input->post('timestamp')));
       $data['status'] = $this->input->post('status');
       $this->db->where('frontend_events_id', $event_id);
       $this->db->update('frontend_events', $data);
@@ -86,7 +98,7 @@ class Frontend_model extends CI_Model {
     function add_news() {
       $data['title']  = $this->input->post('title');
       $data['description']  = $this->input->post('description');
-      $data['date_added'] = strtotime($this->input->post('date'));
+      $data['date_added'] = strtotime(ptg($this->input->post('date')));
       if ($_FILES['news_image']['name'] != '') {
         $data['image']  = $_FILES['news_image']['name'];
         move_uploaded_file($_FILES['news_image']['tmp_name'], 'uploads/frontend/news_image/'. $_FILES['news_image']['name']);
@@ -124,7 +136,7 @@ class Frontend_model extends CI_Model {
       $data['title']            = $this->input->post('title');
       $data['description']      = $this->input->post('description');
       $data['show_on_website']  = $this->input->post('show_on_website');
-      $data['date_added']       = strtotime($this->input->post('date_added'));
+      $data['date_added']       = strtotime(ptg($this->input->post('date_added')));
       if ($_FILES['cover_image']['name'] != '') {
         $data['image']  = $_FILES['cover_image']['name'];
         move_uploaded_file($_FILES['cover_image']['tmp_name'], 'uploads/frontend/gallery_cover/'. $_FILES['cover_image']['name']);
@@ -137,7 +149,7 @@ class Frontend_model extends CI_Model {
       $data['title']            = $this->input->post('title');
       $data['description']      = $this->input->post('description');
       $data['show_on_website']  = $this->input->post('show_on_website');
-      $data['date_added']       = strtotime($this->input->post('date_added'));
+      $data['date_added']       = strtotime(ptg($this->input->post('date_added')));
       if ($_FILES['cover_image']['name'] != '') {
         $data['image']  = $_FILES['cover_image']['name'];
         move_uploaded_file($_FILES['cover_image']['tmp_name'], 'uploads/frontend/gallery_cover/'. $_FILES['cover_image']['name']);

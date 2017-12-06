@@ -1,4 +1,6 @@
-<?php 
+<?php
+    require_once(APPPATH.'libraries/jdatetime.class.php');
+    $date = new jDateTime(true, true, 'Asia/Tehran');
 	$edit_data	=	$this->db->get_where('payment' , array(
 		'payment_id' => $param2
 	))->result_array();
@@ -78,7 +80,7 @@
                         <label class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
                         <div class="col-sm-6">
                             <input type="text" class="datepicker form-control" name="timestamp"
-                            value="<?php echo date('d M,Y', $row['timestamp']);?>"
+                            value="<?php echo $date->date('d M,Y', $row['timestamp']);?>"
                                 data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>" />
                         </div>
                     </div>

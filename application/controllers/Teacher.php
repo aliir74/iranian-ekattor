@@ -10,6 +10,18 @@ if (!defined('BASEPATH'))
  *  http://support.creativeitem.com
  */
 
+/* persian date to georgian date for timestamp */
+function ptg($str) {
+    /*manually added*/
+    include(APPPATH.'libraries/gregorian_jalali.php');
+    $var = explode('/', $str);
+    $gdate = jalali_to_gregorian((int)$var[2], (int)$var[1], (int)$var[0], True);
+    $new_var = explode('/', $gdate);
+    $new_str = sprintf("%02d", $new_var[1]).'/'.sprintf("%02d", $new_var[2]).'/'.sprintf("%04d", $new_var[0]);
+    return $new_str;
+}
+
+
 class Teacher extends CI_Controller
 {
 
@@ -645,7 +657,7 @@ else{
     {
         $data['class_id']   = $this->input->post('class_id');
         $data['year']       = $this->input->post('year');
-        $data['timestamp']  = strtotime($this->input->post('timestamp'));
+        $data['timestamp']  = strtotime(ptg($this->input->post('timestamp')));
         $data['section_id'] = $this->input->post('section_id');
         $query = $this->db->get_where('attendance' ,array(
             'class_id'=>$data['class_id'],
@@ -742,14 +754,14 @@ else{
         if ($param1 == 'create') {
             $data['notice_title']     = $this->input->post('notice_title');
             $data['notice']           = $this->input->post('notice');
-            $data['create_timestamp'] = strtotime($this->input->post('create_timestamp'));
+            $data['create_timestamp'] = strtotime(ptg($this->input->post('create_timestamp')));
             $this->db->insert('noticeboard', $data);
             redirect(base_url() . 'index.php?teacher/noticeboard/', 'refresh');
         }
         if ($param1 == 'do_update') {
             $data['notice_title']     = $this->input->post('notice_title');
             $data['notice']           = $this->input->post('notice');
-            $data['create_timestamp'] = strtotime($this->input->post('create_timestamp'));
+            $data['create_timestamp'] = strtotime(ptg($this->input->post('create_timestamp')));
             $this->db->where('notice_id', $param2);
             $this->db->update('noticeboard', $data);
             $this->session->set_flashdata('flash_message', get_phrase('notice_updated'));

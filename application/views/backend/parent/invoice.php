@@ -1,4 +1,7 @@
 <?php
+    require_once(APPPATH.'libraries/jdatetime.class.php');
+    $date = new jDateTime(true, true, 'Asia/Tehran');
+
     $child_of_parent = $this->db->get_where('student' , array(
         'student_id' => $student_id
     ))->result_array();
@@ -50,7 +53,7 @@
 							<td>
 								<span class="label label-<?php if($row2['status']=='paid')echo 'success';else echo 'danger';?>"><?php echo $row2['status'];?></span>
 							</td>
-							<td><?php echo date('d M,Y', $row2['creation_timestamp']);?></td>
+							<td><?php echo $date->date('l j F Y', $row2['creation_timestamp']);?></td>
 							<td>
                 <div class="row">
                   <div class="col-md-6">

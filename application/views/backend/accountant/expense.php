@@ -1,4 +1,7 @@
-
+<?php
+require_once(APPPATH.'libraries/jdatetime.class.php');
+$date = new jDateTime(true, true, 'Asia/Tehran');
+?>
 <a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/expense_add/');" 
 class="btn btn-primary pull-right">
 <i class="entypo-plus-circled"></i>
@@ -46,7 +49,7 @@ class="btn btn-primary pull-right">
             	?>
             </td>
             <td><?php echo $row['amount'];?></td>
-            <td><?php echo date('d M,Y', $row['timestamp']);?></td>
+            <td><?php echo $date->date("l j F Y", $row['timestamp']);;?></td>
             <td>
                 
                 <div class="btn-group">

@@ -714,7 +714,9 @@ class Mobile extends CI_Controller
         $data['notice_id']    = $row['notice_id'];
         $data['notice_title'] = $row['notice_title'];
         $data['notice']       = $row['notice'];
-        $data['date']         = date('d-M-Y',$row['create_timestamp']);
+          require_once(APPPATH.'libraries/jdatetime.class.php');
+          $date = new jDateTime(true, true, 'Asia/Tehran');
+        $data['date']         = $date->date('d-M-Y',$row['create_timestamp']);
 
         array_push($response, $data);
       }

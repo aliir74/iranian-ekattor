@@ -44,7 +44,7 @@
 						))->row()->name;
 					?>
 				</td>
-				<td><?php echo date("d/m/Y" , $row['timestamp']);?></td>
+				<td><?php echo $date->date("l j F Y" , $row['timestamp']);?></td>
 				<td>
 					<?php echo substr($row['file_name'], 0, 20);?><?php if(strlen($row['file_name']) > 20) echo '...';?>
 				</td>

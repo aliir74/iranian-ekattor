@@ -1,4 +1,6 @@
 <?php
+require_once(APPPATH.'libraries/jdatetime.class.php');
+$date = new jDateTime(true, true, 'Asia/Tehran');
 $edit_data = $this->db->get_where('noticeboard', array('notice_id' => $param2))->result_array();
 foreach ($edit_data as $row):
 ?>
@@ -24,7 +26,7 @@ foreach ($edit_data as $row):
                         <b>Notice</b>
                         <p><?php echo $row['notice'] ?></p>
                         <b>Date</b>
-                        <p><?php echo date('d M Y',$row['create_timestamp']) ?></p>
+                        <p><?php echo $date->date('l j F Y',$row['create_timestamp']) ?></p>
                     </div>
                 </div>
             </div>

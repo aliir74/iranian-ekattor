@@ -1,3 +1,8 @@
+<?php
+require_once(APPPATH.'libraries/jdatetime.class.php');
+$date = new jDateTime(true, true, 'Asia/Tehran');
+?>
+
 <hr />
 <a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/academic_syllabus_add/');" 
 	class="btn btn-primary pull-right">
@@ -68,7 +73,7 @@
 										))->row()->name;
 									?>
 								</td>
-								<td><?php echo date("d/m/Y" , $row['timestamp']);?></td>
+								<td><?php echo $date->date("d/m/Y" , $row['timestamp']);?></td>
 								<td>
 									<?php echo substr($row['file_name'], 0, 20);?><?php if(strlen($row['file_name']) > 20) echo '...';?>
 								</td>

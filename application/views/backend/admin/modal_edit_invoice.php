@@ -1,5 +1,7 @@
 <?php
 $edit_data		=	$this->db->get_where('invoice' , array('invoice_id' => $param2) )->result_array();
+require_once(APPPATH.'libraries/jdatetime.class.php');
+$date = new jDateTime(true, true, 'Asia/Tehran');
 ?>
 
 <div class="tab-pane box active" id="edit" style="padding: 5px">
@@ -55,7 +57,7 @@ $edit_data		=	$this->db->get_where('invoice' , array('invoice_id' => $param2) )-
                     <label class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
                     <div class="col-sm-5">
                         <input type="text" class="datepicker form-control" name="date"
-                            value="<?php echo date('m/d/Y', $row['creation_timestamp']);?>"/>
+                            value="<?php echo $date->date('m/d/Y', $row['creation_timestamp']);?>"/>
                     </div>
 
                 </div>
