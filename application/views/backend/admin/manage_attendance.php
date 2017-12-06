@@ -1,5 +1,8 @@
 <hr />
-
+<?php
+require_once(APPPATH.'libraries/jdatetime.class.php');
+$date = new jDateTime(true, true, 'Asia/Tehran');
+?>
 <?php echo form_open(base_url() . 'index.php?admin/attendance_selector/');?>
 <div class="row">
 
@@ -23,23 +26,23 @@
 	</div>
 
 	
-    <div id="section_holder">
+    <!--<div id="section_holder">
 	<div class="col-md-3">
 		<div class="form-group">
-		<label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('section');?></label>
+		<label class="control-label" style="margin-bottom: 5px;"><?php /*echo get_phrase('section');*/?></label>
 			<select class="form-control selectboxit" name="section_id">
-                            <option value=""><?php echo get_phrase('select_class_first') ?></option>
+                            <option value=""><?php /*echo get_phrase('select_class_first') */?></option>
 				
 			</select>
 		</div>
 	</div>
-    </div>
+    </div>-->
 	
         <div class="col-md-3">
 		<div class="form-group">
 		<label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('date');?></label>
 			<input type="text" class="form-control datepicker" name="timestamp" data-format="dd-mm-yyyy"
-				value="<?php echo date("d-m-Y");?>"/>
+				value="<?php echo $date->date("d-m-Y");?>"/>
 		</div>
 	</div>
 	<input type="hidden" name="year" value="<?php echo $running_year;?>">
