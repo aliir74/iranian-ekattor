@@ -244,8 +244,8 @@ class Crud_model extends CI_Model {
         $var = explode('/', $this->input->post('timestamp'));
         $gdate = jalali_to_gregorian((int)$var[2], (int)$var[1], (int)$var[0], True);
         $new_var = explode('/', $gdate);
-        show_error($this->input->post('timestamp').'\n'.$gdate.'\n'.$new_var.'\n\n\n'.sprintf("%02d", $new_var[2]).'/'.sprintf("%02d", $new_var[1]).'/'.sprintf("%04d", $new_var[0]));
-        $data['timestamp']         = strtotime(sprintf("%02d", $new_var[2]).'/'.sprintf("%02d", $new_var[1]).'/'.sprintf("%04d", $new_var[0]));
+        #show_error($this->input->post('timestamp').'\n'.$gdate.'\n'.$new_var.'\n\n\n'.sprintf("%02d", $new_var[2]).'/'.sprintf("%02d", $new_var[1]).'/'.sprintf("%04d", $new_var[0]));
+        $data['timestamp']         = strtotime(sprintf("%02d", $new_var[1]).'/'.sprintf("%02d", $new_var[2]).'/'.sprintf("%04d", $new_var[0]));
         $data['title'] 		       = $this->input->post('title');
         $data['description']       = $this->input->post('description');
         $data['file_name'] 	       = $_FILES["file_name"]["name"];
