@@ -51,7 +51,7 @@ $date = new jDateTime(true, true, 'Asia/Tehran');
         <div class="form-group">
             <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('date'); ?></label>
             <input type="text" class="form-control datepicker" name="timestamp" data-format="dd-mm-yyyy"
-                   value="<?php echo $date->date("d/m/Y", $timestamp); ?>"/>
+                   value="<?php echo $date->date("d/m/Y", (int)$timestamp); ?>"/>
             <?php
             echo ($timestamp);
             ?>
@@ -84,7 +84,10 @@ $date = new jDateTime(true, true, 'Asia/Tehran');
                 <?php /*echo get_phrase('section'); */?> <?php /*echo $this->db->get_where('section', array('section_id' => $section_id))->row()->name; */?>
             </h4>-->
             <h4 style="color: #696969;">
-                <?php echo $date->date("d M Y", $timestamp); ?>
+                <?php echo $date->date("d M Y", (int)$timestamp); ?>
+            </h4>
+            <h4>
+                <?php echo $timestamp; ?>
             </h4>
         </div>
     </div>
