@@ -22,25 +22,26 @@
         </div>
     <?php endif; ?>
 
+    <!--
     <?php
-    $query = $this->db->get_where('section', array('class_id' => $class_id));
+/*    $query = $this->db->get_where('section', array('class_id' => $class_id));
     if ($query->num_rows() > 0):
         $sections = $query->result_array();
-        ?>
+        */?>
         <div id="section_holder">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('section'); ?></label>
+                    <label class="control-label" style="margin-bottom: 5px;"><?php /*echo get_phrase('section'); */?></label>
                     <select class="form-control selectboxit" name="section_id">
-                        <?php foreach ($sections as $row): ?>
-                            <option value="<?php echo $row['section_id']; ?>"
-                                    <?php if ($section_id == $row['section_id']) echo 'selected'; ?>><?php echo $row['name']; ?></option>
-                                <?php endforeach; ?>
+                        <?php /*foreach ($sections as $row): */?>
+                            <option value="<?php /*echo $row['section_id']; */?>"
+                                    <?php /*if ($section_id == $row['section_id']) echo 'selected'; */?>><?php /*echo $row['name']; */?></option>
+                                <?php /*endforeach; */?>
                     </select>
                 </div>
             </div>
         </div>
-    <?php endif; ?>
+    --><?php /*endif; */?>
     <div class="col-md-2">
         <div class="form-group">
             <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('month'); ?></label>
