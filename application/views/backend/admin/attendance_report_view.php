@@ -183,14 +183,7 @@
                             <?php
                             $data = array();
 
-                            $students = $this->db->get_where('enroll', array('class_id' => $class_id, 'year' => $running_year, 'section_id !=' => -1))->result_array();
-                            $st_all = $this->db->get_where('enroll', array('class_id' => $class_id, 'year' => $running_year))->result_array();
-                            log_message('error', implode(' ', array('class_id' => $class_id, 'year' => $running_year, 'section_id !=' => -1)));
-                            foreach ($st_all as $rrr):
-                                log_message('error', $rrr['enroll_code']);
-                            endforeach;
-                            $students = $st_all;
-
+                            $students = $this->db->get_where('enroll', array('class_id' => $class_id, 'year' => $running_year))->result_array();
                             foreach ($students as $row):
                                 ?>
                         <tr>
@@ -203,10 +196,10 @@
                                 $timestamp = strtotime(ptg2($i . '/' . $month . '/' . $sessional_year));
                                 #$this->db->group_by('timestamp');
                                 log_message('error', implode(' ', array('section_id !=' => -1, 'class_id' => $class_id, 'year' => $running_year, 'timestamp' => $timestamp, 'student_id' => $row['student_id'])));
-                                $attendance = $this->db->get_where('attendance', array('section_id !=' => -1, 'class_id' => $class_id, 'year' => $running_year, 'timestamp' => $timestamp, 'student_id' => $row['student_id']))->result_array();
-
+                                $attendance = $this->db->get_where('attendance', array('class_id' => $class_id, 'year' => $running_year, 'timestamp' => $timestamp, 'student_id' => $row['student_id']))->result_array();
 
                                 foreach ($attendance as $row1):
+                                    log_message('error', 'h '.implode($row1));
                                     $month_dummy = date('d', $row1['timestamp']);
 
                                     if ($i == $month_dummy)
