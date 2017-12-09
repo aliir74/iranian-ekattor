@@ -184,11 +184,10 @@
                             $data = array();
 
                             $students = $this->db->get_where('enroll', array('class_id' => $class_id, 'year' => $running_year, 'section_id !=' => -1))->result_array();
-                            $st_all = $this->db->get_where('enroll');
-                            foreach($st_all as $rrr):
+                            $st_all = $this->db->get_where('enroll')->result_array();
+                            foreach ($st_all as $rrr):
                                 log_message('error', $rrr);
                             endforeach;
-                            log_message('error', sizeof($students));
 
                             foreach ($students as $row):
                                 ?>
