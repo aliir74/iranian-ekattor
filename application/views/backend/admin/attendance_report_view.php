@@ -195,7 +195,7 @@
                             for ($i = 1; $i <= $days; $i++) {
                                 $timestamp = strtotime($i . '-' . $month . '-' . $sessional_year);
                                 $this->db->group_by('timestamp');
-                                $attendance = $this->db->get_where('attendance', array('class_id' => $class_id, 'year' => $running_year, 'timestamp' => $timestamp, 'student_id' => $row['student_id']))->result_array();
+                                $attendance = $this->db->get_where('attendance', array('section_id' => $section_id, 'class_id' => $class_id, 'year' => $running_year, 'timestamp' => $timestamp, 'student_id' => $row['student_id']))->result_array();
 
 
                                 foreach ($attendance as $row1):
