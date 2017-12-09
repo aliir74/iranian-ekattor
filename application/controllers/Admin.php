@@ -1534,7 +1534,7 @@ class Admin extends CI_Controller
         $data['section_id']     = $this->input->post('section_id');
         $data['month']          = $this->input->post('month');
         $data['sessional_year'] = $this->input->post('sessional_year');
-        redirect(base_url() . 'index.php?admin/attendance_report_view/' . $data['class_id'] . '/' . $data['section_id'] . '/' . $data['month'] . '/' . $data['sessional_year'], 'refresh');
+        redirect(base_url() . 'index.php?admin/attendance_report_view/' . $data['class_id'] . '/' . '0/' . $data['month'] . '/' . $data['sessional_year'], 'refresh');
     }
 
     /******MANAGE BILLING / INVOICES WITH STATUS*****/
