@@ -117,7 +117,7 @@
                 <div class="icon"><i class="entypo-docs"></i></div>
                 <h3 style="color: #696969;">
                     <?php
-                    #$section_name = $this->db->get_where('section', array('section_id' => $section_id))->row()->name;
+                    $section_name = $this->db->get_where('section', array('section_id' => $section_id))->row()->name;
                     $class_name = $this->db->get_where('class', array('class_id' => $class_id))->row()->name;
                     if ($month == 1)
                         $m = 'January';
@@ -147,7 +147,7 @@
                     ?>
                 </h3>
                 <h4 style="color: #696969;">
-    <?php echo get_phrase('class') . ' ' . $class_name; ?><!-- : <?php /*echo get_phrase('section');*/?> --><?php /*echo $section_name; */?><br>
+    <?php echo get_phrase('class') . ' ' . $class_name; ?> : <?php echo get_phrase('section');?> <?php echo $section_name; ?><br>
     <?php echo $m . ', ' . $sessional_year; ?>
                 </h4>
             </div>
@@ -182,7 +182,7 @@
                             <?php
                             $data = array();
 
-                            $students = $this->db->get_where('enroll', array('class_id' => $class_id, 'year' => $running_year))->result_array();
+                            $students = $this->db->get_where('enroll', array('class_id' => $class_id, 'year' => $running_year, 'section_id' => $section_id))->result_array();
 
                             foreach ($students as $row):
                                 ?>
