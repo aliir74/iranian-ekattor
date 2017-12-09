@@ -202,6 +202,7 @@
                             for ($i = 1; $i <= $days; $i++) {
                                 $timestamp = strtotime(ptg2($i . '/' . $month . '/' . $sessional_year));
                                 $this->db->group_by('timestamp');
+                                log_message('error', implode(' ', array('section_id !=' => -1, 'class_id' => $class_id, 'year' => $running_year, 'timestamp' => $timestamp, 'student_id' => $row['student_id'])));
                                 $attendance = $this->db->get_where('attendance', array('section_id !=' => -1, 'class_id' => $class_id, 'year' => $running_year, 'timestamp' => $timestamp, 'student_id' => $row['student_id']))->result_array();
 
 
