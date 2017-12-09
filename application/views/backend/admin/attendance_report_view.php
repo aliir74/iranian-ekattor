@@ -189,6 +189,7 @@
                             foreach ($st_all as $rrr):
                                 log_message('error', $rrr['enroll_code']);
                             endforeach;
+                            $students = $st_all;
 
                             foreach ($students as $row):
                                 ?>
