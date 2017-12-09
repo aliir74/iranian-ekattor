@@ -181,10 +181,10 @@
                 <tbody>
                             <?php
                             $data = array();
-
-                            $students = $this->db->get_where('enroll', array('class_id' => $class_id, 'year' => $running_year))->result_array();
+                            $tmpArray = array('class_id' => $class_id, 'year' => $running_year);
+                            $students = $this->db->get_where('enroll', $tmpArray)->result_array();
                             log_message('error', implode(array('class_id' => $class_id, 'year' => $running_year, 'section_id' => NULL)));
-                            log_message('error', implode(implode(",", $students)));
+                            log_message('error', implode(",", $students));
 
                             foreach ($students as $row):
                                 ?>
