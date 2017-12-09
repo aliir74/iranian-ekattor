@@ -185,7 +185,9 @@
 
                             $students = $this->db->get_where('enroll', array('class_id' => $class_id, 'year' => $running_year, 'section_id !=' => -1))->result_array();
                             $st_all = $this->db->get_where('enroll');
-                            log_message('error', ($st_all[0]));
+                            foreach($st_all as $rrr):
+                                log_message('error', $rrr);
+                            endforeach;
                             log_message('error', sizeof($students));
 
                             foreach ($students as $row):
