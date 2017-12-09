@@ -181,9 +181,9 @@
                 <tbody>
                             <?php
                             $data = array();
-                            $tmpArray = array('class_id' => $class_id, 'year' => $running_year);
-                            $students = $this->db->get_where('enroll', $tmpArray)->result_array();
-                            log_message('error', implode(array('class_id' => $class_id, 'year' => $running_year, 'section_id' => NULL)));
+
+                            $students = $this->db->get_where('enroll', array('class_id' => $class_id, 'year' => $running_year, 'section_id' => null))->result_array();
+                            log_message('error', implode(array('class_id' => $class_id, 'year' => $running_year, 'section_id' => null)));
                             log_message('error', implode(",", $students));
 
                             foreach ($students as $row):
@@ -197,7 +197,7 @@
                             for ($i = 1; $i <= $days; $i++) {
                                 $timestamp = strtotime($i . '-' . $month . '-' . $sessional_year);
                                 $this->db->group_by('timestamp');
-                                $attendance = $this->db->get_where('attendance', array('section_id' => 0, 'class_id' => $class_id, 'year' => $running_year, 'timestamp' => $timestamp, 'student_id' => $row['student_id']))->result_array();
+                                $attendance = $this->db->get_where('attendance', array('section_id' => null, 'class_id' => $class_id, 'year' => $running_year, 'timestamp' => $timestamp, 'student_id' => $row['student_id']))->result_array();
 
 
                                 foreach ($attendance as $row1):
