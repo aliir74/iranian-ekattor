@@ -183,6 +183,7 @@
                             $data = array();
 
                             $students = $this->db->get_where('enroll', array('class_id' => $class_id, 'year' => $running_year, 'section_id' => 'NULL'))->result_array();
+                            echo $students;
 
                             foreach ($students as $row):
                                 ?>
