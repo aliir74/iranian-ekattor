@@ -1,8 +1,10 @@
+<head>
 <style>
     #subject_holder div:first-child {
         display: none !important;
     }
 </style>
+</head>
 <hr />
 <?php echo form_open(base_url() . 'index.php?teacher/marks_selector');?>
 <div class="row">
