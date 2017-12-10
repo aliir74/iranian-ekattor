@@ -10,6 +10,21 @@
 		td {
 			padding: 5px;
 		}
+
+        @font-face {
+            font-family: 'bnazanin';
+            src:url('/assets/fonts/fonts/BNazanin.eot?#') format('eot'),
+            url('/assets/fonts/fonts/BNazanin.woff') format('woff'),
+            url('/assets/fonts/fonts/BNazanin.ttf') format('truetype');
+        }
+
+        body {
+            font-family: "bnazanin", Tahoma;
+        }
+
+        table {
+            font-family: "bnazanin", Tahoma;;
+        }
 	</style>
 
 	<center>
@@ -51,7 +66,8 @@
 				</td>
 			<?php
 				$total_marks = 0;
-				$total_grade_point = 0;  
+				$total_grade_point = 0;
+                $take_exam_subjects = 0;
 				foreach($subjects as $row2):
 			?>
 				<td style="text-align: center;">
@@ -71,7 +87,10 @@
 								$total_grade_point += $grade['grade_point'];
 							}
 							$total_marks += $obtained_marks;
-						}
+                            $take_exam_subjects += 1;
+						} else {
+						    echo '-';
+                        }
 						
 
 					?>
@@ -84,7 +103,8 @@
 					$this->db->where('year' , $running_year);
 					$this->db->from('subject');
 					$number_of_subjects = $this->db->count_all_results();
-					echo ($total_grade_point / $number_of_subjects);
+					#echo ($total_grade_point / $number_of_subjects);
+                    echo ($total_grade_point / $take_exam_subjects);
 				?>
 			</td>
 			</tr>
