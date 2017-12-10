@@ -26,7 +26,7 @@
 		}
 
         body {
-            font-family: "bnazanin", Tahoma;
+            font-family: "B Nazanin", Tahoma;
         }
 
         table {
