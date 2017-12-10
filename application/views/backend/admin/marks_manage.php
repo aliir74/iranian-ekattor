@@ -2,7 +2,7 @@
 <?php echo form_open(base_url() . 'index.php?admin/marks_selector');?>
 <div class="row">
 
-	<div class="col-md-2">
+	<div class="col-md-3">
 		<div class="form-group">
 		<label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('exam');?></label>
 			<select name="exam_id" class="form-control selectboxit">
@@ -16,7 +16,7 @@
 		</div>
 	</div>
 
-	<div class="col-md-2">
+	<div class="col-md-3">
 		<div class="form-group">
 		<label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('class');?></label>
 			<select name="class_id" class="form-control selectboxit" onchange="get_class_subject(this.value)">
@@ -32,15 +32,15 @@
 	</div>
 
 	<div id="subject_holder">
-		<div class="col-md-3">
+		<!--<div class="col-md-3">
 			<div class="form-group">
-			<label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('section');?></label>
+			<label class="control-label" style="margin-bottom: 5px;"><?php /*echo get_phrase('section');*/?></label>
 				<select name="" id="" class="form-control selectboxit" disabled="disabled">
-					<option value=""><?php echo get_phrase('select_class_first');?></option>		
+					<option value=""><?php /*echo get_phrase('select_class_first');*/?></option>
 				</select>
 			</div>
-		</div>
-		<div class="col-md-3">
+		</div>-->
+		<div class="col-md-4">
 			<div class="form-group">
 			<label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('subject');?></label>
 				<select name="" id="" class="form-control selectboxit" disabled="disabled">
