@@ -125,7 +125,9 @@
 								}
 								$total_marks += $obtained_marks;
 								$take_exam_subjects += 1;
-							}
+							} else {
+							    echo '-';
+                            }
 							
 
 						?>
