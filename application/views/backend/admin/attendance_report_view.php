@@ -196,15 +196,15 @@ $jdate = new jDateTime(true, true, 'Asia/Tehran'); ?>
                             $status = 0;
                             for ($i = 1; $i <= $days; $i++) {
                                 $timestamp = strtotime(ptg2($i . '/' . $month . '/' . $sessional_year));
-                                #$this->db->group_by('timestamp');
-                                log_message('error', implode(' ', array('section_id !=' => -1, 'class_id' => $class_id, 'year' => $running_year, 'timestamp' => $timestamp, 'student_id' => $row['student_id'])));
+                                $this->db->group_by('timestamp');
+                                #log_message('error', implode(' ', array('section_id !=' => -1, 'class_id' => $class_id, 'year' => $running_year, 'timestamp' => $timestamp, 'student_id' => $row['student_id'])));
                                 $attendance = $this->db->get_where('attendance', array('class_id' => $class_id, 'year' => $running_year, 'timestamp' => $timestamp, 'student_id' => $row['student_id']))->result_array();
-                                log_message('error', 'size: '.sizeof($attendance));
+                                #log_message('error', 'size: '.sizeof($attendance));
 
                                 foreach ($attendance as $row1):
-                                    log_message('error', 'h '.implode(':', $row1));
+                                    #log_message('error', 'h '.implode(':', $row1));
                                     $month_dummy = $jdate->date('d', $row1['timestamp'], false);
-                                    log_message('error', $month_dummy.'!'.$i);
+                                    #log_message('error', $month_dummy.'!'.$i);
 
                                     if ($i == $month_dummy)
                                     $status = $row1['status'];
