@@ -50,6 +50,7 @@
 		</div>
 		<div class="col-md-2" style="margin-top: 20px;">
 			<center>
+                hello
 				<button type="submit" class="btn btn-info" id = "submit"><?php echo get_phrase('manage_marks');?></button>
 			</center>
 		</div>
