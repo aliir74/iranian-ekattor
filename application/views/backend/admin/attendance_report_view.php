@@ -196,7 +196,7 @@ $jdate = new jDateTime(true, true, 'Asia/Tehran'); ?>
                             $status = 0;
                             for ($i = 1; $i <= $days; $i++) {
                                 $timestamp = strtotime(ptg2($i . '/' . $month . '/' . $sessional_year));
-                                $this->db->group_by('timestamp');
+                                #$this->db->group_by('timestamp');
                                 #log_message('error', implode(' ', array('section_id !=' => -1, 'class_id' => $class_id, 'year' => $running_year, 'timestamp' => $timestamp, 'student_id' => $row['student_id'])));
                                 $attendance = $this->db->get_where('attendance', array('class_id' => $class_id, 'year' => $running_year, 'timestamp' => $timestamp, 'student_id' => $row['student_id']))->result_array();
                                 #log_message('error', 'size: '.sizeof($attendance));
