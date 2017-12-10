@@ -150,6 +150,7 @@ $jdate = new jDateTime(true, true, 'Asia/Tehran'); ?>
                     ?>
                 </h3>
                 <h4 style="color: #696969;">
+                    <?php echo strtolower($m); ?>
     <?php echo get_phrase('class') . ' ' . $class_name; ?><br>
     <?php echo get_phrase(strtolower($m)) . ', ' . $sessional_year; ?>
                 </h4>
