@@ -1,5 +1,7 @@
 <hr />
-
+<?php
+require_once(APPPATH.'libraries/jdatetime.class.php');
+$jdate = new jDateTime(true, true, 'Asia/Tehran'); ?>
 <?php echo form_open(base_url() . 'index.php?admin/attendance_report_selector'); ?>
 <div class="row">
 
@@ -201,7 +203,8 @@
 
                                 foreach ($attendance as $row1):
                                     log_message('error', 'h '.implode(':', $row1));
-                                    $month_dummy = date('d', $row1['timestamp']);
+                                    $month_dummy = $jdate->date('d', $row1['timestamp']);
+                                    log_message('error', $month_dummy.'!'.$i);
 
                                     if ($i == $month_dummy)
                                     $status = $row1['status'];
