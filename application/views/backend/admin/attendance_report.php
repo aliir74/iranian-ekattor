@@ -15,7 +15,7 @@ $jdate = new jDateTime(true, true, 'Asia/Tehran');
         ?>
 
         <div class="col-md-4">
-            <?php echo $jdate->date('m', false); ?>
+            <?php echo $jdate->date('m', false, false); ?>
             <div class="form-group">
                 <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('class'); ?></label>
                 <select class="form-control selectboxit" name="class_id" onchange="select_section(this.value)">
