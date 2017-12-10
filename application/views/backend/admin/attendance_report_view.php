@@ -139,7 +139,7 @@ $jdate = new jDateTime(true, true, 'Asia/Tehran'); ?>
                     else if ($month == 8)
                         $m = 'August';
                     else if ($month == 9)
-                        $m = 'Sepetember';
+                        $m = 'September';
                     else if ($month == 10)
                         $m = 'October';
                     else if ($month == 11)
@@ -150,7 +150,6 @@ $jdate = new jDateTime(true, true, 'Asia/Tehran'); ?>
                     ?>
                 </h3>
                 <h4 style="color: #696969;">
-                    <?php echo strtolower($m); ?>
     <?php echo get_phrase('class') . ' ' . $class_name; ?><br>
     <?php echo get_phrase(strtolower($m)) . ', ' . $sessional_year; ?>
                 </h4>
