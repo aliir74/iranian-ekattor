@@ -13,7 +13,7 @@
         else if($month == 6) $m='June';
         else if($month == 7) $m='July';
         else if($month == 8) $m='August';
-        else if($month == 9) $m='Sepetember';
+        else if($month == 9) $m='September';
         else if($month == 10) $m='October';
         else if($month == 11) $m='November';
         else if($month == 12) $m='December';
