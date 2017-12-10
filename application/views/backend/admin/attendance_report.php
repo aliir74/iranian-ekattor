@@ -1,4 +1,8 @@
 <hr />
+<?php
+require_once(APPPATH.'libraries/jdatetime.class.php');
+$jdate = new jDateTime(true, true, 'Asia/Tehran');
+?>
 
 <?php echo form_open(base_url() . 'index.php?admin/attendance_report_selector/'); ?>
 <div class="row">
@@ -11,6 +15,7 @@
         ?>
 
         <div class="col-md-4">
+            <?php echo $jdate->date('m', false); ?>
             <div class="form-group">
                 <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('class'); ?></label>
                 <select class="form-control selectboxit" name="class_id" onchange="select_section(this.value)">
@@ -66,7 +71,7 @@
                         $m = 'december';
                     ?>
                     <option value="<?php echo $i; ?>"
-                          <?php if($month == $i) echo 'selected'; ?>  >
+                          <?php if($jdate->date('m', false) == $i) echo 'selected'; ?>  >
                                 <?php echo get_phrase($m); ?>
                     </option>
                     <?php
