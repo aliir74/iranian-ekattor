@@ -203,7 +203,7 @@ $jdate = new jDateTime(true, true, 'Asia/Tehran'); ?>
 
                                 foreach ($attendance as $row1):
                                     log_message('error', 'h '.implode(':', $row1));
-                                    $month_dummy = $jdate->date('d', $row1['timestamp']);
+                                    $month_dummy = $jdate->date('d', $row1['timestamp'], false, false);
                                     log_message('error', $month_dummy.'!'.$i);
 
                                     if ($i == $month_dummy)
