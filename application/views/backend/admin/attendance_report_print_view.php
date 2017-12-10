@@ -24,6 +24,14 @@
 		td {
 			padding: 5px;
 		}
+
+        body {
+            font-family: "bnazanin", Tahoma;
+        }
+
+        table {
+            font-family: "bnazanin", Tahoma;;
+        }
 	</style>
 
 	<center>
