@@ -120,7 +120,6 @@
 								echo $obtained_marks;
 								if ($obtained_marks >= 0 && $obtained_marks != '') {
 									$grade = $this->crud_model->get_grade($obtained_marks);
-									log_message('error', $total_grade_point.' '.$grade['grade_point']);
 									$total_grade_point += $grade['grade_point'];
 								}
 								$total_marks += $obtained_marks;
@@ -137,8 +136,8 @@
 						$this->db->where('year' , $running_year);
 						$this->db->from('subject');
 						$number_of_subjects = $this->db->count_all_results();
-						echo $total_grade_point;
-						#echo ($total_grade_point / $number_of_subjects);
+						#echo $total_grade_point;
+						echo ($total_grade_point / $number_of_subjects);
 					?>
 				</td>
 				</tr>
