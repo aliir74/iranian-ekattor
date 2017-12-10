@@ -1,6 +1,6 @@
 <style>
-    .col-md-2:first-child {
-        display: none;
+    #subject_holder div:first-child {
+        display: none !important;
     }
 </style>
 <hr />
