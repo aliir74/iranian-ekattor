@@ -37,14 +37,14 @@
 	</div>
 
 	<div id="subject_holder">
-		<!--<div class="col-md-3">
+		<div class="col-md-3">
 			<div class="form-group">
-			<label class="control-label" style="margin-bottom: 5px;"><?php /*echo get_phrase('section');*/?></label>
+			<label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('section');?></label>
 				<select name="" id="" class="form-control selectboxit" disabled="disabled">
-					<option value=""><?php /*echo get_phrase('select_class_first');*/?></option>
+					<option value=""><?php echo get_phrase('select_class_first');?></option>
 				</select>
 			</div>
-		</div>-->
+		</div>
 		<div class="col-md-4">
 			<div class="form-group">
 			<label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('subject');?></label>
