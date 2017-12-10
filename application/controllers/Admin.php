@@ -986,19 +986,21 @@ class Admin extends CI_Controller
         $query = $this->db->get_where('mark' , array(
                     'exam_id' => $data['exam_id'],
                         'class_id' => $data['class_id'],
-                            'section_id' => $data['section_id'],
+                            /*'section_id' => $data['section_id'],*/
                                 'subject_id' => $data['subject_id'],
                                     'year' => $data['year']
                 ));
         if($query->num_rows() < 1) {
             $students = $this->db->get_where('enroll' , array(
-                'class_id' => $data['class_id'] , 'section_id' => $data['section_id'] , 'year' => $data['year']
+                'class_id' => $data['class_id'] , /*'section_id' => $data['section_id'] ,*/ 'year' => $data['year']
             ))->result_array();
             foreach($students as $row) {
                 $data['student_id'] = $row['student_id'];
                 $this->db->insert('mark' , $data);
             }
         }
+            //set section_id 0 because we dont have section in iran but it should set to work some functionality
+        $data['section_id'] = 0;
         redirect(base_url() . 'index.php?admin/marks_manage_view/' . $data['exam_id'] . '/' . $data['class_id'] . '/' . $data['section_id'] . '/' . $data['subject_id'] , 'refresh');
     }
     else{
