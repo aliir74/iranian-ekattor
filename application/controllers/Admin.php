@@ -1018,7 +1018,7 @@ class Admin extends CI_Controller
         $marks_of_students = $this->db->get_where('mark' , array(
             'exam_id' => $exam_id,
                 'class_id' => $class_id,
-                    'section_id' => $section_id,
+                    /*'section_id' => $section_id,*/
                         'year' => $running_year,
                             'subject_id' => $subject_id
         ))->result_array();
