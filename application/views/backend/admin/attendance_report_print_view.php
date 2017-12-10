@@ -1,6 +1,8 @@
-<?php 
+<?php
+    require_once(APPPATH.'libraries/jdatetime.class.php');
+    $jdate = new jDateTime(true, true, 'Asia/Tehran');
 	$class_name		= $this->db->get_where('class' , array('class_id' => $class_id))->row()->name;
-	$section_name  		= $this->db->get_where('section' , array('section_id' => $section_id))->row()->name;
+	#$section_name  		= $this->db->get_where('section' , array('section_id' => $section_id))->row()->name;
 	$system_name        =	$this->db->get_where('settings' , array('type'=>'system_name'))->row()->description;
 	$running_year       =	$this->db->get_where('settings' , array('type'=>'running_year'))->row()->description;
         if($month == 1) $m = 'January';
@@ -29,8 +31,8 @@
 		<h3 style="font-weight: 100;"><?php echo $system_name;?></h3>
 		<?php echo get_phrase('attendance_sheet');?><br>
 		<?php echo get_phrase('class') . ' ' . $class_name;?><br>
-		<?php echo get_phrase('section').' '.$section_name;?><br>
-        <?php echo $m . ', ' . $sessional_year; ?>
+		<?php /*echo get_phrase('section').' '.$section_name;*/?><!--<br>-->
+        <?php echo get_phrase(strtolower($m)) . ' ' . $sessional_year; ?>
 		
 	</center>
         
@@ -55,7 +57,7 @@
                             <?php
                             $data = array();
 
-                            $students = $this->db->get_where('enroll', array('class_id' => $class_id, 'year' => $running_year, 'section_id' => $section_id))->result_array();
+                            $students = $this->db->get_where('enroll', array('class_id' => $class_id, 'year' => $running_year))->result_array();
 
                             foreach ($students as $row):
                                 ?>
@@ -66,13 +68,13 @@
                             <?php
                             $status = 0;
                             for ($i = 1; $i <= $days; $i++) {
-                                $timestamp = strtotime($i . '-' . $month . '-' . $sessional_year);
-                                $this->db->group_by('timestamp');
-                                $attendance = $this->db->get_where('attendance', array('section_id' => $section_id, 'class_id' => $class_id, 'year' => $running_year, 'timestamp' => $timestamp, 'student_id' => $row['student_id']))->result_array();
+                                $timestamp = strtotime(ptg2($i . '/' . $month . '/' . $sessional_year));
+                                #$this->db->group_by('timestamp');
+                                $attendance = $this->db->get_where('attendance', array('class_id' => $class_id, 'year' => $running_year, 'timestamp' => $timestamp, 'student_id' => $row['student_id']))->result_array();
 
 
                                 foreach ($attendance as $row1):
-                                    $month_dummy = date('m', $row1['timestamp']);
+                                    $month_dummy = $jdate->date('m', $row1['timestamp'], false);
                                     if ($i == $month_dummy)
                                         ;
                                     $status = $row1['status'];
