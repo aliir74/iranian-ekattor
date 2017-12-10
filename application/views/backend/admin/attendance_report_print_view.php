@@ -24,9 +24,15 @@
 		td {
 			padding: 5px;
 		}
+        @font-face {
+            font-family: 'bnazanin';
+            src:url('/assets/fonts/fonts/BNazanin.eot?#') format('eot'),
+            url('/assets/fonts/fonts/BNazanin.woff') format('woff'),
+            url('/assets/fonts/fonts/BNazanin.ttf') format('truetype');
+        }
 
         body {
-            font-family: "B Nazanin", Tahoma;
+            font-family: "bnazanin", Tahoma;
         }
 
         table {
