@@ -136,8 +136,8 @@
 						$this->db->where('year' , $running_year);
 						$this->db->from('subject');
 						$number_of_subjects = $this->db->count_all_results();
-						echo $number_of_subjects;
-						echo ($total_grade_point / $number_of_subjects);
+						echo $total_grade_point;
+						#echo ($total_grade_point / $number_of_subjects);
 					?>
 				</td>
 				</tr>
