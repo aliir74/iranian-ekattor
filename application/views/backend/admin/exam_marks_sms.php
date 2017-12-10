@@ -42,7 +42,7 @@
         </div>
         
           <div class="col-md-3" style="margin-top: 20px;">
-              <button type="submit" class="btn btn-primary"><?php echo get_phrase('send_marks');?> via SMS</button>
+              <button type="submit" class="btn btn-primary"><?php echo get_phrase('send_marks');?> با پیامک</button>
           </div>
 
 	<?php echo form_close();?>
