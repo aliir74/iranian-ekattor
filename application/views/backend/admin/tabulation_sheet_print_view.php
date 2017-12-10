@@ -23,6 +23,7 @@
         }
 
         table {
+            direction: rtl;
             font-family: "bnazanin", Tahoma;;
         }
 	</style>
