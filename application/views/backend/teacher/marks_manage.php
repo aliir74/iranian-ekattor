@@ -1,5 +1,5 @@
 <style>
-    .col-md-3:first-child {
+    .col-md-2:first-child {
         display: none;
     }
 </style>
