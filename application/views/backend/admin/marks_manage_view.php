@@ -1,3 +1,9 @@
+<style>
+    .col-md-2:first-child {
+        display: none !important;
+    }
+</style>
+
 <hr />
 <?php echo form_open(base_url() . 'index.php?admin/marks_selector');?>
 <div class="row">
@@ -34,24 +40,24 @@
 	</div>
 
 	<div id="subject_holder">
-		<!--<div class="col-md-2">
+		<div class="col-md-2">
 			<div class="form-group">
-			<label class="control-label" style="margin-bottom: 5px;"><?php /*echo get_phrase('section');*/?></label>
+			<label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('section');?></label>
 				<select name="section_id" id="section_id" class="form-control selectboxit">
-					<?php /*
+					<?php
 						$sections = $this->db->get_where('section' , array(
 							'class_id' => $class_id 
 						))->result_array();
 						foreach($sections as $row):
-					*/?>
-					<option value="<?php /*echo $row['section_id'];*/?>"
-						<?php /*if($section_id == $row['section_id']) echo 'selected';*/?>>
-							<?php /*echo $row['name'];*/?>
+					?>
+					<option value="<?php echo $row['section_id'];?>"
+						<?php if($section_id == $row['section_id']) echo 'selected';?>>
+							<?php echo $row['name'];?>
 					</option>
-					<?php /*endforeach;*/?>
+					<?php endforeach;?>
 				</select>
 			</div>
-		</div>-->
+		</div>
 		<div class="col-md-4">
 			<div class="form-group">
 			<label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('subject');?></label>
