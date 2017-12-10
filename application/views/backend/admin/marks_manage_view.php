@@ -95,8 +95,8 @@
 			
 			<h3 style="color: #696969;"><?php echo get_phrase('marks_for');?> <?php echo $this->db->get_where('exam' , array('exam_id' => $exam_id))->row()->name;?></h3>
 			<h4 style="color: #696969;">
-				<?php echo get_phrase('class');?> <?php echo $this->db->get_where('class' , array('class_id' => $class_id))->row()->name;?> : 
-				<?php /*echo get_phrase('section');*/?><!-- --><?php /*echo $this->db->get_where('section' , array('section_id' => $section_id))->row()->name;*/?>
+				<?php echo get_phrase('class');?> <?php echo $this->db->get_where('class' , array('class_id' => $class_id))->row()->name;?><!-- :
+				<?php /*echo get_phrase('section');*/?> --><?php /*echo $this->db->get_where('section' , array('section_id' => $section_id))->row()->name;*/?>
 			</h4>
 			<h4 style="color: #696969;">
 				<?php echo get_phrase('subject');?> : <?php echo $this->db->get_where('subject' , array('subject_id' => $subject_id))->row()->name;?>
