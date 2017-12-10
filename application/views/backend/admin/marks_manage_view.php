@@ -141,7 +141,7 @@
 							<?php echo $this->db->get_where('student' , array('student_id' => $row['student_id']))->row()->name;?>
 						</td>
 						<td>
-							<input type="text" class="form-control" name="marks_obtained_<?php echo $row['mark_id'];?>"
+							<input type="number" class="form-control" name="marks_obtained_<?php echo $row['mark_id'];?>"
 								value="<?php echo $row['mark_obtained'];?>">	
 						</td>
 						<td>
