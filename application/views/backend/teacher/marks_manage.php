@@ -1,3 +1,8 @@
+<style>
+    .col-md-3:first-child {
+        display: none;
+    }
+</style>
 <hr />
 <?php echo form_open(base_url() . 'index.php?teacher/marks_selector');?>
 <div class="row">
@@ -40,7 +45,7 @@
 				</select>
 			</div>
 		</div>-->
-		<div class="col-md-4">
+		<div class="col-md-3">
 			<div class="form-group">
 			<label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('subject');?></label>
 				<select name="" id="" class="form-control selectboxit" disabled="disabled">
