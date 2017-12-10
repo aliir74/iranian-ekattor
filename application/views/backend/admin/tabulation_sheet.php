@@ -103,7 +103,8 @@
 					</td>
 				<?php
 					$total_marks = 0;
-					$total_grade_point = 0;  
+					$total_grade_point = 0;
+                    $take_exam_subjects = 0;
 					foreach($subjects as $row2):
 				?>
 					<td style="text-align: center;">
@@ -123,6 +124,7 @@
 									$total_grade_point += $grade['grade_point'];
 								}
 								$total_marks += $obtained_marks;
+								$take_exam_subjects += 1;
 							}
 							
 
@@ -137,7 +139,8 @@
 						$this->db->from('subject');
 						$number_of_subjects = $this->db->count_all_results();
 						#echo $total_grade_point;
-						echo ($total_grade_point / $number_of_subjects);
+						#echo ($total_grade_point / $number_of_subjects);
+                        echo ($total_grade_point / $take_exam_subjects);
 					?>
 				</td>
 				</tr>
