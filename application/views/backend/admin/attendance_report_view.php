@@ -200,7 +200,7 @@
                                 log_message('error', 'size: '.sizeof($attendance));
 
                                 foreach ($attendance as $row1):
-                                    log_message('error', 'h '.implode($row1));
+                                    log_message('error', 'h '.implode(':', $row1));
                                     $month_dummy = date('d', $row1['timestamp']);
 
                                     if ($i == $month_dummy)
