@@ -31,8 +31,8 @@
 	<center>
 		<img src="uploads/logo.png" style="max-height : 60px;"><br>
 		<h3 style="font-weight: 100;"><?php echo $system_name;?></h3>
-		<?php echo get_phrase('tabulation_sheet');?><br>
-		<?php echo get_phrase('class') . ' ' . $class_name;?><br>
+		<?php echo get_phrase('tabulation_sheet');?><br><br>
+		<?php echo get_phrase('class') . ' ' . $class_name;?><br><br>
 		<?php echo $exam_name;?>
 
 		
