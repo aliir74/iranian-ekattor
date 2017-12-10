@@ -29,14 +29,13 @@
 	<center>
 		<img src="uploads/logo.png" style="max-height : 60px;"><br>
 		<h3 style="font-weight: 100;"><?php echo $system_name;?></h3>
-		<?php echo get_phrase('attendance_sheet');?><br>
-		<?php echo get_phrase('class') . ' ' . $class_name;?><br>
+		<?php echo get_phrase('attendance_sheet');?><br><br>
+		<?php echo get_phrase('class') . ' ' . $class_name;?><br><br>
 		<?php /*echo get_phrase('section').' '.$section_name;*/?><!--<br>-->
         <?php echo get_phrase(strtolower($m)) . ' ' . $sessional_year; ?>
-		
 	</center>
         
-          <table border="1" style="width:100%; border-collapse:collapse;border: 1px solid #ccc; margin-top: 10px;">
+          <table border="1" style="width:100%; border-collapse:collapse;border: 1px solid #ccc; margin-top: 10px; direction: rtl;">
                 <thead>
                     <tr>
                         <td style="text-align: center;">
