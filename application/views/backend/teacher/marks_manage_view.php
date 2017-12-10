@@ -35,22 +35,22 @@
 
 	<div id="subject_holder">
 		<div class="col-md-2">
-			<div class="form-group">
-			<label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('section');?></label>
+			<!--<div class="form-group">
+			<label class="control-label" style="margin-bottom: 5px;"><?php /*echo get_phrase('section');*/?></label>
 				<select name="section_id" id="section_id" class="form-control selectboxit">
 					<?php
-						$sections = $this->db->get_where('section' , array(
+/*						$sections = $this->db->get_where('section' , array(
 							'class_id' => $class_id
 						))->result_array();
 						foreach($sections as $row):
-					?>
-					<option value="<?php echo $row['section_id'];?>"
-						<?php if($section_id == $row['section_id']) echo 'selected';?>>
-							<?php echo $row['name'];?>
+					*/?>
+					<option value="<?php /*echo $row['section_id'];*/?>"
+						<?php /*if($section_id == $row['section_id']) echo 'selected';*/?>>
+							<?php /*echo $row['name'];*/?>
 					</option>
-					<?php endforeach;?>
+					<?php /*endforeach;*/?>
 				</select>
-			</div>
+			</div>-->
 		</div>
 		<div class="col-md-3">
 			<div class="form-group">
@@ -91,7 +91,7 @@
 			<h3 style="color: #696969;"><?php echo get_phrase('marks_for');?> <?php echo $this->db->get_where('exam' , array('exam_id' => $exam_id))->row()->name;?></h3>
 			<h4 style="color: #696969;">
 				<?php echo get_phrase('class');?> <?php echo $this->db->get_where('class' , array('class_id' => $class_id))->row()->name;?> :
-				<?php echo get_phrase('section');?> <?php echo $this->db->get_where('section' , array('section_id' => $section_id))->row()->name;?>
+				<?php /*echo get_phrase('section');*/?><!-- --><?php /*echo $this->db->get_where('section' , array('section_id' => $section_id))->row()->name;*/?>
 			</h4>
 			<h4 style="color: #696969;">
 				<?php echo get_phrase('subject');?> : <?php echo $this->db->get_where('subject' , array('subject_id' => $subject_id))->row()->name;?>
@@ -120,7 +120,7 @@
 					$count = 1;
 					$marks_of_students = $this->db->get_where('mark' , array(
 						'class_id' => $class_id,
-							'section_id' => $section_id ,
+							/*'section_id' => $section_id ,*/
 								'year' => $running_year,
 									'subject_id' => $subject_id,
 										'exam_id' => $exam_id
