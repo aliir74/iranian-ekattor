@@ -1,5 +1,5 @@
 <style>
-    .col-md-2:first-child {
+    #subject_holder .col-md-2:first-child {
         display: none !important;
     }
 </style>
