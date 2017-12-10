@@ -1,5 +1,5 @@
 <style>
-    #subject_holder div:first-child {
+    .col-md-2:first-child {
         display: none !important;
     }
 </style>
@@ -37,7 +37,7 @@
 	</div>
 
 	<div id="subject_holder">
-		<div class="col-md-3">
+		<div class="col-md-2">
 			<div class="form-group">
 			<label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('section');?></label>
 				<select name="" id="" class="form-control selectboxit" disabled="disabled">
