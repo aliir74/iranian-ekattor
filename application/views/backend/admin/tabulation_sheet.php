@@ -120,6 +120,7 @@
 								echo $obtained_marks;
 								if ($obtained_marks >= 0 && $obtained_marks != '') {
 									$grade = $this->crud_model->get_grade($obtained_marks);
+									log_message('error', $total_grade_point.' '.$grade['grade_point']);
 									$total_grade_point += $grade['grade_point'];
 								}
 								$total_marks += $obtained_marks;
