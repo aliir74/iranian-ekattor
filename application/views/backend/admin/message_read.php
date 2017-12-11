@@ -19,7 +19,7 @@ foreach ($messages as $row):
         </div>
 
         <div class="mail-date" style="padding:7px;">
-            <?php $date->date("l j F Y", $row['timestamp']); ?>
+            <?php $date->date("d F Y", $row['timestamp']); ?>
         </div>
 
     </div>
