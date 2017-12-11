@@ -1,3 +1,7 @@
+<?php
+require_once(APPPATH.'libraries/jdatetime.class.php');
+$jdate = new jDateTime(true, true, 'Asia/Tehran');
+?>
 <hr />
 <div class="row">
 	<div class="col-md-12">
@@ -62,7 +66,7 @@
                             		<button class="btn btn-danger btn-xs"><?php echo get_phrase('unpaid');?></button>
                             	</td>
                             <?php endif;?>
-							<td><?php echo date('d M,Y', $row['creation_timestamp']);?></td>
+							<td><?php echo $jdate->date('d M,Y', $row['creation_timestamp']);?></td>
 							<td>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -154,7 +158,7 @@
 					            	?>
 					            </td>
 					            <td><?php echo $row['amount'];?></td>
-					            <td><?php echo date('d M,Y', $row['timestamp']);?></td>
+					            <td><?php echo $jdate->date('d M,Y', $row['timestamp']);?></td>
 					            <td align="center">
 					            	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_invoice/<?php echo $row['invoice_id'];?>');"
 					            		class="btn btn-default">
@@ -238,7 +242,7 @@
 						            	?>
 						            </td>
 						            <td><?php echo $row['amount'];?></td>
-						            <td><?php echo date('d M,Y', $row['timestamp']);?></td>
+						            <td><?php echo $jdate->date('d M,Y', $row['timestamp']);?></td>
 						            <td align="center">
 						            	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_invoice/<?php echo $row['invoice_id'];?>');"
 						            		class="btn btn-default">
