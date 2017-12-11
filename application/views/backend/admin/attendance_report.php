@@ -1,5 +1,12 @@
 <hr />
 <?php
+
+function convertPersianNumbersToEnglish($number)
+{
+    $persian = array('۰۰', '۰۱', '۰۲', '۰۳', '۰۴', '۰۵', '۰۶', '۰۷', '۰۸', '۰۹', '۱۰', '۱۱', '۱۲');
+    $num = range(0, 12);
+    return (int)str_replace($persian, $num, $number);
+}
 require_once(APPPATH.'libraries/jdatetime.class.php');
 $jdate = new jDateTime(true, true, 'Asia/Tehran');
 ?>
@@ -15,7 +22,7 @@ $jdate = new jDateTime(true, true, 'Asia/Tehran');
         ?>
 
         <div class="col-md-4">
-            <?php echo $jdate->date('m'); ?>
+            <?php echo convertPersianNumbersToEnglish($jdate->date('m', false)); ?>
             <div class="form-group">
                 <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('class'); ?></label>
                 <select class="form-control selectboxit" name="class_id" onchange="select_section(this.value)">
