@@ -173,8 +173,7 @@ $jdate = new jDateTime(true, true, 'Asia/Tehran'); ?>
     <?php
     $year = explode('-', $running_year);
     #$days = cal_days_in_month(CAL_GREGORIAN, $month, $sessional_year);
-    $days = days_in_month($month, date('y'));
-    echo date('y');
+    $days = days_in_month($month, date('Y'));
 
     for ($i = 1; $i <= $days; $i++) {
         ?>
