@@ -23,7 +23,7 @@ foreach ($edit_data as $row):
                     <div class="panel-body">
                         <b>عنوان</b>
                         <p><?php echo $row['notice_title']; ?></p>
-                        <b>توجه</b>
+                        <b>اعلان</b>
                         <p><?php echo $row['notice'] ?></p>
                         <b>تاریخ</b>
                         <p><?php echo $date->date('d F Y',$row['create_timestamp']) ?></p>
