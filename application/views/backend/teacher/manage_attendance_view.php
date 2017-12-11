@@ -57,7 +57,7 @@ $jdate = new jDateTime(true, true, 'Asia/Tehran'); ?>
 
 			<h3 style="color: #696969;"><?php echo get_phrase('attendance_for_class');?> <?php echo $this->db->get_where('class' , array('class_id' => $class_id))->row()->name;?></h3>
 			<h4 style="color: #696969;">
-				<?php echo get_phrase('section');?> <?php echo $this->db->get_where('section' , array('section_id' => $section_id))->row()->name;?>
+<!--				<?php /*echo get_phrase('section');*/?> --><?php /*echo $this->db->get_where('section' , array('section_id' => $section_id))->row()->name;*/?>
 			</h4>
 			<h4 style="color: #696969;">
 				<?php echo $jdate->date("d F Y" , $timestamp);?>
@@ -100,7 +100,7 @@ $jdate = new jDateTime(true, true, 'Asia/Tehran'); ?>
                     $select_id = 0;
 					if($section_id != ''){
 						$attendance_of_students = $this->db->get_where('attendance' , array(
-							'class_id' => $class_id, 'section_id' => $section_id , 'year' => $running_year,'timestamp'=>$timestamp
+							'class_id' => $class_id, /*'section_id' => $section_id ,*/ 'year' => $running_year,'timestamp'=>$timestamp
 						))->result_array();
 					}
 					foreach($attendance_of_students as $row):
