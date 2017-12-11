@@ -1,3 +1,7 @@
+<?php
+require_once(APPPATH.'libraries/jdatetime.class.php');
+$jdate = new jDateTime(true, true, 'Asia/Tehran');
+?>
 
 <table cellpadding="0" cellspacing="0" border="0" class="table table-bordered datatable" id="table_export">
     <thead>
@@ -18,7 +22,7 @@
         <tr>
             <td><?php echo $count++; ?></td>
             <td><?php echo $row['notice_title']; ?></td>
-            <td><?php echo date('d M,Y', $row['create_timestamp']); ?></td>
+            <td><?php echo $jdate->date('d F Y', $row['create_timestamp']); ?></td>
             <td align="center">
               <?php if ($row['show_on_website'] == 1) { ?>
                 <i class="fa fa-circle" style="color: green"></i>
