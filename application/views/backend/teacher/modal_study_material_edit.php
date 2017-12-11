@@ -1,4 +1,8 @@
 <?php
+require_once(APPPATH.'libraries/jdatetime.class.php');
+$jdate = new jDateTime(true, true, 'Asia/Tehran'); ?>
+
+<?php
 $class_info = $this->db->get('class')->result_array();
 $single_study_material_info = $this->db->get_where('document', array('document_id' => $param2))->result_array();
 foreach ($single_study_material_info as $row) {
@@ -23,7 +27,7 @@ foreach ($single_study_material_info as $row) {
 
                             <div class="col-sm-5">
                                 <input type="text" name="timestamp" class="form-control datepicker" data-format="D, dd MM yyyy"
-                                       placeholder="date here" value="<?php echo date("d M, Y", $row['timestamp']); ?>">
+                                       placeholder="date here" value="<?php echo $jdate->date("d/m/Y", $row['timestamp'], false); ?>">
                             </div>
                         </div>
 
