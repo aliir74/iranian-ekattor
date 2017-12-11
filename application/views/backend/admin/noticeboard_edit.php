@@ -1,5 +1,7 @@
 <hr />
 <?php
+require_once(APPPATH.'libraries/jdatetime.class.php');
+$jdate = new jDateTime(true, true, 'Asia/Tehran');
   $info = $this->db->get_where('noticeboard', array(
     'notice_id' => $notice_id
   ))->result_array();
@@ -27,7 +29,7 @@
           <label class="col-sm-3 control-label"><?php echo get_phrase('date'); ?></label>
           <div class="col-sm-5">
               <input type="text" class="datepicker form-control" name="create_timestamp"
-                value="<?php echo date('m/d/Y', $row['create_timestamp']);?>" required />
+                value="<?php echo $jdate->date('d/m/Y', $row['create_timestamp'], false);?>" required />
           </div>
       </div>
 
