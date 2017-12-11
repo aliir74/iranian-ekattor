@@ -22,7 +22,6 @@ $jdate = new jDateTime(true, true, 'Asia/Tehran');
         ?>
 
         <div class="col-md-4">
-            <?php echo convertPersianNumbersToEnglish($jdate->date('m', false)); ?>
             <div class="form-group">
                 <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('class'); ?></label>
                 <select class="form-control selectboxit" name="class_id" onchange="select_section(this.value)">
@@ -78,7 +77,7 @@ $jdate = new jDateTime(true, true, 'Asia/Tehran');
                         $m = 'december';
                     ?>
                     <option value="<?php echo $i; ?>"
-                          <?php if($jdate->date('m') == $i) echo 'selected'; ?>  >
+                          <?php if(convertPersianNumbersToEnglish($jdate->date('m')) == $i) echo 'selected'; ?>  >
                                 <?php echo get_phrase($m); ?>
                     </option>
                     <?php
