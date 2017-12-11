@@ -21,12 +21,12 @@ foreach ($edit_data as $row):
                 <div class="panel panel-primary" data-collapsed="0">
                         
                     <div class="panel-body">
-                        <b>Title</b>
+                        <b>عنوان</b>
                         <p><?php echo $row['notice_title']; ?></p>
-                        <b>Notice</b>
+                        <b>توجه</b>
                         <p><?php echo $row['notice'] ?></p>
-                        <b>Date</b>
-                        <p><?php echo $date->date('d M Y',$row['create_timestamp']) ?></p>
+                        <b>تاریخ</b>
+                        <p><?php echo $date->date('d F Y',$row['create_timestamp']) ?></p>
                     </div>
                 </div>
             </div>

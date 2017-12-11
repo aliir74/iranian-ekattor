@@ -28,7 +28,7 @@ $edit_data		=	$this->db->get_where('noticeboard' , array('notice_id' => $param2)
                 <div class="form-group">
                     <label class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
                     <div class="col-sm-5">
-                        <input type="text" class="datepicker form-control" name="create_timestamp" value="<?php echo date('m/d/Y',$row['create_timestamp']);?>" required/>
+                        <input type="text" class="datepicker form-control" name="create_timestamp" value="<?php echo $jdate->date('d/m/Y',$row['create_timestamp'], false);?>" required/>
                     </div>
                 </div>
 
