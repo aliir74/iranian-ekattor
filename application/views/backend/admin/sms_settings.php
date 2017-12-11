@@ -219,7 +219,7 @@
 
 			</div>
 
-		</div>click
+		</div>
 
 	</div>
 </div>
