@@ -58,6 +58,7 @@ $date = new jDateTime(true, true, 'Asia/Tehran');
                     <div class="col-sm-5">
                         <input type="text" class="datepicker form-control" name="date"
                             value="<?php echo $date->date('m/d/Y', $row['creation_timestamp'], false, false);?>"/>
+                        <?php echo $date->date('m/d/Y', $row['creation_timestamp'], false, false); ?>
                     </div>
 
                 </div>
