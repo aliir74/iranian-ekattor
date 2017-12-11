@@ -61,7 +61,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" style="display: none;">
                         <label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('section');?></label>
                             <div class="col-sm-5">
                                 <select name="section_id" class="form-control" id="section_selector_holder">
