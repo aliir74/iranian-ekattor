@@ -653,13 +653,13 @@ else{
         $data['section_id'] = $this->input->post('section_id');
         $query = $this->db->get_where('attendance' ,array(
             'class_id'=>$data['class_id'],
-                'section_id'=>$data['section_id'],
+                /*'section_id'=>$data['section_id'],*/
                     'year'=>$data['year'],
                         'timestamp'=>$data['timestamp']
         ));
         if($query->num_rows() < 1) {
             $students = $this->db->get_where('enroll' , array(
-                'class_id' => $data['class_id'] , 'section_id' => $data['section_id'] , 'year' => $data['year']
+                'class_id' => $data['class_id'] , /*'section_id' => $data['section_id'] ,*/ 'year' => $data['year']
             ))->result_array();
             foreach($students as $row) {
                 $attn_data['class_id']   = $data['class_id'];
@@ -671,6 +671,8 @@ else{
             }
 
         }
+        //set section_id 0 because we dont have section in iran but it should set to work some functionality
+        $data['section_id'] = 0;
         redirect(base_url().'index.php?teacher/manage_attendance_view/'.$data['class_id'].'/'.$data['section_id'].'/'.$data['timestamp'],'refresh');
     }
 

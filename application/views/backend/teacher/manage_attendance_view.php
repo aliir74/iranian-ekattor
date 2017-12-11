@@ -1,3 +1,7 @@
+<?php
+require_once(APPPATH.'libraries/jdatetime.class.php');
+$jdate = new jDateTime(true, true, 'Asia/Tehran'); ?>
+
 <hr />
 
 <?php echo form_open(base_url() . 'index.php?teacher/attendance_selector/');?>
@@ -7,7 +11,7 @@
 		<div class="form-group">
 		<label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('date');?></label>
 			<input type="text" class="form-control datepicker" name="timestamp" data-format="dd-mm-yyyy"
-				value="<?php echo date("d-m-Y" , $timestamp);?>"/>
+				value="<?php echo $jdate->date("d/m/Y" , $timestamp, false);?>"/>
 		</div>
 	</div>
 
@@ -56,7 +60,7 @@
 				<?php echo get_phrase('section');?> <?php echo $this->db->get_where('section' , array('section_id' => $section_id))->row()->name;?>
 			</h4>
 			<h4 style="color: #696969;">
-				<?php echo date("d M Y" , $timestamp);?>
+				<?php echo $jdate->date("d F Y" , $timestamp);?>
 			</h4>
 		</div>
 	</div>
