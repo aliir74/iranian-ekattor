@@ -1,4 +1,7 @@
 <?php
+require_once(APPPATH.'libraries/jdatetime.class.php');
+$jdate = new jDateTime(true, true, 'Asia/Tehran');
+
 $edit_data	=	$this->db->get_where('invoice' , array('invoice_id' => $param2) )->result_array();
 foreach ($edit_data as $row):
 ?>
@@ -43,7 +46,7 @@ foreach ($edit_data as $row):
                                         echo 'paypal';
                 				?>
                 			</td>
-                			<td><?php echo date('d M,Y', $row2['timestamp']);?></td>
+                			<td><?php echo $jdate->date('d F Y', $row2['timestamp'], false);?></td>
                 		</tr>
                 	<?php endforeach;?>
                 	</tbody>
@@ -108,7 +111,7 @@ foreach ($edit_data as $row):
 	                    <label class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
 	                    <div class="col-sm-6">
 	                        <input type="text" class="datepicker form-control" name="timestamp"
-	                            value="<?php echo date('m/d/Y');?>"/>
+	                            value="<?php echo $jdate->date('d/m/Y', false, false);?>"/>
 	                    </div>
 					</div>
 
