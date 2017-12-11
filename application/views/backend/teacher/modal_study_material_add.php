@@ -1,3 +1,7 @@
+<?php
+require_once(APPPATH.'libraries/jdatetime.class.php');
+$jdate = new jDateTime(true, true, 'Asia/Tehran'); ?>
+
 <?php $class_info = $this->db->get('class')->result_array(); ?>
 <div class="row">
     <div class="col-md-12">
@@ -14,12 +18,12 @@
 
                 <?php echo form_open(base_url() . 'index.php?teacher/study_material/create', array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data')); ?>
 
-                <div class="form-group" style="display: none;">
+                <div class="form-group" style="">
                     <label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('date'); ?></label>
 
                     <div class="col-sm-5">
                         <input type="text" name="timestamp" class="form-control datepicker" data-format="D, dd MM yyyy"
-                               placeholder="<?php echo get_phrase('select_date'); ?>" value="<?php echo date('m/d/Y'); ?>" required>
+                               placeholder="<?php echo get_phrase('select_date'); ?>" value="<?php echo $jdate->date('d/m/Y', false, false); ?>" required>
                     </div>
                 </div>
 
