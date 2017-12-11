@@ -23,7 +23,7 @@
                         <label class="col-sm-3 control-label"><?php echo get_phrase('category');?></label>
                         <div class="col-sm-6">
                             <select name="expense_category_id" class="form-control selectboxit" required>
-                                <!--<option value=""><?php /*echo get_phrase('select_expense_category');*/?></option>-->
+                                <option value=""><?php echo get_phrase('select_expense_category');?></option>
                                 <?php 
                                 	$categories = $this->db->get('expense_category')->result_array();
                                 	foreach ($categories as $row):
@@ -32,7 +32,7 @@
                             <?php endforeach;?>
                             </select>
                         </div>
-                        انتخاب این فیلد اجباری است.
+                        <label class="col-sm-3 control-label">انتخاب این فیلد اجباری است.</label>
                     </div>
 					
 					<div class="form-group">
