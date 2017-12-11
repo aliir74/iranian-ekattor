@@ -1,4 +1,6 @@
 <?php
+require_once(APPPATH.'libraries/jdatetime.class.php');
+$date = new jDateTime(true, true, 'Asia/Tehran');
 $edit_data = $this->db->get_where('invoice', array('invoice_id' => $param2))->result_array();
 foreach ($edit_data as $row):
 ?>
@@ -15,7 +17,7 @@ foreach ($edit_data as $row):
         <table width="100%" border="0">
             <tr>
                 <td align="right">
-                    <h5><?php echo get_phrase('creation_date'); ?> : <?php echo date('d M,Y', $row['creation_timestamp']);?></h5>
+                    <h5><?php echo get_phrase('creation_date'); ?> : <?php echo $jdate->date('d M Y', $row['creation_timestamp']);?></h5>
                     <h5><?php echo get_phrase('title'); ?> : <?php echo $row['title'];?></h5>
                     <h5><?php echo get_phrase('description'); ?> : <?php echo $row['description'];?></h5>
                     <h5><?php echo get_phrase('status'); ?> : <?php echo $row['status']; ?></h5>
@@ -84,7 +86,7 @@ foreach ($edit_data as $row):
                 foreach ($payment_history as $row2):
                     ?>
                     <tr>
-                        <td><?php echo date("d M, Y", $row2['timestamp']); ?></td>
+                        <td><?php echo $jdate->date("d M Y", $row2['timestamp']); ?></td>
                         <td><?php echo $row2['amount']; ?></td>
                         <td>
                             <?php 

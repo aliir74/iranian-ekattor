@@ -1,3 +1,7 @@
+<?php
+require_once(APPPATH.'libraries/jdatetime.class.php');
+$jdate = new jDateTime(true, true, 'Asia/Tehran');
+?>
 <div class="row">
 	<div class="col-md-12">
     
@@ -39,7 +43,7 @@
 							<td>
 								<span class="label label-<?php if($row['status']=='paid')echo 'success';else echo 'secondary';?>"><?php echo $row['status'];?></span>
 							</td>
-							<td><?php echo date('d M,Y', $row['creation_timestamp']);?></td>
+							<td><?php echo $jdate->date('d M Y', $row['creation_timestamp']);?></td>
 							<td>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
