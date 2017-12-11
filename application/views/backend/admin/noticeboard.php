@@ -1,3 +1,8 @@
+<?php
+require_once(APPPATH.'libraries/jdatetime.class.php');
+$jdate = new jDateTime(true, true, 'Asia/Tehran');
+?>
+
 <hr />
 <div class="row">
     <div class="col-md-12">
@@ -83,7 +88,7 @@
                         <label class="col-sm-3 control-label"><?php echo get_phrase('date'); ?></label>
                         <div class="col-sm-5">
                             <input type="text" class="datepicker form-control" name="create_timestamp"
-                              value="<?php echo date('m/d/Y');?>" required />
+                              value="<?php echo $jdate->date('d/m/Y', false, false);?>" required />
                         </div>
                     </div>
 
