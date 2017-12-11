@@ -1,5 +1,6 @@
 <hr />
 <?php
+include(APPPATH.'libraries/days_in_jalali_month.php');
 require_once(APPPATH.'libraries/jdatetime.class.php');
 $jdate = new jDateTime(true, true, 'Asia/Tehran'); ?>
 <?php echo form_open(base_url() . 'index.php?admin/attendance_report_selector'); ?>
@@ -171,7 +172,9 @@ $jdate = new jDateTime(true, true, 'Asia/Tehran'); ?>
                         </td>
     <?php
     $year = explode('-', $running_year);
-    $days = cal_days_in_month(CAL_GREGORIAN, $month, $sessional_year);
+    #$days = cal_days_in_month(CAL_GREGORIAN, $month, $sessional_year);
+    $days = days_in_month($month, date('y'));
+    echo date('y');
 
     for ($i = 1; $i <= $days; $i++) {
         ?>
