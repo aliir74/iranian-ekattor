@@ -32,7 +32,7 @@
                             <?php endforeach;?>
                             </select>
                         </div>
-                        <label class="col-sm-3 control-label">انتخاب این فیلد اجباری است.</label>
+                        <label class="col-sm-3 control-label">فیلد اجباری!</label>
                     </div>
 					
 					<div class="form-group">
