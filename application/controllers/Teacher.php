@@ -681,7 +681,7 @@ else{
         $running_year = $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description;
         $active_sms_service = $this->db->get_where('settings' , array('type' => 'active_sms_service'))->row()->description;
         $attendance_of_students = $this->db->get_where('attendance' , array(
-            'class_id'=>$class_id,'section_id'=>$section_id,'year'=>$running_year,'timestamp'=>$timestamp
+            'class_id'=>$class_id,/*'section_id'=>$section_id,*/'year'=>$running_year,'timestamp'=>$timestamp
         ))->result_array();
         foreach($attendance_of_students as $row) {
             $attendance_status = $this->input->post('status_'.$row['attendance_id']);
