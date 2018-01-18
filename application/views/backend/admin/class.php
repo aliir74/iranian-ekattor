@@ -127,7 +127,7 @@
 <?php echo form_open(base_url() . 'index.php?admin/add_students_to_research_class_using_csv/import' ,
     array('class' => 'form-inline validate', 'style' => 'text-align:center;',  'enctype' => 'multipart/form-data'));?>
 <div class="row">
-    <div class="col-md-offset-4 col-md-4" style="padding: 15px;">
+    <div class="col-md-3" style="padding: 15px;">
         <button type="button" class="btn btn-primary" name="generate_csv" id="generate_csv"><?php echo "گرفتن اطلاعات دانش آموزان"; ?></button>
     </div>
     <div class="col-md-6">
