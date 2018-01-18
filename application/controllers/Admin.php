@@ -2808,7 +2808,7 @@ class Admin extends CI_Controller
                     if(strlen($research_classes) != 0) {
                         $research_classes = $research_classes.'-'.strval($this->input->post('class_id'));
                     } else {
-                        $research_classes = $this->input->post('class_id');
+                        $research_classes = strval($this->input->post('class_id'));
                     }
                     $this->db->where('student_id',$data['id']);
                     $this->db->update('enroll',array('research_class_id' => $research_classes));
