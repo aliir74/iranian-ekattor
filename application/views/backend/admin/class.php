@@ -25,6 +25,7 @@
                 		<tr>
                     		<th><div>#</div></th>
                     		<th><div><?php echo get_phrase('class_name');?></div></th>
+                            <th><div><?php echo "ID";?></div></th>
                     		<th><div><?php echo get_phrase('numeric_name');?></div></th>
                     		<th><div><?php echo get_phrase('teacher');?></div></th>
                     		<th><div><?php echo get_phrase('options');?></div></th>
@@ -35,6 +36,7 @@
                         <tr>
                             <td><?php echo $count++;?></td>
 							<td><?php echo $row['name'];?></td>
+                            <td><?php echo $row['class_id'];?></td>
 							<td><?php echo $row['name_numeric'];?></td>
 							<td>
                                 <?php
@@ -122,7 +124,74 @@
 		</div>
 	</div>
 </div>
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6" style="padding: 15px; text-align: center">
+        <button type="button" class="btn btn-primary" name="generate_csv" id="generate_csv"><?php echo "گرفتن اطلاعات دانش آموزان"; ?></button>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+<?php echo form_open(base_url() . 'index.php?admin/add_students_to_research_class_using_csv/import' ,
+    array('class' => 'form-inline validate', 'style' => 'text-align:center;',  'enctype' => 'multipart/form-data'));?>
+<div class="row">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-6">
+        <div class="form_group">
+            <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('class');?></label>
+            <select name="class_id" id="class_id" class="form-control selectboxit" required
+                    onchange="get_sections(this.value)"  data-validate="required"  data-message-required="<?php echo get_phrase('value_required');?>">
+                <option value=""><?php echo get_phrase('select_class');?></option>
+                <?php
+                $classes = $this->db->get('class')->result_array();
+                foreach($classes as $row):
+                    ?>
+                    <option value="<?php echo $row['class_id'];?>"><?php echo $row['name'];?></option>
+                <?php endforeach;?>
+            </select>
+        </div>
+    </div>
+    <!--<div id="section_holder" class="col-md-3">
+        <label class="control-label" style="margin-bottom: 5px;"><?php /*echo get_phrase('section');*/?></label>
+        <select name="section_id" id="section_id" class="form-control selectboxit">
+            <option value=""><?php /*echo get_phrase('select_class_first');*/?></option>
+        </select>
+    </div>-->
+    <div class="col-md-3"></div>
+</div>
+<br>
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-offset-4 col-md-4" style="padding-bottom:15px;">
+            <input type="file" name="userfile" class="form-control file2 inline btn btn-info" data-label="<i class='entypo-tag'></i> Select CSV File"
+                   data-validate="required" data-message-required="<?php echo get_phrase('required'); ?>"
+                   accept="text/csv, .csv" />
+        </div>
+        <div class="col-md-offset-4 col-md-4">
+            <button type="submit" class="btn btn-success" name="import_csv" id="import_csv"><?php echo get_phrase('import_CSV'); ?></button>
+        </div>
 
+        <a href="" download="students_information.csv" style="display: none;" id = "bulk">Download</a>
+    </div>
+</div>
+<br>
+<?php echo form_close();?>
+
+<div class="row">
+    <div class="col-md-12" style="padding: 10px; background-color: #B3E5FC; color: #424242;">
+        <p style="font-weight: 700; font-size: 15px;">
+            <?php echo "لطفا مطابق دستورالعمل زیر دانش آموزان را به کلاس‌های پژوهشی اضافه کنید!"; ?>
+        </p>
+        <ol>
+            <li style="padding: 5px;"><?php echo "ابتدا با زدن روی دکمه‌ی اطلاعات دانش آموزان، اطلاعات تمام دانش آموزان سال تحصیلی فعلی رو دانلود کنید."; ?></li>
+            <li style="padding: 5px;"><?php echo "فایل csv دقیقا مشابه فایل اطلاعات دانش آموزان درست کنید که اطلاعات دانش آموزانی که فقط اطلاعات دانش آموزانی که قرار است به کلاس پژوهشی اضافه شوند در آن باشد."; ?></li>
+            <li style="padding: 5px;"><?php echo "فایل خود را select کرده و سپس دکمه‌ی import را بزنید.";?></li>
+        </ol>
+        <p style="color: #FF5722; font-weight: 500;">
+            ***<?php echo "دقت کنید که فایل خود را کاملا مطابق ستون‌های فایل اطلاعات دانش آموزان بسازید!"; ?>
+        </p>
+    </div>
+</div>
 
 
 <!-----  DATA TABLE EXPORT CONFIGURATIONS ---->                      
@@ -139,4 +208,18 @@
 		});
 	});
 		
+</script>
+
+<script type="text/javascript">
+    $("#generate_csv").click(function(){
+        $.ajax({
+            url: '<?php echo base_url();?>index.php?admin/generate_all_student_information_csv/',
+            success: function(response) {
+                toastr.success("<?php echo get_phrase('file_generated'); ?>");
+                $("#bulk").attr('href', response);
+                jQuery('#bulk')[0].click();
+                //document.location = response;
+            }
+        });
+    });
 </script>

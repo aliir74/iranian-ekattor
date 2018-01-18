@@ -257,15 +257,27 @@ class Crud_model extends CI_Model {
         return $this->db->get('document')->result_array();
     }
 
-    function select_study_material_info_for_student()
+    function select_study_material_info_for_student ()
     {
         $student_id = $this->session->userdata('student_id');
-        $class_id   = $this->db->get_where('enroll', array(
+        $student_row = $this->db->get_where('enroll', array(
             'student_id' => $student_id,
-                'year' => $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description
-            ))->row()->class_id;
+            'year' => $this->db->get_where('settings' , array('type' => 'running_year'))->row()->description
+        ))->row();
+        $class_id   = $student_row->class_id;
+        $research_class_id = $student_row->research_class_id;
         $this->db->order_by("timestamp", "desc");
-        return $this->db->get_where('document', array('class_id' => $class_id))->result_array();
+        if ($research_class_id) {
+            #$research_class_id_array = explode('-', $research_class_id);
+            $research_class_id_array = array_map('intval', explode('-', $research_class_id));
+            $this->db->select('*');
+            $this->db->from('document');
+            $this->db->where_in('class_id', $research_class_id_array);
+            $merged = array_merge($this->db->get()->result_array(), $this->db->get_where('document', array('class_id' => $class_id))->result_array());
+            return $merged;
+        } else {
+            return $this->db->get_where('document', array('class_id' => $class_id))->result_array();
+        }
     }
 
     function update_study_material_info($document_id)
