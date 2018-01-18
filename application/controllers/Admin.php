@@ -2744,7 +2744,27 @@ class Admin extends CI_Controller
 
 
 
+    function generate_all_student_information_csv()
+    {
+        if ($this->session->userdata('admin_login') != 1)
+            redirect(base_url(), 'refresh');
 
+        $running_year = $this->db->get_where('settings', array('type'=>'running_year'))->row()->description;
+
+        $file   = fopen("uploads/all_student_information.csv", "w");
+        $line   = array('ID', 'StudentName', 'Email', 'ParentID');
+        fputcsv($file, $line, ',');
+        #$this->db->get_where('student', arr)
+        $this->db->select("*");
+        $this->db->from("enroll");
+        $this->db->join("student", "enroll.student_id = student.student_id");
+        $this->db->where(array('enroll.year' => $running_year));
+        $result_array = $this->db->get()->result_array();
+        foreach ($result_array as $row) {
+            $line = array($row['student_id'], $row['name'], $row['email'], $row['parent_id']);
+        }
+        echo $file_path = base_url() . 'uploads/all_student_information.csv';
+    }
 
     // bulk student_add using CSV
     function generate_bulk_student_csv($class_id = '', $section_id = '')
