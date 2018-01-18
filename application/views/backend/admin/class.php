@@ -127,7 +127,7 @@
         <div class="col-md-offset-4 col-md-4" style="padding: 15px;">
             <button type="button" class="btn btn-primary" name="generate_csv" id="generate_csv"><?php echo "گرفتن اطلاعات دانش آموزان"; ?></button>
         </div>
-        <a href="" download="bulk_student.csv" style="" id = "bulk">Download</a>
+        <a href="" download="students_information.csv" style="" id = "bulk">Download</a>
     </div>
 </div>
 
@@ -151,7 +151,6 @@
 
 <script type="text/javascript">
     $("#generate_csv").click(function(){
-        console.log('hello');
         $.ajax({
             url: '<?php echo base_url();?>index.php?admin/generate_all_student_information_csv/',
             success: function(response) {

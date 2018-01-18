@@ -2754,8 +2754,7 @@ class Admin extends CI_Controller
         $file   = fopen("uploads/all_student_information.csv", "w");
         $line   = array('ID', 'StudentName', 'Email', 'ParentID');
         fputcsv($file, $line, ',');
-        #$this->db->get_where('student', arr)
-        $this->db->select("*");
+        /*$this->db->select("*");
         $this->db->from("enroll");
         $this->db->join("student", "enroll.student_id = student.student_id");
         $this->db->where(array('enroll.year' => $running_year));
@@ -2763,7 +2762,7 @@ class Admin extends CI_Controller
         foreach ($result_array as $row) {
             $line = array($row['student_id'], $row['name'], $row['email'], $row['parent_id']);
             fputcsv($file, $line, ',');
-        }
+        }*/
         echo $file_path = base_url() . 'uploads/all_student_information.csv';
     }
 
