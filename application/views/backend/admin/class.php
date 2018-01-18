@@ -127,8 +127,10 @@
 <?php echo form_open(base_url() . 'index.php?admin/add_students_to_research_class_using_csv/import' ,
     array('class' => 'form-inline validate', 'style' => 'text-align:center;',  'enctype' => 'multipart/form-data'));?>
 <div class="row">
-    <div class="col-md-3"></div>
-    <div class="col-md-3">
+    <div class="col-md-offset-4 col-md-4" style="padding: 15px;">
+        <button type="button" class="btn btn-primary" name="generate_csv" id="generate_csv"><?php echo "گرفتن اطلاعات دانش آموزان"; ?></button>
+    </div>
+    <div class="col-md-6">
         <div class="form_group">
             <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('class');?></label>
             <select name="class_id" id="class_id" class="form-control selectboxit" required
@@ -153,9 +155,6 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="col-md-offset-4 col-md-4" style="padding: 15px;">
-            <button type="button" class="btn btn-primary" name="generate_csv" id="generate_csv"><?php echo "گرفتن اطلاعات دانش آموزان"; ?></button>
-        </div>
         <div class="col-md-offset-4 col-md-4" style="padding-bottom:15px;">
             <input type="file" name="userfile" class="form-control file2 inline btn btn-info" data-label="<i class='entypo-tag'></i> Select CSV File"
                    data-validate="required" data-message-required="<?php echo get_phrase('required'); ?>"
