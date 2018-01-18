@@ -123,6 +123,12 @@
 			<!----CREATION FORM ENDS-->
 		</div>
 	</div>
+    <div class="col-md-12">
+        <div class="col-md-offset-4 col-md-4" style="padding: 15px;">
+            <button type="button" class="btn btn-primary" name="generate_csv" id="generate_csv"><?php echo "گرفتن اطلاعات دانش آموزان"; ?></button>
+        </div>
+        <a href="" download="bulk_student.csv" style="display: none;" id = "bulk">Download</a>
+    </div>
 </div>
 
 
@@ -141,4 +147,19 @@
 		});
 	});
 		
+</script>
+
+<script type="text/javascript">
+    $("#generate_csv").click(function(){
+        $.ajax({
+            url: '<?php echo base_url();?>index.php?admin/generate_all_student_information_csv',
+            success: function(response) {
+                toastr.success("<?php echo get_phrase('file_generated'); ?>");
+                $("#bulk").attr('href', response);
+                jQuery('#bulk')[0].click();
+                //document.location = response;
+            }
+        });
+        }
+    });
 </script>

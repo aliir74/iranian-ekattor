@@ -61,7 +61,7 @@
     </div>
 </div>
 
-<a href="" download="bulk_student.csv" style="display: none;" id = "bulk">Download</a>
+<a href="" download="students_information.csv" style="display: none;" id = "bulk">Download</a>
 
 <script>
 
