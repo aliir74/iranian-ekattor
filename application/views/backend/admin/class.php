@@ -127,7 +127,7 @@
         <div class="col-md-offset-4 col-md-4" style="padding: 15px;">
             <button type="button" class="btn btn-primary" name="generate_csv" id="generate_csv"><?php echo "گرفتن اطلاعات دانش آموزان"; ?></button>
         </div>
-        <a href="" download="students_information.csv" style="" id = "bulk">Download</a>
+        <a href="" download="students_information.csv" style="display: none;" id = "bulk">Download</a>
     </div>
 </div>
 
