@@ -2804,9 +2804,9 @@ class Admin extends CI_Controller
                     }
 
                     $data['id'] = $row[0];
-                    $research_classes = $this->db->get_where('enroll', array('student_id' => $data['id']));
-                    if(strlen($research_classes) != 0) {
-                        $research_classes = $research_classes.'-'.strval($this->input->post('class_id'));
+                    $research_classes = $this->db->get_where('enroll', array('student_id' => $data['id']))->result_array();
+                    if(($research_classes[0]['research_class_id'])) {
+                        $research_classes = $research_classes[0]['research_class_id'].'-'.strval($this->input->post('class_id'));
                     } else {
                         $research_classes = strval($this->input->post('class_id'));
                     }
