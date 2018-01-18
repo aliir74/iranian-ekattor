@@ -143,12 +143,12 @@
             </select>
         </div>
     </div>
-    <div id="section_holder" class="col-md-3">
-        <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('section');?></label>
+    <!--<div id="section_holder" class="col-md-3">
+        <label class="control-label" style="margin-bottom: 5px;"><?php /*echo get_phrase('section');*/?></label>
         <select name="section_id" id="section_id" class="form-control selectboxit">
-            <option value=""><?php echo get_phrase('select_class_first');?></option>
+            <option value=""><?php /*echo get_phrase('select_class_first');*/?></option>
         </select>
-    </div>
+    </div>-->
     <div class="col-md-3"></div>
 </div>
 <div class="row">

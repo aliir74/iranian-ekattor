@@ -2785,6 +2785,7 @@ class Admin extends CI_Controller
     // import CSV for research class students adding
     function add_students_to_research_class_using_csv($param1 = '') {
         log_message('error', "add_students_to_research_class_using_csv");
+        log_message('error', $this->input->post('class_id'));
 
         if ($this->session->userdata('admin_login') != 1)
             redirect(base_url(), 'refresh');
