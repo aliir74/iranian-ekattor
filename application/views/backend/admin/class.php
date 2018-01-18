@@ -123,8 +123,35 @@
 			<!----CREATION FORM ENDS-->
 		</div>
 	</div>
-    <?php echo form_open(base_url() . 'index.php?admin/add_students_to_research_class_using_csv/import' ,
-        array('class' => 'form-inline validate', 'style' => 'text-align:center;',  'enctype' => 'multipart/form-data'));?>
+</div>
+<?php echo form_open(base_url() . 'index.php?admin/add_students_to_research_class_using_csv/import' ,
+    array('class' => 'form-inline validate', 'style' => 'text-align:center;',  'enctype' => 'multipart/form-data'));?>
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-3">
+        <div class="form_group">
+            <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('class');?></label>
+            <select name="class_id" id="class_id" class="form-control selectboxit" required
+                    onchange="get_sections(this.value)"  data-validate="required"  data-message-required="<?php echo get_phrase('value_required');?>">
+                <option value=""><?php echo get_phrase('select_class');?></option>
+                <?php
+                $classes = $this->db->get('class')->result_array();
+                foreach($classes as $row):
+                    ?>
+                    <option value="<?php echo $row['class_id'];?>"><?php echo $row['name'];?></option>
+                <?php endforeach;?>
+            </select>
+        </div>
+    </div>
+    <div id="section_holder" class="col-md-3">
+        <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('section');?></label>
+        <select name="section_id" id="section_id" class="form-control selectboxit">
+            <option value=""><?php echo get_phrase('select_class_first');?></option>
+        </select>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+<div class="row">
     <div class="col-md-12">
         <div class="col-md-offset-4 col-md-4" style="padding: 15px;">
             <button type="button" class="btn btn-primary" name="generate_csv" id="generate_csv"><?php echo "گرفتن اطلاعات دانش آموزان"; ?></button>
@@ -140,8 +167,8 @@
 
         <a href="" download="students_information.csv" style="display: none;" id = "bulk">Download</a>
     </div>
-    <?php echo form_close();?>
 </div>
+<?php echo form_close();?>
 
 
 
