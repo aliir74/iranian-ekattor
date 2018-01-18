@@ -126,7 +126,7 @@
 </div>
 <div class="row">
     <div class="col-md-4"></div>
-    <div class="col-md-4 col-md-offset-4" style="padding: 15px;">
+    <div class="col-md-4" style="padding: 15px;">
         <button type="button" class="btn btn-primary" name="generate_csv" id="generate_csv"><?php echo "گرفتن اطلاعات دانش آموزان"; ?></button>
     </div>
     <div class="col-md-4"></div>
@@ -159,6 +159,7 @@
     </div>-->
     <div class="col-md-3"></div>
 </div>
+<br>
 <div class="row">
     <div class="col-md-12">
         <div class="col-md-offset-4 col-md-4" style="padding-bottom:15px;">
@@ -178,7 +179,7 @@
 <div class="row">
     <div class="col-md-12" style="padding: 10px; background-color: #B3E5FC; color: #424242;">
         <p style="font-weight: 700; font-size: 15px;">
-            <?php echo get_phrase('please_follow_the_instructions_for_adding_bulk_student:'); ?>
+            <?php echo "لطفا مطابق دستورالعمل زیر دانش آموزان را به کلاس‌های پژوهشی اضافه کنید!"; ?>
         </p>
         <ol>
             <li style="padding: 5px;"><?php echo "ابتدا با زدن روی دکمه‌ی اطلاعات دانش آموزان، اطلاعات تمام دانش آموزان سال تحصیلی فعلی رو دانلود کنید."; ?></li>
