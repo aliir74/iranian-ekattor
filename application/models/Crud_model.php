@@ -257,7 +257,7 @@ class Crud_model extends CI_Model {
         return $this->db->get('document')->result_array();
     }
 
-    function select_study_material_info_for_student()
+    function cd ()
     {
         $student_id = $this->session->userdata('student_id');
         $student_row = $this->db->get_where('enroll', array(
@@ -268,7 +268,8 @@ class Crud_model extends CI_Model {
         $research_class_id = $student_row->research_class_id;
         $this->db->order_by("timestamp", "desc");
         if ($research_class_id) {
-            $research_class_id_array = explode('-', $research_class_id);
+            #$research_class_id_array = explode('-', $research_class_id);
+            $research_class_id_array = array_map('intval', explode('-', $research_class_id));
             $this->db->select('document');
             $merged = array_merge($this->db->or_where_in('class_id', $research_class_id_array)->result_array(), $this->db->get_where('document', array('class_id' => $class_id))->result_array());
             log_message($merged);
