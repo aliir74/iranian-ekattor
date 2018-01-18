@@ -2748,7 +2748,7 @@ class Admin extends CI_Controller
     {
         if ($this->session->userdata('admin_login') != 1)
             redirect(base_url(), 'refresh');
-
+        log_message('error', 'generate_all_student_information_csv');
         $running_year = $this->db->get_where('settings', array('type'=>'running_year'))->row()->description;
 
         $file   = fopen("uploads/all_student_information.csv", "w");

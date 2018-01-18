@@ -152,7 +152,7 @@
 <script type="text/javascript">
     $("#generate_csv").click(function(){
         $.ajax({
-            url: '<?php echo base_url();?>index.php?admin/generate_all_student_information_csv',
+            url: '<?php echo base_url();?>index.php?admin/generate_all_student_information_csv/',
             success: function(response) {
                 toastr.success("<?php echo get_phrase('file_generated'); ?>");
                 $("#bulk").attr('href', response);
