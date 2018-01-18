@@ -123,12 +123,24 @@
 			<!----CREATION FORM ENDS-->
 		</div>
 	</div>
+    <?php echo form_open(base_url() . 'index.php?admin/add_students_to_research_class_using_csv/import' ,
+        array('class' => 'form-inline validate', 'style' => 'text-align:center;',  'enctype' => 'multipart/form-data'));?>
     <div class="col-md-12">
         <div class="col-md-offset-4 col-md-4" style="padding: 15px;">
             <button type="button" class="btn btn-primary" name="generate_csv" id="generate_csv"><?php echo "گرفتن اطلاعات دانش آموزان"; ?></button>
         </div>
+        <div class="col-md-offset-4 col-md-4" style="padding-bottom:15px;">
+            <input type="file" name="userfile" class="form-control file2 inline btn btn-info" data-label="<i class='entypo-tag'></i> Select CSV File"
+                   data-validate="required" data-message-required="<?php echo get_phrase('required'); ?>"
+                   accept="text/csv, .csv" />
+        </div>
+        <div class="col-md-offset-4 col-md-4">
+            <button type="submit" class="btn btn-success" name="import_csv" id="import_csv"><?php echo get_phrase('import_CSV'); ?></button>
+        </div>
+
         <a href="" download="students_information.csv" style="display: none;" id = "bulk">Download</a>
     </div>
+    <?php echo form_close();?>
 </div>
 
 
