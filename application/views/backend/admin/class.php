@@ -25,6 +25,7 @@
                 		<tr>
                     		<th><div>#</div></th>
                     		<th><div><?php echo get_phrase('class_name');?></div></th>
+                            <th><div><?php echo "ID";?></div></th>
                     		<th><div><?php echo get_phrase('numeric_name');?></div></th>
                     		<th><div><?php echo get_phrase('teacher');?></div></th>
                     		<th><div><?php echo get_phrase('options');?></div></th>
@@ -35,6 +36,7 @@
                         <tr>
                             <td><?php echo $count++;?></td>
 							<td><?php echo $row['name'];?></td>
+                            <td><?php echo $row['class_id'];?></td>
 							<td><?php echo $row['name_numeric'];?></td>
 							<td>
                                 <?php
