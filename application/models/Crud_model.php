@@ -257,7 +257,7 @@ class Crud_model extends CI_Model {
         return $this->db->get('document')->result_array();
     }
 
-    function cd ()
+    function select_study_material_info_for_student ()
     {
         $student_id = $this->session->userdata('student_id');
         $student_row = $this->db->get_where('enroll', array(
