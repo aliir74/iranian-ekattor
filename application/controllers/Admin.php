@@ -2781,6 +2781,52 @@ class Admin extends CI_Controller
         fputcsv($file, $line, ',');
        echo $file_path = base_url() . 'uploads/bulk_student.csv';
     }
+
+    // import CSV for research class students adding
+    function add_students_to_research_class_using_csv($param1 = '') {
+
+        if ($this->session->userdata('admin_login') != 1)
+            redirect(base_url(), 'refresh');
+
+        if ($param1 == 'import') {
+            if ($this->input->post('class_id') != '') {
+
+                move_uploaded_file($_FILES['userfile']['tmp_name'], 'uploads/research_class_students.csv');
+                $csv = array_map('str_getcsv', file('uploads/research_class_students.csv'));
+                $count = 1;
+                $array_size = sizeof($csv);
+                foreach ($csv as $row) {
+                    if ($count == 1) {
+                        $count++;
+                        continue;
+                    }
+
+                    $data['id'] = $row[0];
+                    $research_classes = $this->db->get_where('enroll', array('student_id' => $data['id']));
+                    if($research_classes) {
+                        $research_classes = $research_classes.'-'.strval($this->input->post('class_id'));
+                    } else {
+                        $research_classes = $this->input->post('class_id');
+                    }
+                    $this->db->where('student_id',$data['id']);
+                    $this->db->update('enroll',array('research_class_id' => $research_classes));
+                }
+
+                $this->session->set_flashdata('flash_message', get_phrase('student_imported'));
+                redirect(base_url() . 'index.php?admin/classes', 'refresh');
+            }
+            else{
+                $this->session->set_flashdata('error_message', get_phrase('please_make_sure_class_and_section_is_selected'));
+                redirect(base_url() . 'index.php?admin/classes', 'refresh');
+            }
+        }
+        /*$page_data['page_name']  = 'student_bulk_add';
+        $page_data['page_title'] = get_phrase('add_bulk_student');
+        $this->load->view('backend/index', $page_data);*/
+        redirect(base_url() . 'index.php?admin/classes', 'refresh');
+    }
+
+
     // CSV IMPORT
     function bulk_student_add_using_csv($param1 = '') {
 
