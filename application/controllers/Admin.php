@@ -2751,10 +2751,9 @@ class Admin extends CI_Controller
         log_message('error', 'generate_all_student_information_csv');
         $running_year = $this->db->get_where('settings', array('type'=>'running_year'))->row()->description;
 
-        $file   = fopen("uploads/all_student_information.csv", "w");
+        $file   = fopen("uploads/all_student_information.csv", "w") or die('cant open the file');
         $line   = array('ID', 'StudentName', 'Email', 'ParentID');
         fputcsv($file, $line, ',');
-        fclose($file);
         /*$this->db->select("*");
         $this->db->from("enroll");
         $this->db->join("student", "enroll.student_id = student.student_id");
