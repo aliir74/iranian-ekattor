@@ -124,11 +124,17 @@
 		</div>
 	</div>
 </div>
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4 col-md-offset-4" style="padding: 15px;">
+        <button type="button" class="btn btn-primary" name="generate_csv" id="generate_csv"><?php echo "گرفتن اطلاعات دانش آموزان"; ?></button>
+    </div>
+    <div class="col-md-4"></div>
+</div>
 <?php echo form_open(base_url() . 'index.php?admin/add_students_to_research_class_using_csv/import' ,
     array('class' => 'form-inline validate', 'style' => 'text-align:center;',  'enctype' => 'multipart/form-data'));?>
 <div class="row">
-    <div class="col-md-3" style="padding: 15px;">
-        <button type="button" class="btn btn-primary" name="generate_csv" id="generate_csv"><?php echo "گرفتن اطلاعات دانش آموزان"; ?></button>
+    <div class="col-md-3">
     </div>
     <div class="col-md-6">
         <div class="form_group">
@@ -169,6 +175,21 @@
 </div>
 <?php echo form_close();?>
 
+<div class="row">
+    <div class="col-md-12" style="padding: 10px; background-color: #B3E5FC; color: #424242;">
+        <p style="font-weight: 700; font-size: 15px;">
+            <?php echo get_phrase('please_follow_the_instructions_for_adding_bulk_student:'); ?>
+        </p>
+        <ol>
+            <li style="padding: 5px;"><?php echo "ابتدا با زدن روی دکمه‌ی اطلاعات دانش آموزان، اطلاعات تمام دانش آموزان سال تحصیلی فعلی رو دانلود کنید."; ?></li>
+            <li style="padding: 5px;"><?php echo "فایل csv دقیقا مشابه فایل اطلاعات دانش آموزان درست کنید که اطلاعات دانش آموزانی که فقط اطلاعات دانش آموزانی که قرار است به کلاس پژوهشی اضافه شوند در آن باشد."; ?></li>
+            <li style="padding: 5px;"><?php echo "فایل خود را select کرده و سپس دکمه‌ی import را بزنید.";?></li>
+        </ol>
+        <p style="color: #FF5722; font-weight: 500;">
+            ***<?php echo "دقت کنید که فایل خود را کاملا مطابق ستون‌های فایل اطلاعات دانش آموزان بسازید!"; ?>
+        </p>
+    </div>
+</div>
 
 
 <!-----  DATA TABLE EXPORT CONFIGURATIONS ---->                      
