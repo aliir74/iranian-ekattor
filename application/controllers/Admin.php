@@ -2754,6 +2754,7 @@ class Admin extends CI_Controller
         $file   = fopen("uploads/all_student_information.csv", "w");
         $line   = array('ID', 'StudentName', 'Email', 'ParentID');
         fputcsv($file, $line, ',');
+        fclose($file);
         /*$this->db->select("*");
         $this->db->from("enroll");
         $this->db->join("student", "enroll.student_id = student.student_id");
