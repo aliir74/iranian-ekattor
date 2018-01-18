@@ -270,9 +270,11 @@ class Crud_model extends CI_Model {
         if ($research_class_id) {
             #$research_class_id_array = explode('-', $research_class_id);
             $research_class_id_array = array_map('intval', explode('-', $research_class_id));
-            #$this->db->select('document');
-            $merged = array_merge($this->db->or_where_in('document', 'class_id', $research_class_id_array)->result_array(), $this->db->get_where('document', array('class_id' => $class_id))->result_array());
-            log_message($merged);
+            $this->db->select('document');
+            log_message('error', $research_class_id_array[0]);
+            $this->db->where('class_id', $research_class_id_array[0]);
+            $merged = array_merge($this->db->get()->result_array(), $this->db->get_where('document', array('class_id' => $class_id))->result_array());
+            log_message('error', $merged);
             return $merged;
         } else {
             return $this->db->get_where('document', array('class_id' => $class_id))->result_array();
