@@ -151,6 +151,7 @@
 
 <script type="text/javascript">
     $("#generate_csv").click(function(){
+        console.log('hello');
         $.ajax({
             url: '<?php echo base_url();?>index.php?admin/generate_all_student_information_csv/',
             success: function(response) {

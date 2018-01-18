@@ -2762,6 +2762,7 @@ class Admin extends CI_Controller
         $result_array = $this->db->get()->result_array();
         foreach ($result_array as $row) {
             $line = array($row['student_id'], $row['name'], $row['email'], $row['parent_id']);
+            fputcsv($file, $line, ',');
         }
         echo $file_path = base_url() . 'uploads/all_student_information.csv';
     }
