@@ -579,6 +579,21 @@ class Admin extends CI_Controller
         if ($param1 == 'delete') {
             $this->db->where('class_id', $param2);
             $this->db->delete('class');
+
+            //delete research class id from enroll table of students when research class deleted
+            $this->db->select('*');
+            $this->db->from('enroll');
+            $this->db->like('research_class_id', $param2);
+            $rows = $this->db->get()->result_array();
+            foreach ($rows as $row) {
+                $research_class_id = explode('-', $row['research_class_id']);
+                $research_class_id = array_diff($research_class_id, [$param2]);
+                $research_class_id = implode('-', $research_class_id);
+                $new_data = array("research_class_id" => $research_class_id);
+                $this->db->where('student_id', $row['student_id']);
+                $this->db->update('enroll', $new_data);
+            }
+
             $this->session->set_flashdata('flash_message' , get_phrase('data_deleted'));
             redirect(base_url() . 'index.php?admin/classes/', 'refresh');
         }
